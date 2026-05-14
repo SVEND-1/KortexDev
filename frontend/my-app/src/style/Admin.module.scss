@@ -1,0 +1,585 @@
+:root {
+  --bg: #04080f;
+  --green: #00ff88;
+  --cyan: #00d4ff;
+  --blue: #0057ff;
+  --dim: #1a2a3a;
+  --text: #c4d8e8;
+  --muted: #4a6070;
+  --glow-g: rgba(0, 255, 136, 0.35);
+  --red: #ff4444;
+}
+
+/* Login Page */
+.loginContainer {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0f1a, #04080f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loginBox {
+  background: rgba(5, 12, 22, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 24px;
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green);
+  margin-bottom: 16px;
+}
+
+.loginHeader h1 {
+  font-size: 20px;
+  color: var(--text);
+  font-weight: 400;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputGroup label {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.inputGroup input {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text);
+  transition: all 0.3s;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+}
+
+.loginBtn {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.loginBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--glow-g);
+}
+
+.error {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 12px;
+  color: var(--red);
+  text-align: center;
+}
+
+/* Admin Dashboard */
+.adminContainer {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.adminNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(4, 8, 15, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  height: 60px;
+  z-index: 100;
+}
+
+.navLogo {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
+  color: var(--green);
+  text-shadow: 0 0 20px var(--green);
+}
+
+.navTabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  padding: 8px 20px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.tabBtn:hover {
+  color: var(--cyan);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.tabBtn.active {
+  color: var(--green);
+  background: rgba(0, 255, 136, 0.1);
+  border-bottom: 2px solid var(--green);
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  padding: 6px 16px;
+  border-radius: 6px;
+  color: var(--red);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logoutBtn:hover {
+  background: rgba(255, 68, 68, 0.1);
+  border-color: var(--red);
+}
+
+.adminContent {
+  padding-top: 80px;
+  padding: 80px 30px 30px;
+}
+
+.tabContent {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tabHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.tabHeader h2 {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.createBtn {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px var(--glow-g);
+}
+
+/* Tables */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(5, 12, 22, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.dataTable th,
+.dataTable td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.05);
+}
+
+.dataTable th {
+  background: rgba(0, 212, 255, 0.05);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.dataTable td {
+  font-size: 13px;
+}
+
+.projectIcon {
+  font-size: 24px;
+}
+
+.projectName {
+  font-weight: 500;
+}
+
+.imagePreview {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.thumbnail {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.noImage {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.reviewText {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.requestType {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.requestType.telegram {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--cyan);
+}
+
+.requestType.vk {
+  background: rgba(0, 100, 255, 0.1);
+  color: #4680ff;
+}
+
+.deleteBtn {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--red);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.deleteBtn:hover {
+  background: rgba(255, 68, 68, 0.2);
+  border-color: var(--red);
+}
+
+/* Message */
+.message {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.message.success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.message.error {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  color: var(--red);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background: rgba(5, 15, 28, 0.95);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  padding: 32px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.modal h3 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formGroup label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.formGroup input {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--cyan);
+}
+
+.formGroup small {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.cancelBtn {
+  background: transparent;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, var(--green), var(--cyan));
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #000;
+  cursor: pointer;
+}
+
+.loader {
+  text-align: center;
+  padding: 60px;
+  color: var(--muted);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .adminNav {
+    padding: 0 15px;
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+  }
+
+  .navTabs {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .tabBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .adminContent {
+    padding: 100px 15px 20px;
+  }
+
+  .tabHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dataTable th,
+  .dataTable td {
+    padding: 10px 12px;
+  }
+
+  .reviewText {
+    max-width: 150px;
+  }
+
+  .modal {
+    padding: 20px;
+    width: 95%;
+  }
+}
+/* Добавьте в конец файла Admin.module.scss */
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(5, 12, 22, 0.5);
+  border-radius: 12px;
+  border: 1px dashed rgba(0, 212, 255, 0.2);
+  color: var(--muted);
+}
+
+.emptyState p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.errorBanner {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin: 20px 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--red);
+}
+
+.errorBanner button {
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  padding: 6px 14px;
+  color: var(--red);
+  cursor: pointer;
+}
+.errorBanner {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--red);
+}
+
+.errorBanner button {
+  background: rgba(255, 68, 68, 0.2);
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  padding: 6px 14px;
+  color: var(--red);
+  cursor: pointer;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(5, 12, 22, 0.5);
+  border-radius: 12px;
+  border: 1px dashed rgba(0, 212, 255, 0.2);
+  color: var(--muted);
+}
+
+.emptyState p {
+  margin-bottom: 20px;
+  font-size: 16px;
+}
