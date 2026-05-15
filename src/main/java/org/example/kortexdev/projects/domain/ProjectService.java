@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,29 +34,29 @@ public class ProjectService {
 
     public Project findById(Long id) {
         return projectMapper.convertEntityToDto(
-                projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Review не найден"))
+                projectRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Проект не найден"))
         );
     }
 
     @Transactional
     public Project save(ProjectCreate request) {
         try {
-            List<String> strings = request.images()
+            // Сохраняем только имя файла, без префикса "uploads/project/"
+            List<String> imageNames = request.images()
                     .stream()
-                    .map(el -> {
-                        return "uploads/project/" + saveImage(el);
-                    })
+                    .map(this::saveImage)
                     .toList();
 
             ProjectEntity project = ProjectEntity.builder()
                     .name(request.name())
-                    .images(strings)
+                    .images(imageNames)
                     .build();
+
             return projectMapper.convertEntityToDto(
                     projectRepository.save(project)
             );
-        }catch (Exception e) {
-            log.error("Не удалось создать review,ex={}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Не удалось создать проект, ex={}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -65,51 +66,43 @@ public class ProjectService {
         try {
             Project project = findById(id);
 
-            for(String imageName : project.images()) {
+            for (String imageName : project.images()) {
                 deleteImage(imageName);
             }
 
             projectRepository.deleteById(id);
             return "Успешно";
-        }catch (Exception e) {
-            log.error("Не удалось удалить review,ex={}",e.getMessage());
+        } catch (Exception e) {
+            log.error("Не удалось удалить проект, ex={}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
     private String saveImage(MultipartFile imageFile) {
         try {
-            String fileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
-            Path uploadPath = Paths.get("uploads/project/");
-
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
-            }
-
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            return fileName;
-        }catch (IOException e){
-            log.error("Не удалось сохранить картинку,ex={}",e.getMessage());
+            byte[] bytes = imageFile.getBytes();
+            String base64 = Base64.getEncoder().encodeToString(bytes);
+            return "data:image/webp;base64," + base64;
+        } catch (IOException e) {
+            log.error("Не удалось сохранить картинку, ex={}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    private void deleteImage(String imageName) throws IOException {
+    private void deleteImage(String imageName) {
         try {
-        if (imageName != null && !imageName.trim().isEmpty()) {
-            Path imagePath = Paths.get("uploads/project/", imageName);
+            if (imageName != null && !imageName.trim().isEmpty()) {
+                Path imagePath = Paths.get("uploads/project/", imageName);
 
-            if (Files.exists(imagePath)) {
-                Files.delete(imagePath);
-                System.out.println("Изображение удалено: " + imageName);
-            } else {
-                System.out.println("Файл не найден: " + imageName);
+                if (Files.exists(imagePath)) {
+                    Files.delete(imagePath);
+                    log.info("Изображение удалено: {}", imageName);
+                } else {
+                    log.warn("Файл не найден: {}", imageName);
+                }
             }
-        }
-        }catch (IOException e) {
-            log.error("Не удалось удалить картинку,ex={}", e.getMessage());
+        } catch (IOException e) {
+            log.error("Не удалось удалить картинку, ex={}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

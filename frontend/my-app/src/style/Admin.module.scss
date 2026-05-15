@@ -382,6 +382,11 @@
   position: relative;
 }
 
+/* Расширенная модалка с превью */
+.modalWide {
+  max-width: 900px;
+}
+
 .modalClose {
   position: absolute;
   top: 16px;
@@ -399,10 +404,19 @@
   color: var(--text);
 }
 
+/* Тело модалки — два столбца */
+.modalBody {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
 .modalForm {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;
+  min-width: 0;
 }
 
 .formGroup {
@@ -463,6 +477,235 @@
   cursor: pointer;
 }
 
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Панель превью */
+.previewPanel {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.previewLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Карточка проекта — имитация главной страницы */
+.projectCard {
+  background: rgba(5, 12, 22, 0.8);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.projectCard:hover {
+  border-color: rgba(0, 255, 136, 0.3);
+}
+
+.cardImageArea {
+  width: 100%;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.cardMainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Кнопки карусели */
+.carouselBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.carouselBtn:hover:not(:disabled) {
+  background: rgba(0, 255, 136, 0.8);
+  color: #000;
+}
+
+.carouselBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carouselPrev {
+  left: 8px;
+}
+
+.carouselNext {
+  right: 8px;
+}
+
+/* Индикатор текущего изображения */
+.carouselIndicator {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--cyan);
+  z-index: 10;
+}
+
+/* Миниатюры */
+.carouselThumbs {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+}
+
+.carouselThumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.carouselThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carouselThumb.active {
+  border-color: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.carouselThumbMore {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.cardExtraImages {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.cardThumb {
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.cardMoreCount {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 5px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.cardImagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.cardImagePlaceholder span {
+  font-size: 32px;
+  opacity: 0.4;
+}
+
+.cardImagePlaceholder p {
+  font-size: 11px;
+  opacity: 0.5;
+  margin: 0;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.cardIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.cardName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.previewImageCount {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+  text-align: center;
+}
+
 .loader {
   text-align: center;
   padding: 60px;
@@ -512,8 +755,29 @@
     padding: 20px;
     width: 95%;
   }
+
+  .modalWide {
+    max-width: 95%;
+  }
+
+  .modalBody {
+    flex-direction: column;
+  }
+
+  .previewPanel {
+    width: 100%;
+  }
+
+  .carouselThumb {
+    width: 32px;
+    height: 32px;
+  }
+
+  .carouselThumbMore {
+    width: 32px;
+    height: 32px;
+  }
 }
-/* Добавьте в конец файла Admin.module.scss */
 
 .emptyState {
   text-align: center;
@@ -534,26 +798,6 @@
   border: 1px solid var(--red);
   border-radius: 8px;
   padding: 12px 20px;
-  margin: 20px 30px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--red);
-}
-
-.errorBanner button {
-  background: rgba(255, 68, 68, 0.2);
-  border: 1px solid var(--red);
-  border-radius: 6px;
-  padding: 6px 14px;
-  color: var(--red);
-  cursor: pointer;
-}
-.errorBanner {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--red);
-  border-radius: 8px;
-  padding: 12px 20px;
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
@@ -568,18 +812,4 @@
   padding: 6px 14px;
   color: var(--red);
   cursor: pointer;
-}
-
-.emptyState {
-  text-align: center;
-  padding: 60px 20px;
-  background: rgba(5, 12, 22, 0.5);
-  border-radius: 12px;
-  border: 1px dashed rgba(0, 212, 255, 0.2);
-  color: var(--muted);
-}
-
-.emptyState p {
-  margin-bottom: 20px;
-  font-size: 16px;
 }

@@ -15,8 +15,10 @@ const AdminDashboard: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [projectName, setProjectName] = useState('');
     const [projectImages, setProjectImages] = useState<FileList | null>(null);
+    const [previewUrls, setPreviewUrls] = useState<string[]>([]);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
     const [creating, setCreating] = useState(false);
+    const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
 
     useEffect(() => {
         if (!adminApi.isAuthenticated()) {
@@ -25,6 +27,32 @@ const AdminDashboard: React.FC = () => {
         }
         loadData();
     }, []);
+
+    // Генерируем превью-URL при смене файлов
+    useEffect(() => {
+        if (!projectImages || projectImages.length === 0) {
+            setPreviewUrls([]);
+            setCurrentPreviewIndex(0);
+            return;
+        }
+        const urls = Array.from(projectImages).map((file) => URL.createObjectURL(file));
+        setPreviewUrls(urls);
+        setCurrentPreviewIndex(0);
+
+        // Освобождаем URL при размонтировании/обновлении
+        return () => {
+            urls.forEach((url) => URL.revokeObjectURL(url));
+        };
+    }, [projectImages]);
+
+    // Сбрасываем превью при закрытии модалки
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setProjectName('');
+        setProjectImages(null);
+        setPreviewUrls([]);
+        setCurrentPreviewIndex(0);
+    };
 
     const loadData = async () => {
         setLoading(true);
@@ -74,9 +102,7 @@ const AdminDashboard: React.FC = () => {
             const result = await adminApi.createProject(projectName, projectImages);
             if (result) {
                 showMessage('success', 'Проект создан');
-                setShowModal(false);
-                setProjectName('');
-                setProjectImages(null);
+                handleCloseModal();
                 await loadData();
             } else {
                 showMessage('error', 'Ошибка создания проекта');
@@ -146,10 +172,21 @@ const AdminDashboard: React.FC = () => {
         if (imagePath.startsWith('data:')) return imagePath;
 
         if (imagePath.includes('uploads/project/')) {
-            return `http://localhost:8080/${imagePath}`;
+            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);
+            return `http://localhost:8080/uploads/project/${fileName}`;
         }
 
         return `http://localhost:8080/uploads/project/${imagePath}`;
+    };
+
+    const nextPreviewImage = () => {
+        if (previewUrls.length === 0) return;
+        setCurrentPreviewIndex((prev) => (prev + 1) % previewUrls.length);
+    };
+
+    const prevPreviewImage = () => {
+        if (previewUrls.length === 0) return;
+        setCurrentPreviewIndex((prev) => (prev - 1 + previewUrls.length) % previewUrls.length);
     };
 
     return (
@@ -295,9 +332,9 @@ const AdminDashboard: React.FC = () => {
                                                     <td>{request.name}</td>
                                                     <td>{request.username}</td>
                                                     <td>
-                                                            <span className={`${styles.requestType} ${styles[request.requestType?.toLowerCase() || 'telegram']}`}>
-                                                                {getRequestTypeLabel(request.requestType)}
-                                                            </span>
+                                                        <span className={`${styles.requestType} ${styles[request.requestType?.toLowerCase() || 'telegram']}`}>
+                                                            {getRequestTypeLabel(request.requestType)}
+                                                        </span>
                                                     </td>
                                                     <td>{new Date(request.createAt).toLocaleDateString('ru-RU')}</td>
                                                     <td>
@@ -359,44 +396,123 @@ const AdminDashboard: React.FC = () => {
                 )}
             </div>
 
-            {/* Modal for Project Create */}
+            {/* Modal for Project Create with Carousel */}
             {showModal && (
-                <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
-                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.modalClose} onClick={() => setShowModal(false)}>×</button>
+                <div className={styles.modalOverlay} onClick={handleCloseModal}>
+                    <div className={`${styles.modal} ${styles.modalWide}`} onClick={(e) => e.stopPropagation()}>
+                        <button className={styles.modalClose} onClick={handleCloseModal}>×</button>
                         <h3>Новый проект</h3>
-                        <div className={styles.modalForm}>
-                            <div className={styles.formGroup}>
-                                <label>Название проекта</label>
-                                <input
-                                    type="text"
-                                    value={projectName}
-                                    onChange={(e) => setProjectName(e.target.value)}
-                                    placeholder="Например: Лендинг для ресторана"
-                                />
-                                <small>Добавьте в название тип проекта (Лендинг/Платформа/Мобильное)</small>
+
+                        <div className={styles.modalBody}>
+                            {/* Левая часть — форма */}
+                            <div className={styles.modalForm}>
+                                <div className={styles.formGroup}>
+                                    <label>Название проекта</label>
+                                    <input
+                                        type="text"
+                                        value={projectName}
+                                        onChange={(e) => setProjectName(e.target.value)}
+                                        placeholder="Например: Лендинг для ресторана"
+                                    />
+                                    <small>Добавьте в название тип проекта (Лендинг/Платформа/Мобильное)</small>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Изображения</label>
+                                    <input
+                                        type="file"
+                                        multiple
+                                        accept="image/*"
+                                        onChange={(e) => setProjectImages(e.target.files)}
+                                    />
+                                    <small>Можно выбрать несколько файлов (PNG, JPG, JPEG)</small>
+                                </div>
+                                <div className={styles.modalButtons}>
+                                    <button className={styles.cancelBtn} onClick={handleCloseModal}>
+                                        Отмена
+                                    </button>
+                                    <button
+                                        className={styles.submitBtn}
+                                        onClick={handleCreateProject}
+                                        disabled={creating}
+                                    >
+                                        {creating ? 'Создание...' : 'Создать'}
+                                    </button>
+                                </div>
                             </div>
-                            <div className={styles.formGroup}>
-                                <label>Изображения</label>
-                                <input
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    onChange={(e) => setProjectImages(e.target.files)}
-                                />
-                                <small>Можно выбрать несколько файлов (PNG, JPG, JPEG)</small>
-                            </div>
-                            <div className={styles.modalButtons}>
-                                <button className={styles.cancelBtn} onClick={() => setShowModal(false)}>
-                                    Отмена
-                                </button>
-                                <button
-                                    className={styles.submitBtn}
-                                    onClick={handleCreateProject}
-                                    disabled={creating}
-                                >
-                                    {creating ? 'Создание...' : 'Создать'}
-                                </button>
+
+                            {/* Правая часть — карусель превью */}
+                            <div className={styles.previewPanel}>
+                                <p className={styles.previewLabel}>Превью карточки</p>
+                                <div className={styles.projectCard}>
+                                    <div className={styles.cardImageArea}>
+                                        {previewUrls.length > 0 ? (
+                                            <>
+                                                <button
+                                                    className={`${styles.carouselBtn} ${styles.carouselPrev}`}
+                                                    onClick={prevPreviewImage}
+                                                    disabled={previewUrls.length <= 1}
+                                                >
+                                                    ‹
+                                                </button>
+                                                <img
+                                                    src={previewUrls[currentPreviewIndex]}
+                                                    alt={`preview ${currentPreviewIndex + 1}`}
+                                                    className={styles.cardMainImage}
+                                                />
+                                                <button
+                                                    className={`${styles.carouselBtn} ${styles.carouselNext}`}
+                                                    onClick={nextPreviewImage}
+                                                    disabled={previewUrls.length <= 1}
+                                                >
+                                                    ›
+                                                </button>
+
+                                                {/* Индикатор текущего изображения */}
+                                                {previewUrls.length > 1 && (
+                                                    <div className={styles.carouselIndicator}>
+                                                        {currentPreviewIndex + 1} / {previewUrls.length}
+                                                    </div>
+                                                )}
+
+                                                {/* Миниатюры для навигации */}
+                                                {previewUrls.length > 1 && (
+                                                    <div className={styles.carouselThumbs}>
+                                                        {previewUrls.slice(0, 4).map((url, idx) => (
+                                                            <button
+                                                                key={idx}
+                                                                className={`${styles.carouselThumb} ${currentPreviewIndex === idx ? styles.active : ''}`}
+                                                                onClick={() => setCurrentPreviewIndex(idx)}
+                                                            >
+                                                                <img src={url} alt={`thumb ${idx + 1}`} />
+                                                            </button>
+                                                        ))}
+                                                        {previewUrls.length > 4 && (
+                                                            <div className={styles.carouselThumbMore}>
+                                                                +{previewUrls.length - 4}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className={styles.cardImagePlaceholder}>
+                                                <span>🖼️</span>
+                                                <p>Изображения не выбраны</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className={styles.cardInfo}>
+                                        <span className={styles.cardIcon}>{getProjectTypeIcon(projectName)}</span>
+                                        <span className={styles.cardName}>
+                                            {projectName.trim() ? projectName : 'Название проекта'}
+                                        </span>
+                                    </div>
+                                </div>
+                                {previewUrls.length > 0 && (
+                                    <p className={styles.previewImageCount}>
+                                        {previewUrls.length} {previewUrls.length === 1 ? 'изображение' : previewUrls.length < 5 ? 'изображения' : 'изображений'}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

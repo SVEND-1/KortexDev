@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -28,10 +26,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${admin.username:admin}")  // ← добавлен username
+    @Value("${admin.username:admin}")
     private String adminUsername;
 
-    @Value("${admin.password:123}")    // ← исправлено
+    @Value("${admin.password:123}")
     private String adminPassword;
 
     @Value("${cors.allowed-origins:http://localhost:5173,http://localhost:3000}")
@@ -43,17 +41,18 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-                // ← Убираем sessionManagement или оставляем IF_REQUIRED (по умолчанию)
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)  // ← меняем с ALWAYS
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(
                                         "/api/admin/login",
-                                        "/api/admin/logout"  // ← добавили logout
+                                        "/api/admin/logout"
                                 ).permitAll()
+                                .requestMatchers("/uploads/**", "/uploads/project/**")
+                                .permitAll()
                                 .requestMatchers("/api/admin/**", "/admin",
                                         "/swagger-ui/**", "/swagger-ui.html",
                                         "/v3/api-docs/**", "/v3/api-docs",
@@ -62,7 +61,6 @@ public class SecurityConfig {
                                 .anyRequest().permitAll()
                 )
 
-                // ← Исправляем authenticationEntryPoint для REST API
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(
                                 (request, response, authException) -> {
@@ -93,7 +91,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);  // ← важно для кук
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -115,11 +113,10 @@ public class SecurityConfig {
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         return username -> {
-            // ← исправлено: сравниваем с adminUsername
             if (adminUsername.equals(username)) {
                 UserDetails userDetails = User.builder()
                         .username(adminUsername)
-                        .password(passwordEncoder.encode(adminPassword))  // ← кодируем пароль
+                        .password(passwordEncoder.encode(adminPassword))
                         .roles("ADMIN")
                         .build();
                 return userDetails;

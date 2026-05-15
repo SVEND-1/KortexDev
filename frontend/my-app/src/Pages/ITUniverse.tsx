@@ -22,6 +22,7 @@ const ITUniverse: React.FC = () => {
     const [activeService, setActiveService] = useState<'LANDING' | 'PLATFORM' | 'MOBILE'>('LANDING');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [navScrolled, setNavScrolled] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
 
     const services: ServiceCard[] = [
         {
@@ -56,10 +57,10 @@ const ITUniverse: React.FC = () => {
                 { icon: '🛒', title: 'Оформление заказа', description: 'Корзина, оформление, история заказов' },
                 { icon: '🚚', title: 'Доставка', description: 'Страница для курьера, трекинг, уведомления' },
                 { icon: '📧', title: 'Онлайн оповещение', description: 'Email и Telegram уведомления о статусах' },
-                { icon: '📅', title: 'Запись на процедуру', description: 'Календарь, управление временем, напоминания' },
+                { icon: '📅', title: 'Запись на услугу', description: 'Календарь, управление временем, напоминания' },
                 { icon: '📈', title: 'Личный кабинет', description: 'История, бонусы, избранное' },
                 { icon: '🔐', title: 'Роли и права', description: 'Админ, менеджер, курьер, клиент' },
-                { icon: '🤖', title: 'API интеграции', description: '1С, CRM, IP-телефония, чат-боты' }
+                { icon: '🤖', title: 'Функционал под ключ', description: 'Любая сложность по договорённости' }
             ],
             examples: [
                 { industry: 'Доставка еды', specialFeature: 'Онлайн оплата, трекинг курьера, Push-уведомления', icon: '🍕' },
@@ -79,45 +80,48 @@ const ITUniverse: React.FC = () => {
                 { icon: '🔔', title: 'Push-уведомления', description: 'Мгновенное оповещение пользователей' },
                 { icon: '📴', title: 'Офлайн режим', description: 'Работа приложения без интернета' },
                 { icon: '🔐', title: 'Биометрия', description: 'Вход по Face ID / Touch ID / отпечатку пальца' },
-                { icon: '📷', title: 'Интеграция с камерой', description: 'Сканер QR-кодов, загрузка фото, AR-функции' },
+                { icon: '📷', title: 'Интеграция с камерой', description: 'Сканер QR-кодов, загрузка фото' },
                 { icon: '📍', title: 'Геолокация', description: 'Карты, трекинг, маршруты' },
-                { icon: '💳', title: 'Apple Pay / Google Pay', description: 'Быстрая и безопасная оплата' },
-                { icon: '📊', title: 'Аналитика', description: 'Firebase Analytics, Crashlytics' },
-                { icon: '🔄', title: 'Автообновление', description: 'Автоматические обновления через магазины' }
+                { icon: '💳', title: 'Apple Pay / Google Pay', description: 'Быстрая и безопасная оплата' }
             ],
             examples: [
                 { industry: 'Доставка', specialFeature: 'Приложение для клиентов и курьеров с трекингом', icon: '🚚' },
                 { industry: 'Фитнес', specialFeature: 'Тренировки, отслеживание прогресса, чат с тренером', icon: '💪' },
                 { industry: 'Медицина', specialFeature: 'Запись, телемедицина, напоминания о приёме', icon: '🏥' },
-                { industry: 'Маркетплейс', specialFeature: 'Каталог, корзина, оплата, отзывы', icon: '🛍️' },
-                { industry: 'Образование', specialFeature: 'Курсы, видеоуроки, тесты, сертификаты', icon: '📚' },
-                { industry: 'Банкинг', specialFeature: 'Платежи, переводы, история операций', icon: '🏦' }
+                { industry: 'Маркетплейс', specialFeature: 'Каталог, корзина, оплата, отзывы', icon: '🛍️' }
             ]
         }
     ];
 
+    // 12 преимуществ для бизнеса (полная версия)
     const businessBenefits = [
-        { icon: '🎯', title: 'Увеличение продаж', description: 'Привлечение новых клиентов и повышение среднего чека' },
-        { icon: '⏰', title: 'Экономия времени', description: 'Автоматизация рутинных задач и процессов' },
-        { icon: '🏆', title: 'Конкурентное преимущество', description: 'Выделение среди конкурентов в вашей нише' },
-        { icon: '📊', title: 'Аналитика и KPI', description: 'Отслеживание эффективности бизнеса' },
-        { icon: '🔄', title: 'Круглосуточная работа', description: 'Сайт работает 24/7, даже когда вы отдыхаете' },
-        { icon: '🌍', title: 'Расширение географии', description: 'Выход на новые рынки и регионы' },
-        { icon: '💬', title: 'Обратная связь', description: 'Быстрая коммуникация с клиентами' },
-        { icon: '📈', title: 'Рост доверия', description: 'Профессиональный сайт повышает доверие к бренду' },
-        { icon: '📱', title: 'Мобильный охват', description: 'Доступ к аудитории со смартфонов в любом месте' },
-        { icon: '🔥', title: 'Лояльность', description: 'Push-уведомления и персонализация повышают лояльность' }
-    ];
+        // Финансовые выгоды
+        { icon: '💰', title: 'Увеличение прибыли', description: 'Продажи 24/7 без выходных. Ваш бизнес работает даже когда вы спите, принося стабильный доход.' },
+        { icon: '📉', title: 'Снижение расходов', description: 'Меньше ручного труда — меньше ошибок и затрат. Автоматизация сокращает операционные расходы на 30-50%.' },
+        { icon: '📈', title: 'Быстрый ROI', description: 'Инвестиции в сайт окупаются за 3-6 месяцев за счёт роста продаж и оптимизации процессов.' },
 
-    const portfolioProjects = [
-        { name: 'EcoClean Химчистка', type: 'LANDING', description: 'Сайт с галереей до/после, онлайн запись и прайс-лист', highlight: 'До/После' },
-        { name: 'Итальянский дворик', type: 'LANDING', description: 'Ресторан с интерактивным меню, бронированием столов', highlight: 'Меню' },
-        { name: 'FastFood Delivery', type: 'PLATFORM', description: 'Платформа доставки с трекингом курьеров и онлайн оплатой', highlight: 'Оплата + Трекинг' },
-        { name: 'FitZone', type: 'PLATFORM', description: 'Фитнес клуб с записью на тренировки и абонементами', highlight: 'Запись онлайн' },
-        { name: 'АвтоМастер', type: 'LANDING', description: 'Автосервис с калькулятором ремонта и онлайн записью', highlight: 'Калькулятор' },
-        { name: 'FoodApp', type: 'MOBILE', description: 'Мобильное приложение для доставки еды с трекингом', highlight: 'iOS + Android' },
-        { name: 'MedHelper', type: 'MOBILE', description: 'Медицинское приложение с записью и телемедициной', highlight: 'Запись онлайн' },
-        { name: 'SportTrack', type: 'MOBILE', description: 'Фитнес-трекер с тренировками и прогрессом', highlight: 'Трекинг' }
+        // Маркетинговые преимущества
+        { icon: '📋', title: 'Сбор контактов', description: 'База клиентов растёт автоматически. Захват email, телефонов и соцсетей посетителей.' },
+        { icon: '📧', title: 'Email и SMS рассылки', description: 'Информируйте клиентов об акциях, новинках и персональных предложениях. Повторные продажи.' },
+        { icon: '🔍', title: 'SEO-продвижение', description: 'Привлечение клиентов из поиска Яндекс и Google. Рост органического трафика без рекламного бюджета.' },
+        { icon: '🔄', title: 'Ретаргетинг', description: 'Возвращайте посетителей, которые не купили. Показывайте рекламу тем, кто уже интересовался вами.' },
+
+        // Клиентские преимущества
+        { icon: '⭐', title: 'Удобство для клиентов', description: 'Онлайн запись 24/7, заказ в один клик, оплата картой — клиенты выбирают тех, кто заботится о их времени.' },
+        { icon: '📦', title: 'Прозрачность', description: 'Статус заказа, история покупок, отслеживание доставки — доверие клиентов растёт с каждым шагом.' },
+        { icon: '🎁', title: 'Бонусы и лояльность', description: 'Персональные рекомендации, программа лояльности, скидки за отзывы — клиенты возвращаются снова.' },
+        { icon: '🗣️', title: 'Отзывы и рейтинги', description: 'Социальное доказательство работает лучше любой рекламы. Собирайте и показывайте отзывы.' },
+
+        // Управленческие преимущества
+        { icon: '📊', title: 'Аналитика продаж', description: 'Отслеживайте, откуда приходят клиенты, какие услуги популярны, где теряете прибыль. Принимайте решения на основе данных.' },
+        { icon: '🔄', title: 'CRM интеграция', description: 'Все заказы и клиенты автоматически попадают в вашу CRM. Ничего не теряется, всё под контролем.' },
+        { icon: '📑', title: 'Отчёты в 1 клик', description: 'Продажи, прибыль, популярные товары, эффективность рекламы — любые отчёты формируются мгновенно.' },
+        { icon: '👥', title: 'Контроль персонала', description: 'Видите кто взял заказ, сколько времени заняла обработка, уровень удовлетворённости клиентов.' },
+
+        // Технологические преимущества
+        { icon: '⚙️', title: 'Автоматизация процессов', description: 'Автоматическое выставление счетов, отправка чеков, уведомления клиентам — меньше рутины, больше времени на развитие.' },
+        { icon: '🚀', title: 'Масштабируемость', description: 'Легко добавляйте новые фичи: интернет-магазин, онлайн запись, интеграции. Сайт растёт вместе с вашим бизнесом.' },
+        { icon: '🔗', title: 'Интеграция с 1С и кассами', description: 'Автоматический обмен данными с 1С, эквайринг, маркировка, ЕГАИС — всё работает "из коробки".' }
     ];
 
     useEffect(() => {
@@ -252,7 +256,7 @@ const ITUniverse: React.FC = () => {
             "  }",
             "}",
             "class MobileApp {",
-            "  constructor(platform) {",
+            "  constructor() {",
             "    this.ios = new SwiftApp();",
             "    this.android = new KotlinApp();",
             "    this.pushNotifications = new Push();",
@@ -302,7 +306,7 @@ const ITUniverse: React.FC = () => {
             observer.observe(el);
         });
         return () => observer.disconnect();
-    }, []);
+    }, [projects, reviews]);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
@@ -341,19 +345,45 @@ const ITUniverse: React.FC = () => {
         return '📱';
     };
 
-    // Замените существующую функцию getImageUrl на эту:
     const getImageUrl = (imagePath: string) => {
         if (!imagePath) return '';
-        if (imagePath.startsWith('http')) return imagePath;
         if (imagePath.startsWith('data:')) return imagePath;
-
-        // Если в БД старые данные с полным путем
-        if (imagePath.includes('uploads/project/')) {
-            return `http://localhost:8080/${imagePath}`;
-        }
-
-        // Новый формат - только имя файла
+        if (imagePath.startsWith('http')) return imagePath;
         return `http://localhost:8080/uploads/project/${imagePath}`;
+    };
+
+    const getProjectType = (name: string) => {
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes('лендинг') || lowerName.includes('landing')) return 'LANDING';
+        if (lowerName.includes('платформ') || lowerName.includes('platform')) return 'PLATFORM';
+        if (lowerName.includes('мобильн') || lowerName.includes('mobile')) return 'MOBILE';
+        return 'LANDING';
+    };
+
+    const getProjectTypeIcon = (name: string) => {
+        const lowerName = name.toLowerCase();
+        if (lowerName.includes('лендинг') || lowerName.includes('landing')) return '📄';
+        if (lowerName.includes('платформ') || lowerName.includes('platform')) return '⚙️';
+        if (lowerName.includes('мобильн') || lowerName.includes('mobile')) return '📱';
+        return '🌐';
+    };
+
+    const getProjectTypeLabel = (type: string) => {
+        switch (type) {
+            case 'LANDING': return 'Лендинг';
+            case 'PLATFORM': return 'Платформа';
+            case 'MOBILE': return 'Мобильное';
+            default: return 'Проект';
+        }
+    };
+
+    const getProjectTypeBadgeClass = (type: string) => {
+        switch (type) {
+            case 'LANDING': return styles.landingBadge;
+            case 'PLATFORM': return styles.platformBadge;
+            case 'MOBILE': return styles.mobileBadge;
+            default: return styles.landingBadge;
+        }
     };
 
     const getGradientColor = (name: string) => {
@@ -373,6 +403,20 @@ const ITUniverse: React.FC = () => {
             hash |= 0;
         }
         return colors[Math.abs(hash) % colors.length];
+    };
+
+    const nextImage = (projectId: number, totalImages: number) => {
+        setCurrentImageIndex(prev => ({
+            ...prev,
+            [projectId]: ((prev[projectId] || 0) + 1) % totalImages
+        }));
+    };
+
+    const prevImage = (projectId: number, totalImages: number) => {
+        setCurrentImageIndex(prev => ({
+            ...prev,
+            [projectId]: ((prev[projectId] || 0) - 1 + totalImages) % totalImages
+        }));
     };
 
     return (
@@ -520,6 +564,7 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
+            {/* Секция услуг с тремя карточками */}
             <section id="services" className={styles.services}>
                 <div className={styles.servicesHeader}>
                     <span className={styles.sectionTag}>Наши услуги</span>
@@ -590,23 +635,12 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
-            <div className={styles.offerBannerSecondary}>
-                <div className={styles.offerContent}>
-                    <div>
-                        <p className={styles.offerText}>Не знаете, что вам нужно?</p>
-                        <p className={styles.offerSubtext}>Поможем подобрать идеальное решение для вашего бизнеса</p>
-                        <button className={`${styles.btn} ${styles.btnG}`} onClick={() => setIsRequestModalOpen(true)}>
-                            Получить консультацию
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+            {/* Раздел с 8 преимуществами для бизнеса */}
             <section id="benefits" className={styles.benefits}>
                 <div className={styles.benefitsHeader}>
-                    <span className={styles.sectionTag}>Почему это работает</span>
+                    <span className={styles.sectionTag}>Почему это выгодно</span>
                     <h2 className={styles.sectionTitle}>
-                        Цифровой продукт <span className={styles.accent}>для бизнеса</span>
+                        Чем полезен <span className={styles.accent}>сайт для бизнеса</span>
                     </h2>
                 </div>
 
@@ -623,6 +657,7 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
+            {/* Остальные секции: портфолио, отзывы, контакты */}
             <section id="portfolio" className={styles.portfolio}>
                 <div className={styles.portfolioHeader}>
                     <div>
@@ -636,37 +671,60 @@ const ITUniverse: React.FC = () => {
                     </button>
                 </div>
 
-                <div className={styles.portfolioGrid}>
-                    {portfolioProjects.map((project, idx) => (
-                        <div key={idx} className={`${styles.portfolioCard} ${styles.reveal}`}>
-                            <div className={styles.portfolioType}>
-                                <span className={`${styles.typeBadge}
-                                  ${project.type === 'LANDING' ? styles.landingBadge :
-                                    project.type === 'PLATFORM' ? styles.platformBadge : styles.mobileBadge}`}>
-                                    {project.type === 'LANDING' ? 'Лендинг' : project.type === 'PLATFORM' ? 'Платформа' : 'Мобильное'}
-                                </span>
-                            </div>
-                            <h3 className={styles.portfolioName}>{project.name}</h3>
-                            <p className={styles.portfolioDesc}>{project.description}</p>
-                            <div className={styles.portfolioHighlight}>
-                                <span className={styles.highlightIcon}>✦</span>
-                                <span>{project.highlight}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                {loadingProjects ? (
+                    <div className={styles.loader}>Загрузка проектов...</div>
+                ) : projects.length > 0 ? (
+                    <div className={styles.projectsGrid}>
+                        {projects.map((project) => {
+                            const projectType = getProjectType(project.name);
+                            const projectTypeLabel = getProjectTypeLabel(projectType);
+                            const hasImages = project.images && project.images.length > 0;
+                            const images = project.images || [];
+                            const currentIndex = currentImageIndex[project.id] || 0;
+                            const currentImageUrl = hasImages ? getImageUrl(images[currentIndex]) : null;
+                            const totalImages = images.length;
 
-                {!loadingProjects && projects.length > 0 && (
-                    <>
-                        <h3 className={styles.realProjectsTitle}>Реализованные проекты</h3>
-                        <div className={styles.projectsGrid}>
-                            {projects.map((project) => {
-                                const hasImage = project.images && project.images.length > 0 && project.images[0];
-                                const imageUrl = hasImage ? getImageUrl(project.images[0]) : null;
-
-                                return (
-                                    <div key={project.id} className={`${styles.projectCard} ${styles.reveal}`}>
-                                        <div className={styles.projectThumb}>
+                            return (
+                                <div key={project.id} className={`${styles.projectCard} ${styles.reveal}`}>
+                                    <div className={styles.projectThumb}>
+                                        {hasImages && currentImageUrl ? (
+                                            <>
+                                                <img
+                                                    src={currentImageUrl}
+                                                    alt={project.name}
+                                                    className={styles.projectImage}
+                                                    onError={(e) => {
+                                                        console.error('Image failed to load:', currentImageUrl);
+                                                        (e.target as HTMLImageElement).style.display = 'none';
+                                                    }}
+                                                />
+                                                {totalImages > 1 && (
+                                                    <>
+                                                        <button
+                                                            className={`${styles.projectCarouselBtn} ${styles.projectCarouselPrev}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                prevImage(project.id, totalImages);
+                                                            }}
+                                                        >
+                                                            ‹
+                                                        </button>
+                                                        <button
+                                                            className={`${styles.projectCarouselBtn} ${styles.projectCarouselNext}`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                nextImage(project.id, totalImages);
+                                                            }}
+                                                        >
+                                                            ›
+                                                        </button>
+                                                        <div className={styles.projectCarouselCounter}>
+                                                            {currentIndex + 1} / {totalImages}
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </>
+                                        ) : (
                                             <div
                                                 className={styles.projectPlaceholder}
                                                 style={{
@@ -675,54 +733,35 @@ const ITUniverse: React.FC = () => {
                                             >
                                                 <div className={styles.placeholderContent}>
                                                     <span className={styles.placeholderIcon}>
-                                                        {project.name?.toLowerCase().includes('лендинг') ? '🌐' :
-                                                            project.name?.toLowerCase().includes('платформ') ? '⚙️' : '📱'}
+                                                        {getProjectTypeIcon(project.name)}
                                                     </span>
                                                     <span className={styles.placeholderText}>{project.name}</span>
                                                 </div>
                                             </div>
-                                            {imageUrl && (
-                                                <img
-                                                    src={imageUrl}
-                                                    alt={project.name}
-                                                    className={styles.projectImage}
-                                                    style={{ display: 'none' }}
-                                                    onLoad={(e) => {
-                                                        (e.target as HTMLImageElement).style.display = 'block';
-                                                        const parent = (e.target as HTMLImageElement).parentElement;
-                                                        const placeholder = parent?.querySelector(`.${styles.projectPlaceholder}`);
-                                                        if (placeholder) {
-                                                            (placeholder as HTMLElement).style.display = 'none';
-                                                        }
-                                                    }}
-                                                    onError={(e) => {
-                                                        console.error('Image failed to load:', imageUrl);
-                                                        (e.target as HTMLImageElement).style.display = 'none';
-                                                    }}
-                                                />
-                                            )}
-                                            <div className={styles.thumbLine}></div>
-                                        </div>
-                                        <div className={styles.projectBody}>
-                                            <div className={styles.projectTags}>
-                                                <span className={styles.tag}>
-                                                    {project.name?.toLowerCase().includes('лендинг') ? 'Лендинг' :
-                                                        project.name?.toLowerCase().includes('платформ') ? 'Платформа' : 'Мобильное приложение'}
-                                                </span>
-                                            </div>
-                                            <div className={styles.projectTitle}>{project.name}</div>
-                                            <p className={styles.projectDesc}>
-                                                {project.description || 'Современный цифровой продукт под ключ. Разработан с учетом всех требований заказчика.'}
-                                            </p>
-                                        </div>
+                                        )}
+                                        <div className={styles.thumbLine}></div>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </>
-                )}
-
-                {!loadingProjects && projects.length === 0 && (
+                                    <div className={styles.projectBody}>
+                                        <div className={styles.projectTags}>
+                                            <span className={`${styles.tag} ${getProjectTypeBadgeClass(projectType)}`}>
+                                                {projectTypeLabel}
+                                            </span>
+                                            {hasImages && (
+                                                <span className={styles.imageCount}>
+                                                    📷 {totalImages} {totalImages === 1 ? 'фото' : totalImages < 5 ? 'фото' : 'фотографий'}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className={styles.projectTitle}>{project.name}</div>
+                                        <p className={styles.projectDesc}>
+                                            {project.description || 'Современный цифровой продукт под ключ.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
                     <div className={styles.emptyProjectsMessage}>
                         <p>Пока нет реализованных проектов</p>
                         <button className={`${styles.btn} ${styles.btnG}`} onClick={() => setIsRequestModalOpen(true)}>

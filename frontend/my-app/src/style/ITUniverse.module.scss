@@ -1891,3 +1891,373 @@
   margin-bottom: 20px;
   font-size: 16px;
 }
+/* ────────────────── PROJECT CAROUSEL ────────────────── */
+.projectCarouselBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  z-index: 10;
+  font-weight: bold;
+  backdrop-filter: blur(4px);
+
+  &:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-50%) scale(1.05);
+  }
+}
+
+.projectCarouselPrev {
+  left: 8px;
+}
+
+.projectCarouselNext {
+  right: 8px;
+}
+
+.projectCarouselCounter {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  color: var(--cyan);
+  z-index: 10;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+.projectTags {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.imageCount {
+  font-size: 10px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 8px;
+  border-radius: 100px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Обновляем стили для projectThumb чтобы изображение правильно отображалось */
+.projectThumb {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .projectImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .projectImage {
+    transform: scale(1.05);
+  }
+}
+/* ────────────────── SHORT BUSINESS BENEFITS (2 CARDS) ────────────────── */
+.businessBenefitsShort {
+  padding: 100px 80px;
+  position: relative;
+  z-index: 1;
+  background: var(--bg2);
+}
+
+.shortBenefitsGrid {
+  display: flex;
+  gap: 1px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.shortBenefitCard {
+  flex: 1;
+  padding: 48px 32px;
+  background: var(--surface);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background: var(--surface2);
+    transform: translateY(-4px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  &:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+.shortBenefitIcon {
+  font-size: 52px;
+  margin-bottom: 24px;
+  display: inline-block;
+  filter: drop-shadow(0 0 12px rgba(124,106,252,0.3));
+  transition: transform 0.3s ease;
+}
+
+.shortBenefitCard:hover .shortBenefitIcon {
+  transform: scale(1.05);
+}
+
+.shortBenefitCard h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.shortBenefitCard p {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text2);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 768px) {
+  .businessBenefitsShort {
+    padding: 70px 32px !important;
+  }
+
+  .shortBenefitsGrid {
+    flex-direction: column;
+  }
+
+  .shortBenefitCard {
+    padding: 40px 24px;
+  }
+
+  .shortBenefitCard h3 {
+    font-size: 20px;
+  }
+}
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.benefitCard {
+  padding: 28px 24px;
+  background: var(--surface);
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+}
+
+.benefitIcon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.benefitCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.benefitCard p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ────────────────── SHORT BUSINESS BENEFITS (2 CARDS) ────────────────── */
+.businessBenefitsShort {
+  padding: 100px 80px;
+  position: relative;
+  z-index: 1;
+  background: var(--bg2);
+}
+
+.shortBenefitsGrid {
+  display: flex;
+  gap: 1px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.shortBenefitCard {
+  flex: 1;
+  padding: 48px 32px;
+  background: var(--surface);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    background: var(--surface2);
+    transform: translateY(-4px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+
+  &:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+.shortBenefitIcon {
+  font-size: 52px;
+  margin-bottom: 24px;
+  display: inline-block;
+  filter: drop-shadow(0 0 12px rgba(124,106,252,0.3));
+  transition: transform 0.3s ease;
+}
+
+.shortBenefitCard:hover .shortBenefitIcon {
+  transform: scale(1.05);
+}
+
+.shortBenefitCard h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.shortBenefitCard p {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text2);
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+/* ────────────────── BENEFITS GRID (FULL VERSION) ────────────────── */
+.benefitsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.benefitCard {
+  padding: 28px 24px;
+  background: var(--surface);
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+}
+
+.benefitIcon {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.benefitCard h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.benefitCard p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .businessBenefitsShort {
+    padding: 70px 32px !important;
+  }
+
+  .shortBenefitsGrid {
+    flex-direction: column;
+  }
+
+  .shortBenefitCard {
+    padding: 40px 24px;
+  }
+
+  .shortBenefitCard h3 {
+    font-size: 20px;
+  }
+}
