@@ -49,7 +49,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ isOpen, onClose, onSuccess })
                         className={styles.modalInput}
                     />
                     <textarea
-                        placeholder="Ваш отзыв"
+                        placeholder="Расскажите о вашем опыте работы с нами..."
                         value={review}
                         onChange={(e) => setReview(e.target.value)}
                         required

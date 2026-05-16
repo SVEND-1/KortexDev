@@ -1,4 +1,3 @@
-// src/types/index.ts
 
 export interface Project {
     id: number;
@@ -16,7 +15,7 @@ export interface Request {
     id: number;
     name: string;
     username: string;
-    requestType: 'TELEGRAM' | 'VK';
+    requestType: 'TG' | 'VK';
     createAt: string;
 }
 
@@ -31,7 +30,7 @@ export interface Review {
 export interface RequestCreate {
     name: string;
     username: string;
-    requestType: 'TELEGRAM' | 'VK';
+    requestType: 'TG' | 'VK';
 }
 
 export interface ReviewCreate {

@@ -11,7 +11,7 @@ interface RequestModalProps {
 const RequestModal: React.FC<RequestModalProps> = ({ isOpen, onClose, onSuccess }) => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
-    const [requestType, setRequestType] = useState<'TELEGRAM' | 'VK'>('TELEGRAM');
+    const [requestType, setRequestType] = useState<'TG' | 'VK'>('TG');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -26,7 +26,7 @@ const RequestModal: React.FC<RequestModalProps> = ({ isOpen, onClose, onSuccess 
             await api.createRequest({ name, username, requestType });
             setName('');
             setUsername('');
-            setRequestType('TELEGRAM');
+            setRequestType('TG');
             onSuccess();
             onClose();
         } catch (err) {
@@ -62,9 +62,9 @@ const RequestModal: React.FC<RequestModalProps> = ({ isOpen, onClose, onSuccess 
                         <label className={styles.modalRadio}>
                             <input
                                 type="radio"
-                                value="TELEGRAM"
-                                checked={requestType === 'TELEGRAM'}
-                                onChange={() => setRequestType('TELEGRAM')}
+                                value="TG"
+                                checked={requestType === 'TG'}
+                                onChange={() => setRequestType('TG')}
                             />
                             Telegram
                         </label>

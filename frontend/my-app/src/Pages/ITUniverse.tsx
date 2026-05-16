@@ -11,6 +11,7 @@ const ITUniverse: React.FC = () => {
     const codeAreaRef = useRef<HTMLDivElement>(null);
     const monitorWrapRef = useRef<HTMLDivElement>(null);
     const heroTextRef = useRef<HTMLDivElement>(null);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     const [projects, setProjects] = useState<Project[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -93,36 +94,55 @@ const ITUniverse: React.FC = () => {
         }
     ];
 
-    // 12 преимуществ для бизнеса (полная версия)
     const businessBenefits = [
-        // Финансовые выгоды
         { icon: '💰', title: 'Увеличение прибыли', description: 'Продажи 24/7 без выходных. Ваш бизнес работает даже когда вы спите, принося стабильный доход.' },
         { icon: '📉', title: 'Снижение расходов', description: 'Меньше ручного труда — меньше ошибок и затрат. Автоматизация сокращает операционные расходы на 30-50%.' },
         { icon: '📈', title: 'Быстрый ROI', description: 'Инвестиции в сайт окупаются за 3-6 месяцев за счёт роста продаж и оптимизации процессов.' },
-
-        // Маркетинговые преимущества
         { icon: '📋', title: 'Сбор контактов', description: 'База клиентов растёт автоматически. Захват email, телефонов и соцсетей посетителей.' },
         { icon: '📧', title: 'Email и SMS рассылки', description: 'Информируйте клиентов об акциях, новинках и персональных предложениях. Повторные продажи.' },
         { icon: '🔍', title: 'SEO-продвижение', description: 'Привлечение клиентов из поиска Яндекс и Google. Рост органического трафика без рекламного бюджета.' },
         { icon: '🔄', title: 'Ретаргетинг', description: 'Возвращайте посетителей, которые не купили. Показывайте рекламу тем, кто уже интересовался вами.' },
-
-        // Клиентские преимущества
         { icon: '⭐', title: 'Удобство для клиентов', description: 'Онлайн запись 24/7, заказ в один клик, оплата картой — клиенты выбирают тех, кто заботится о их времени.' },
         { icon: '📦', title: 'Прозрачность', description: 'Статус заказа, история покупок, отслеживание доставки — доверие клиентов растёт с каждым шагом.' },
         { icon: '🎁', title: 'Бонусы и лояльность', description: 'Персональные рекомендации, программа лояльности, скидки за отзывы — клиенты возвращаются снова.' },
         { icon: '🗣️', title: 'Отзывы и рейтинги', description: 'Социальное доказательство работает лучше любой рекламы. Собирайте и показывайте отзывы.' },
-
-        // Управленческие преимущества
-        { icon: '📊', title: 'Аналитика продаж', description: 'Отслеживайте, откуда приходят клиенты, какие услуги популярны, где теряете прибыль. Принимайте решения на основе данных.' },
+        { icon: '📊', title: 'Аналитика продаж', description: 'Отслеживайте, откуда приходят клиенты, какие услуги популярны, где теряете прибыль.' },
         { icon: '🔄', title: 'CRM интеграция', description: 'Все заказы и клиенты автоматически попадают в вашу CRM. Ничего не теряется, всё под контролем.' },
         { icon: '📑', title: 'Отчёты в 1 клик', description: 'Продажи, прибыль, популярные товары, эффективность рекламы — любые отчёты формируются мгновенно.' },
         { icon: '👥', title: 'Контроль персонала', description: 'Видите кто взял заказ, сколько времени заняла обработка, уровень удовлетворённости клиентов.' },
-
-        // Технологические преимущества
-        { icon: '⚙️', title: 'Автоматизация процессов', description: 'Автоматическое выставление счетов, отправка чеков, уведомления клиентам — меньше рутины, больше времени на развитие.' },
+        { icon: '⚙️', title: 'Автоматизация процессов', description: 'Автоматическое выставление счетов, отправка чеков, уведомления клиентам — меньше рутины.' },
         { icon: '🚀', title: 'Масштабируемость', description: 'Легко добавляйте новые фичи: интернет-магазин, онлайн запись, интеграции. Сайт растёт вместе с вашим бизнесом.' },
         { icon: '🔗', title: 'Интеграция с 1С и кассами', description: 'Автоматический обмен данными с 1С, эквайринг, маркировка, ЕГАИС — всё работает "из коробки".' }
     ];
+
+    // Разбиваем текст на буквы для анимации
+    const heroTitleWords = ['Создаём', 'цифровые', 'продукты'];
+
+    // Анимированный заголовок с волной
+    const AnimatedWaveText = ({ text }: { text: string }) => (
+        <span className={styles.textWaveContainer}>
+            {text.split('').map((char, i) => (
+                <span
+                    key={i}
+                    className={styles.textWaveLetter}
+                    style={{ '--i': i } as React.CSSProperties}
+                >
+                    {char === ' ' ? '\u00A0' : char}
+                </span>
+            ))}
+        </span>
+    );
+
+    // Прогресс скролла
+    useEffect(() => {
+        const handleScrollProgress = () => {
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / totalScroll) * 100;
+            setScrollProgress(progress);
+        };
+        window.addEventListener('scroll', handleScrollProgress);
+        return () => window.removeEventListener('scroll', handleScrollProgress);
+    }, []);
 
     useEffect(() => {
         const loadProjects = async () => {
@@ -156,11 +176,11 @@ const ITUniverse: React.FC = () => {
         document.title = 'IT Universe | Разработка сайтов и мобильных приложений';
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) {
-            metaDescription.setAttribute('content', 'Разработка лендингов, веб-платформ и мобильных приложений под ключ. Создаем цифровые продукты, которые приносят прибыль.');
+            metaDescription.setAttribute('content', 'Разработка лендингов, веб-платформ и мобильных приложений под ключ.');
         } else {
             const meta = document.createElement('meta');
             meta.name = 'description';
-            meta.content = 'Разработка лендингов, веб-платформ и мобильных приложений под ключ. Создаем цифровые продукты, которые приносят прибыль.';
+            meta.content = 'Разработка лендингов, веб-платформ и мобильных приложений под ключ.';
             document.head.appendChild(meta);
         }
     }, []);
@@ -171,6 +191,7 @@ const ITUniverse: React.FC = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Custom cursor
     useEffect(() => {
         let mx = 0, my = 0;
         let rx = 0, ry = 0;
@@ -186,8 +207,8 @@ const ITUniverse: React.FC = () => {
         };
 
         const animateRing = () => {
-            rx += (mx - rx) * 0.10;
-            ry += (my - ry) * 0.10;
+            rx += (mx - rx) * 0.09;
+            ry += (my - ry) * 0.09;
             if (ringRef.current) {
                 ringRef.current.style.left = rx + 'px';
                 ringRef.current.style.top = ry + 'px';
@@ -198,44 +219,32 @@ const ITUniverse: React.FC = () => {
         document.addEventListener('mousemove', handleMouseMove);
         animateRing();
 
-        const interactiveElements = document.querySelectorAll('a, button');
-        const handleMouseEnter = () => {
-            if (cursorRef.current) {
-                cursorRef.current.style.width = '12px';
-                cursorRef.current.style.height = '12px';
-            }
-            if (ringRef.current) {
-                ringRef.current.style.width = '52px';
-                ringRef.current.style.height = '52px';
-                ringRef.current.style.opacity = '0.5';
-            }
+        const interactiveEls = document.querySelectorAll('a, button');
+        const onEnter = () => {
+            if (cursorRef.current) { cursorRef.current.style.width = '10px'; cursorRef.current.style.height = '10px'; }
+            if (ringRef.current) { ringRef.current.style.width = '48px'; ringRef.current.style.height = '48px'; ringRef.current.style.borderColor = 'rgba(109,92,232,0.5)'; }
         };
-        const handleMouseLeave = () => {
-            if (cursorRef.current) {
-                cursorRef.current.style.width = '6px';
-                cursorRef.current.style.height = '6px';
-            }
-            if (ringRef.current) {
-                ringRef.current.style.width = '32px';
-                ringRef.current.style.height = '32px';
-                ringRef.current.style.opacity = '1';
-            }
+        const onLeave = () => {
+            if (cursorRef.current) { cursorRef.current.style.width = '5px'; cursorRef.current.style.height = '5px'; }
+            if (ringRef.current) { ringRef.current.style.width = '28px'; ringRef.current.style.height = '28px'; ringRef.current.style.borderColor = 'rgba(255,255,255,0.18)'; }
         };
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', handleMouseEnter);
-            el.addEventListener('mouseleave', handleMouseLeave);
+
+        interactiveEls.forEach(el => {
+            el.addEventListener('mouseenter', onEnter);
+            el.addEventListener('mouseleave', onLeave);
         });
 
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
             cancelAnimationFrame(animFrame);
-            interactiveElements.forEach(el => {
-                el.removeEventListener('mouseenter', handleMouseEnter);
-                el.removeEventListener('mouseleave', handleMouseLeave);
+            interactiveEls.forEach(el => {
+                el.removeEventListener('mouseenter', onEnter);
+                el.removeEventListener('mouseleave', onLeave);
             });
         };
     }, []);
 
+    // Code lines in monitor
     useEffect(() => {
         if (!codeAreaRef.current) return;
         const codeLines = [
@@ -277,55 +286,112 @@ const ITUniverse: React.FC = () => {
         });
     }, []);
 
+    // Particles
     useEffect(() => {
         const particlesContainer = document.getElementById('particles');
         if (!particlesContainer) return;
-        const colors = ['rgba(124,106,252,0.5)', 'rgba(90,212,239,0.4)', 'rgba(90,239,176,0.4)'];
-        for (let i = 0; i < 30; i++) {
+        const colors = ['rgba(109,92,232,0.5)', 'rgba(77,212,232,0.4)', 'rgba(77,232,168,0.4)', 'rgba(232,146,77,0.3)'];
+        for (let i = 0; i < 35; i++) {
             const p = document.createElement('div');
             p.className = styles.particle;
-            p.style.cssText = `--x:${Math.random() * 100}%;--y:${Math.random() * 100}%;--s:${Math.random() * 2.5 + 1}px;--c:${colors[i % 3]};--d:${(Math.random() * 4 + 4).toFixed(1)}s;--dl:${(Math.random() * 8).toFixed(1)}s`;
+            p.style.cssText = `--x:${Math.random() * 100}%;--y:${Math.random() * 100}%;--s:${(Math.random() * 2 + 1).toFixed(1)}px;--c:${colors[i % 4]};--d:${(Math.random() * 5 + 4).toFixed(1)}s;--dl:${(Math.random() * 10).toFixed(1)}s`;
             particlesContainer.appendChild(p);
         }
     }, []);
 
+    // Scroll reveal — IntersectionObserver для всех анимаций
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
-                entries.forEach(entry => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add(styles.visible);
+                        const el = entry.target as HTMLElement;
+                        el.classList.add(styles.visible);
+                        observer.unobserve(el);
                     }
                 });
             },
-            { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
         );
-        const revealElements = document.querySelectorAll(`.${styles.reveal}, .${styles.revealLeft}, .${styles.revealRight}`);
-        revealElements.forEach((el, i) => {
-            (el as HTMLElement).style.transitionDelay = `${(i % 6) * 0.07}s`;
-            observer.observe(el);
-        });
+
+        // Наблюдаем за всеми элементами с анимациями
+        const animatedElements = document.querySelectorAll(`
+            .${styles.reveal}, 
+            .${styles.revealScale}, 
+            .${styles.revealLeft}, 
+            .${styles.revealRight},
+            .${styles.revealBlur},
+            .${styles.revealFlip},
+            .${styles.staggerItem},
+            .${styles.staggerScale},
+            .${styles.benefitCard}
+        `);
+
+        animatedElements.forEach(el => observer.observe(el));
         return () => observer.disconnect();
     }, [projects, reviews]);
 
+    // Stagger animation for benefit cards on scroll
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
-            const mx = (e.clientX / window.innerWidth - 0.5) * 20;
-            const my = (e.clientY / window.innerHeight - 0.5) * 20;
-            if (monitorWrapRef.current) {
-                monitorWrapRef.current.style.transform = `translateY(0) translate(${-mx * 0.35}px, ${-my * 0.35}px)`;
-            }
-            if (heroTextRef.current) {
-                heroTextRef.current.style.transform = `translate(${mx * 0.2}px, ${my * 0.2}px)`;
-            }
-        };
-        document.addEventListener('mousemove', handleMouseMove);
-        return () => document.removeEventListener('mousemove', handleMouseMove);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target as HTMLElement;
+                        const siblings = Array.from(el.parentElement?.children || []);
+                        const index = siblings.indexOf(el);
+                        el.style.transitionDelay = `${Math.min(index * 0.05, 0.6)}s`;
+                        el.classList.add(styles.visible);
+                        observer.unobserve(el);
+                    }
+                });
+            },
+            { threshold: 0.05, rootMargin: '0px 0px -20px 0px' }
+        );
+
+        document.querySelectorAll(`.${styles.benefitCard}`).forEach(el => observer.observe(el));
+        return () => observer.disconnect();
     }, []);
+
+    // 3D Tilt effect on project cards
+    useEffect(() => {
+        const cards = document.querySelectorAll(`.${styles.projectCard}`);
+
+        const handleMouseMove = (e: Event) => {
+            const mouseEvent = e as MouseEvent;
+            const card = mouseEvent.currentTarget as HTMLElement;
+            const rect = card.getBoundingClientRect();
+            const x = ((mouseEvent.clientX - rect.left) / rect.width) * 100;
+            const y = ((mouseEvent.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mx', `${x}%`);
+            card.style.setProperty('--my', `${y}%`);
+
+            const tiltX = ((mouseEvent.clientY - rect.top) / rect.height - 0.5) * -8;
+            const tiltY = ((mouseEvent.clientX - rect.left) / rect.width - 0.5) * 8;
+            card.style.transform = `translateY(-6px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        };
+
+        const handleMouseLeave = (e: Event) => {
+            const card = e.currentTarget as HTMLElement;
+            card.style.transform = '';
+        };
+
+        cards.forEach(card => {
+            card.addEventListener('mousemove', handleMouseMove);
+            card.addEventListener('mouseleave', handleMouseLeave);
+        });
+
+        return () => {
+            cards.forEach(card => {
+                card.removeEventListener('mousemove', handleMouseMove);
+                card.removeEventListener('mouseleave', handleMouseLeave);
+            });
+        };
+    }, [projects]);
 
     const showSuccess = (message: string) => {
         setSuccessMessage(message);
-        setTimeout(() => setSuccessMessage(''), 4000);
+        setTimeout(() => setSuccessMessage(''), 4500);
     };
 
     const scrollToContact = () => {
@@ -388,14 +454,14 @@ const ITUniverse: React.FC = () => {
 
     const getGradientColor = (name: string) => {
         const colors = [
-            'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-            'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-            'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-            'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-            'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-            'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
-            'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+            'linear-gradient(135deg, #3d2fa0 0%, #5a45cc 100%)',
+            'linear-gradient(135deg, #1a3a5c 0%, #2e6fad 100%)',
+            'linear-gradient(135deg, #1a4a2e 0%, #2d8a50 100%)',
+            'linear-gradient(135deg, #4a1a3a 0%, #8a2d6f 100%)',
+            'linear-gradient(135deg, #3a2a10 0%, #8a6a25 100%)',
+            'linear-gradient(135deg, #2a1a4a 0%, #5a3d8f 100%)',
+            'linear-gradient(135deg, #0a3040 0%, #1a6080 100%)',
+            'linear-gradient(135deg, #3a1020 0%, #7a2040 100%)',
         ];
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
@@ -419,44 +485,39 @@ const ITUniverse: React.FC = () => {
         }));
     };
 
+    const marqueeReviews = reviews.length > 0 ? [...reviews, ...reviews] : [];
+
     return (
         <div className={styles.container}>
+            {/* Прогресс-бар скролла */}
+            <div className={styles.progressBar} style={{ width: `${scrollProgress}%` }}></div>
+
             <meta name="keywords" content="разработка сайтов, лендинг, веб-платформа, мобильное приложение" />
             <meta property="og:title" content="IT Universe | Разработка сайтов и мобильных приложений" />
-            <meta property="og:description" content="Разработка лендингов, веб-платформ и мобильных приложений под ключ. Создаем цифровые продукты, которые приносят прибыль." />
 
             <div id="cursor" ref={cursorRef} className={styles.cursor}></div>
             <div id="cursor-ring" ref={ringRef} className={styles.cursorRing}></div>
             <div className={styles.gridBg}></div>
-            <div className={styles.scanline}></div>
+            <div className={styles.gridLines}></div>
             <div className={styles.particles} id="particles"></div>
 
-            {successMessage && (
-                <div className={styles.toast}>{successMessage}</div>
-            )}
+            {successMessage && <div className={styles.toast}>{successMessage}</div>}
 
-            <nav className={styles.nav} style={{
-                background: navScrolled ? 'rgba(8,8,10,0.92)' : 'rgba(8,8,10,0.5)',
-                borderBottomColor: navScrolled ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)',
-            }}>
-                <div className={styles.navLogo}>
-                    IT<span>.</span>UNIVERSE
-                </div>
+            {/* NAV */}
+            <nav className={`${styles.nav} ${navScrolled ? styles.scrolled : ''}`}>
+                <div className={styles.navLogo}>IT<span>.</span>UNIVERSE</div>
                 <div className={styles.navLinks}>
-                    <a href="#services">Услуги</a>
-                    <a href="#benefits">Преимущества</a>
-                    <a href="#portfolio">Проекты</a>
-                    <a href="#reviews">Отзывы</a>
-                    <a href="#contact">Контакты</a>
+                    <a href="#services" className={styles.hoverScale}>Услуги</a>
+                    <a href="#benefits" className={styles.hoverScale}>Преимущества</a>
+                    <a href="#portfolio" className={styles.hoverScale}>Проекты</a>
+                    <a href="#reviews" className={styles.hoverScale}>Отзывы</a>
+                    <a href="#contact" className={styles.hoverScale}>Контакты</a>
                 </div>
-                <button className={styles.navCta} onClick={() => setIsRequestModalOpen(true)}>
+                <button className={`${styles.navCta} ${styles.glowPulse}`} onClick={() => setIsRequestModalOpen(true)}>
                     Заказать проект
                 </button>
-
                 <div className={styles.mobileMenuToggle} onClick={toggleMobileMenu}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span></span><span></span><span></span>
                 </div>
             </nav>
 
@@ -466,16 +527,16 @@ const ITUniverse: React.FC = () => {
                 <a href="#portfolio" onClick={closeMobileMenu}>Проекты</a>
                 <a href="#reviews" onClick={closeMobileMenu}>Отзывы</a>
                 <a href="#contact" onClick={closeMobileMenu}>Контакты</a>
-                <button className={`${styles.btn} ${styles.btnP} ${styles.mobileCta}`} onClick={() => {
-                    closeMobileMenu();
-                    setIsRequestModalOpen(true);
-                }}>Заказать проект</button>
+                <button className={`${styles.btn} ${styles.btnP} ${styles.mobileCta}`} onClick={() => { closeMobileMenu(); setIsRequestModalOpen(true); }}>
+                    Заказать проект
+                </button>
             </div>
             <div className={`${styles.mobileOverlay} ${mobileMenuOpen ? styles.open : ''}`} onClick={closeMobileMenu}></div>
 
+            {/* HERO */}
             <section id="hero" className={styles.hero}>
                 <div className={styles.monitorWrap} ref={monitorWrapRef}>
-                    <div className={styles.monitor}>
+                    <div className={`${styles.monitor} ${styles.cardRaise}`}>
                         <div className={styles.monitorBar}>
                             <div className={`${styles.dot} ${styles.r}`}></div>
                             <div className={`${styles.dot} ${styles.y}`}></div>
@@ -489,56 +550,56 @@ const ITUniverse: React.FC = () => {
                     <div className={styles.monitorGlowBase}></div>
 
                     <div className={styles.devices}>
-                        <div className={styles.devItem} style={{ top: '15%', right: '5%', '--fd': '7s', '--fdelay': '0s', '--fx': '8px', '--fy': '-14px', '--rot': '-6deg', '--rot2': '2deg' } as React.CSSProperties}>
-                            <div className={styles.devBox} style={{ '--dw': '52px', '--dh': '52px', '--dfs': '22px' } as React.CSSProperties}>🌐</div>
+                        <div className={`${styles.devItem} ${styles.hoverRotate}`} style={{ top: '15%', right: '3%', '--fd': '7s', '--fdelay': '0s', '--fx': '8px', '--fy': '-14px', '--rot': '-6deg', '--rot2': '2deg' } as React.CSSProperties}>
+                            <div className={styles.devBox} style={{ '--dw': '50px', '--dh': '50px', '--dfs': '22px' } as React.CSSProperties}>🌐</div>
                             <div className={styles.devLabel}>Landing</div>
                         </div>
-                        <div className={styles.devItem} style={{ top: '55%', right: '-2%', '--fd': '5.5s', '--fdelay': '1s', '--fx': '-5px', '--fy': '-10px', '--rot': '8deg', '--rot2': '-3deg' } as React.CSSProperties}>
-                            <div className={styles.devBox} style={{ '--dw': '48px', '--dh': '48px', '--dfs': '20px' } as React.CSSProperties}>📱</div>
+                        <div className={`${styles.devItem} ${styles.hoverRotateNeg}`} style={{ top: '55%', right: '-4%', '--fd': '5.5s', '--fdelay': '1s', '--fx': '-5px', '--fy': '-10px', '--rot': '8deg', '--rot2': '-3deg' } as React.CSSProperties}>
+                            <div className={styles.devBox} style={{ '--dw': '46px', '--dh': '46px', '--dfs': '20px' } as React.CSSProperties}>📱</div>
                             <div className={styles.devLabel}>Mobile</div>
                         </div>
-                        <div className={styles.devItem} style={{ top: '70%', left: '8%', '--fd': '8s', '--fdelay': '2s', '--fx': '10px', '--fy': '-8px', '--rot': '4deg', '--rot2': '-2deg' } as React.CSSProperties}>
-                            <div className={styles.devBox} style={{ '--dw': '48px', '--dh': '48px', '--dfs': '20px' } as React.CSSProperties}>⚙️</div>
+                        <div className={`${styles.devItem} ${styles.hoverRotate}`} style={{ top: '72%', left: '5%', '--fd': '8s', '--fdelay': '2s', '--fx': '10px', '--fy': '-8px', '--rot': '4deg', '--rot2': '-2deg' } as React.CSSProperties}>
+                            <div className={styles.devBox} style={{ '--dw': '46px', '--dh': '46px', '--dfs': '20px' } as React.CSSProperties}>⚙️</div>
                             <div className={styles.devLabel}>Platform</div>
                         </div>
                     </div>
                 </div>
 
                 <div className={styles.heroText} ref={heroTextRef}>
-                    <div className={styles.badge}>
-                        Разработка сайтов и приложений
-                    </div>
+                    <div className={`${styles.badge} ${styles.pulse}`}>Разработка сайтов и приложений</div>
                     <h1 className={styles.heroTitle}>
-                        <span className={styles.htLine}>Создаём</span>
-                        <span className={styles.htLine}>цифровые</span>
-                        <span className={styles.htLine}>продукты</span>
+                        {heroTitleWords.map((word, wordIdx) => (
+                            <span key={wordIdx} className={styles.htLine}>
+                                <AnimatedWaveText text={word} />
+                            </span>
+                        ))}
                     </h1>
-                    <p className={styles.heroDesc}>
+                    <p className={`${styles.heroDesc} ${styles.revealFast}`}>
                         Лендинги, веб-платформы и мобильные приложения под ключ.
                         Индивидуальный дизайн, админ-панель, онлайн оплата и не только.
                         Продукт, который работает на ваш бизнес 24/7.
                     </p>
                     <div className={styles.ctaRow}>
-                        <button className={`${styles.btn} ${styles.btnP}`} onClick={() => setIsRequestModalOpen(true)}>
+                        <button className={`${styles.btn} ${styles.btnP} ${styles.hoverScaleLg}`} onClick={() => setIsRequestModalOpen(true)}>
                             Заказать разработку →
                         </button>
-                        <button className={`${styles.btn} ${styles.btnG}`} onClick={scrollToContact}>
+                        <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`} onClick={scrollToContact}>
                             Бесплатная консультация
                         </button>
                     </div>
                     <div className={styles.statsRow}>
                         <div className={styles.stat}>
-                            <span className={styles.snum}>50+</span>
+                            <span className={`${styles.snum} ${styles.textGradientShift}`}>50+</span>
                             <span className={styles.slabel}>Проектов</span>
                         </div>
                         <div className={styles.sdiv}></div>
                         <div className={styles.stat}>
-                            <span className={styles.snum}>100%</span>
+                            <span className={`${styles.snum} ${styles.textGradientShift}`}>100%</span>
                             <span className={styles.slabel}>Довольных клиентов</span>
                         </div>
                         <div className={styles.sdiv}></div>
                         <div className={styles.stat}>
-                            <span className={styles.snum}>24/7</span>
+                            <span className={`${styles.snum} ${styles.textGradientShift}`}>24/7</span>
                             <span className={styles.slabel}>Поддержка</span>
                         </div>
                     </div>
@@ -550,13 +611,14 @@ const ITUniverse: React.FC = () => {
                 </div>
             </section>
 
-            <div className={styles.offerBanner}>
+            {/* OFFER BANNER */}
+            <div className={`${styles.offerBanner} ${styles.reveal}`}>
                 <div className={styles.offerContent}>
                     <span className={styles.offerIcon}>✦</span>
                     <p className={styles.offerText}>
                         Закажите разработку сегодня и получите <strong>бесплатное SEO-продвижение</strong> на первый месяц
                     </p>
-                    <button className={`${styles.btn} ${styles.btnP} ${styles.offerBtn}`} onClick={() => setIsRequestModalOpen(true)}>
+                    <button className={`${styles.btn} ${styles.btnP} ${styles.offerBtn} ${styles.hoverScale}`} onClick={() => setIsRequestModalOpen(true)}>
                         Заказать
                     </button>
                 </div>
@@ -564,37 +626,37 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
-            {/* Секция услуг с тремя карточками */}
+            {/* SERVICES */}
             <section id="services" className={styles.services}>
-                <div className={styles.servicesHeader}>
+                <div className={`${styles.servicesHeader} ${styles.revealBlur}`}>
                     <span className={styles.sectionTag}>Наши услуги</span>
                     <h2 className={styles.sectionTitle}>
                         Что мы <span className={styles.accent}>предлагаем</span>
                     </h2>
                 </div>
 
-                <div className={styles.serviceToggle}>
+                <div className={`${styles.serviceToggle} ${styles.revealLeft}`}>
                     {(['LANDING', 'PLATFORM', 'MOBILE'] as const).map(type => (
                         <button
                             key={type}
-                            className={`${styles.serviceToggleBtn} ${activeService === type ? styles.active : ''}`}
+                            className={`${styles.serviceToggleBtn} ${activeService === type ? styles.active : ''} ${styles.hoverScale}`}
                             onClick={() => setActiveService(type)}
                         >
-                            {type === 'LANDING' ? '📄 Лендинг' : type === 'PLATFORM' ? '⚙️ Веб-платформа' : '📱 Мобильное приложение'}
+                            {type === 'LANDING' ? '📄 Лендинг' : type === 'PLATFORM' ? '⚙️ Веб-платформа' : '📱 Мобильное'}
                         </button>
                     ))}
                 </div>
 
-                <div className={styles.serviceCard}>
+                <div className={`${styles.serviceCard} ${styles.revealFlip} ${styles.cardRaise}`}>
                     <div className={styles.serviceHeader}>
                         <div>
-                            <div className={styles.serviceIconLarge}>{getServiceIcon()}</div>
+                            <div className={`${styles.serviceIconLarge} ${styles.hoverRotate}`}>{getServiceIcon()}</div>
                             <h3 className={styles.serviceTitle}>{currentService.title}</h3>
                             <p className={styles.serviceSubtitle}>{currentService.subtitle}</p>
                         </div>
                         {currentService.price && (
                             <div className={styles.servicePrice}>
-                                <span className={styles.priceValue}>{currentService.price}</span>
+                                <span className={`${styles.priceValue} ${styles.textGradientShift}`}>{currentService.price}</span>
                                 <span className={styles.priceLabel}>Стоимость разработки</span>
                             </div>
                         )}
@@ -602,8 +664,8 @@ const ITUniverse: React.FC = () => {
 
                     <div className={styles.serviceFeatures}>
                         {currentService.features.map((feature, idx) => (
-                            <div key={idx} className={styles.featureItem}>
-                                <div className={styles.featureIcon}>{feature.icon}</div>
+                            <div key={idx} className={`${styles.featureItem} ${styles.staggerItem}`} style={{ '--i': idx } as React.CSSProperties}>
+                                <div className={`${styles.featureIcon} ${styles.hoverRotate}`}>{feature.icon}</div>
                                 <div className={styles.featureContent}>
                                     <h4>{feature.title}</h4>
                                     <p>{feature.description}</p>
@@ -616,8 +678,8 @@ const ITUniverse: React.FC = () => {
                         <h4>Примеры для бизнеса</h4>
                         <div className={styles.examplesGrid}>
                             {currentService.examples.map((example, idx) => (
-                                <div key={idx} className={styles.exampleItem}>
-                                    <span className={styles.exampleIcon}>{example.icon}</span>
+                                <div key={idx} className={`${styles.exampleItem} ${styles.staggerScale}`} style={{ '--i': idx } as React.CSSProperties}>
+                                    <span className={`${styles.exampleIcon} ${styles.hoverRotate}`}>{example.icon}</span>
                                     <div>
                                         <strong>{example.industry}</strong>
                                         <span className={styles.exampleFeature}>{example.specialFeature}</span>
@@ -627,7 +689,7 @@ const ITUniverse: React.FC = () => {
                         </div>
                     </div>
 
-                    <button className={`${styles.btn} ${styles.btnP} ${styles.serviceBtn}`} onClick={() => setIsRequestModalOpen(true)}>
+                    <button className={`${styles.btn} ${styles.btnP} ${styles.serviceBtn} ${styles.glowPulse}`} onClick={() => setIsRequestModalOpen(true)}>
                         Рассчитать стоимость →
                     </button>
                 </div>
@@ -635,9 +697,9 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
-            {/* Раздел с 8 преимуществами для бизнеса */}
+            {/* BENEFITS */}
             <section id="benefits" className={styles.benefits}>
-                <div className={styles.benefitsHeader}>
+                <div className={`${styles.benefitsHeader} ${styles.revealBlur}`}>
                     <span className={styles.sectionTag}>Почему это выгодно</span>
                     <h2 className={styles.sectionTitle}>
                         Чем полезен <span className={styles.accent}>сайт для бизнеса</span>
@@ -646,8 +708,8 @@ const ITUniverse: React.FC = () => {
 
                 <div className={styles.benefitsGrid}>
                     {businessBenefits.map((benefit, idx) => (
-                        <div key={idx} className={`${styles.benefitCard} ${styles.reveal}`}>
-                            <div className={styles.benefitIcon}>{benefit.icon}</div>
+                        <div key={idx} className={`${styles.benefitCard} ${styles.cardRaise}`}>
+                            <div className={`${styles.benefitIcon} ${styles.hoverRotate}`}>{benefit.icon}</div>
                             <h3>{benefit.title}</h3>
                             <p>{benefit.description}</p>
                         </div>
@@ -657,16 +719,16 @@ const ITUniverse: React.FC = () => {
 
             <div className={styles.sectionSep}></div>
 
-            {/* Остальные секции: портфолио, отзывы, контакты */}
+            {/* PORTFOLIO */}
             <section id="portfolio" className={styles.portfolio}>
-                <div className={styles.portfolioHeader}>
+                <div className={`${styles.portfolioHeader} ${styles.revealRight}`}>
                     <div>
                         <span className={styles.sectionTag}>Наши работы</span>
                         <h2 className={styles.sectionTitle}>
                             Выполненные <span className={styles.accent}>проекты</span>
                         </h2>
                     </div>
-                    <button className={styles.portfolioMore} onClick={() => setIsRequestModalOpen(true)}>
+                    <button className={`${styles.portfolioMore} ${styles.hoverScale}`} onClick={() => setIsRequestModalOpen(true)}>
                         Хочу такой же →
                     </button>
                 </div>
@@ -675,7 +737,7 @@ const ITUniverse: React.FC = () => {
                     <div className={styles.loader}>Загрузка проектов...</div>
                 ) : projects.length > 0 ? (
                     <div className={styles.projectsGrid}>
-                        {projects.map((project) => {
+                        {projects.map((project, projectIdx) => {
                             const projectType = getProjectType(project.name);
                             const projectTypeLabel = getProjectTypeLabel(projectType);
                             const hasImages = project.images && project.images.length > 0;
@@ -683,79 +745,38 @@ const ITUniverse: React.FC = () => {
                             const currentIndex = currentImageIndex[project.id] || 0;
                             const currentImageUrl = hasImages ? getImageUrl(images[currentIndex]) : null;
                             const totalImages = images.length;
+                            const isFeatured = projectIdx === 0;
 
                             return (
-                                <div key={project.id} className={`${styles.projectCard} ${styles.reveal}`}>
+                                <div key={project.id} className={`${styles.projectCard} ${isFeatured ? styles.featured : ''} ${styles.revealScale}`}>
                                     <div className={styles.projectThumb}>
                                         {hasImages && currentImageUrl ? (
                                             <>
-                                                <img
-                                                    src={currentImageUrl}
-                                                    alt={project.name}
-                                                    className={styles.projectImage}
-                                                    onError={(e) => {
-                                                        console.error('Image failed to load:', currentImageUrl);
-                                                        (e.target as HTMLImageElement).style.display = 'none';
-                                                    }}
-                                                />
+                                                <img src={currentImageUrl} alt={project.name} className={styles.projectImage} onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                                <div className={styles.projectImageOverlay}></div>
                                                 {totalImages > 1 && (
                                                     <>
-                                                        <button
-                                                            className={`${styles.projectCarouselBtn} ${styles.projectCarouselPrev}`}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                prevImage(project.id, totalImages);
-                                                            }}
-                                                        >
-                                                            ‹
-                                                        </button>
-                                                        <button
-                                                            className={`${styles.projectCarouselBtn} ${styles.projectCarouselNext}`}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                nextImage(project.id, totalImages);
-                                                            }}
-                                                        >
-                                                            ›
-                                                        </button>
-                                                        <div className={styles.projectCarouselCounter}>
-                                                            {currentIndex + 1} / {totalImages}
-                                                        </div>
+                                                        <button className={`${styles.projectCarouselPrev} ${styles.hoverScale}`} onClick={(e) => { e.stopPropagation(); prevImage(project.id, totalImages); }}>‹</button>
+                                                        <button className={`${styles.projectCarouselNext} ${styles.hoverScale}`} onClick={(e) => { e.stopPropagation(); nextImage(project.id, totalImages); }}>›</button>
+                                                        <div className={styles.projectCarouselCounter}>{currentIndex + 1} / {totalImages}</div>
                                                     </>
                                                 )}
                                             </>
                                         ) : (
-                                            <div
-                                                className={styles.projectPlaceholder}
-                                                style={{
-                                                    background: getGradientColor(project.name)
-                                                }}
-                                            >
-                                                <div className={styles.placeholderContent}>
-                                                    <span className={styles.placeholderIcon}>
-                                                        {getProjectTypeIcon(project.name)}
-                                                    </span>
-                                                    <span className={styles.placeholderText}>{project.name}</span>
-                                                </div>
+                                            <div className={styles.projectPlaceholder} style={{ background: getGradientColor(project.name), width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '12px' }}>
+                                                <span style={{ fontSize: '40px', opacity: 0.6 }}>{getProjectTypeIcon(project.name)}</span>
+                                                <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '-0.01em' }}>{project.name}</span>
                                             </div>
                                         )}
                                         <div className={styles.thumbLine}></div>
                                     </div>
                                     <div className={styles.projectBody}>
                                         <div className={styles.projectTags}>
-                                            <span className={`${styles.tag} ${getProjectTypeBadgeClass(projectType)}`}>
-                                                {projectTypeLabel}
-                                            </span>
-                                            {hasImages && (
-                                                <span className={styles.imageCount}>
-                                                    📷 {totalImages} {totalImages === 1 ? 'фото' : totalImages < 5 ? 'фото' : 'фотографий'}
-                                                </span>
-                                            )}
+                                            <span className={`${styles.tag} ${getProjectTypeBadgeClass(projectType)}`}>{projectTypeLabel}</span>
+                                            {hasImages && <span className={styles.imageCount}>📷 {totalImages} {totalImages === 1 ? 'фото' : totalImages < 5 ? 'фото' : 'фотографий'}</span>}
                                         </div>
                                         <div className={styles.projectTitle}>{project.name}</div>
-                                        <p className={styles.projectDesc}>
-                                            {project.description || 'Современный цифровой продукт под ключ.'}
-                                        </p>
+                                        <p className={styles.projectDesc}>{project.description || 'Современный цифровой продукт под ключ.'}</p>
                                     </div>
                                 </div>
                             );
@@ -764,22 +785,23 @@ const ITUniverse: React.FC = () => {
                 ) : (
                     <div className={styles.emptyProjectsMessage}>
                         <p>Пока нет реализованных проектов</p>
-                        <button className={`${styles.btn} ${styles.btnG}`} onClick={() => setIsRequestModalOpen(true)}>
+                        <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`} onClick={() => setIsRequestModalOpen(true)}>
                             Станьте первым клиентом
                         </button>
                     </div>
                 )}
             </section>
 
+            {/* REVIEWS */}
             <section id="reviews" className={styles.reviews}>
-                <div className={styles.reviewsHeader}>
+                <div className={`${styles.reviewsHeader} ${styles.revealLeft}`}>
                     <div>
                         <span className={styles.sectionTag}>Отзывы клиентов</span>
                         <h2 className={styles.sectionTitle}>
                             Что говорят <span className={styles.accent}>о нас</span>
                         </h2>
                     </div>
-                    <button className={`${styles.btn} ${styles.btnG} ${styles.reviewBtn}`} onClick={() => setIsReviewModalOpen(true)}>
+                    <button className={`${styles.btn} ${styles.btnG} ${styles.reviewBtn} ${styles.glowPulse}`} onClick={() => setIsReviewModalOpen(true)}>
                         Оставить отзыв
                     </button>
                 </div>
@@ -788,64 +810,79 @@ const ITUniverse: React.FC = () => {
                     <div className={styles.loader}>Загрузка отзывов...</div>
                 ) : reviews.length === 0 ? (
                     <div className={styles.emptyState}>Пока нет отзывов. Будьте первым!</div>
-                ) : (
+                ) : reviews.length < 3 ? (
                     <div className={styles.reviewsGrid}>
                         {reviews.map((review) => (
-                            <div key={review.id} className={`${styles.reviewCard} ${styles.reveal}`}>
+                            <div key={review.id} className={`${styles.reviewCard} ${styles.cardRaise}`}>
                                 <div className={styles.reviewHeader}>
-                                    <div className={styles.reviewAvatar}>
-                                        {review.name.charAt(0).toUpperCase()}
-                                    </div>
+                                    <div className={`${styles.reviewAvatar} ${styles.hoverRotate}`}>{review.name.charAt(0).toUpperCase()}</div>
                                     <div>
                                         <div className={styles.reviewName}>{review.name}</div>
-                                        <div className={styles.reviewDate}>
-                                            {new Date(review.createAt).toLocaleDateString('ru-RU')}
-                                        </div>
+                                        <div className={styles.reviewDate}>{new Date(review.createAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
                                     </div>
                                 </div>
+                                <div className={styles.reviewStars}>{'★★★★★'.split('').map((s, i) => <span key={i}>{s}</span>)}</div>
                                 <p className={styles.reviewText}>{review.review}</p>
                             </div>
                         ))}
                     </div>
+                ) : (
+                    <div className={styles.reviewsMarqueeWrap}>
+                        <div className={styles.reviewsMarquee}>
+                            {marqueeReviews.map((review, idx) => (
+                                <div key={`${review.id}-${idx}`} className={`${styles.reviewCard} ${styles.cardRaise}`}>
+                                    <div className={styles.reviewHeader}>
+                                        <div className={`${styles.reviewAvatar} ${styles.hoverRotate}`}>{review.name.charAt(0).toUpperCase()}</div>
+                                        <div>
+                                            <div className={styles.reviewName}>{review.name}</div>
+                                            <div className={styles.reviewDate}>{new Date(review.createAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                                        </div>
+                                    </div>
+                                    <div className={styles.reviewStars}>{'★★★★★'.split('').map((s, i) => <span key={i}>{s}</span>)}</div>
+                                    <p className={styles.reviewText}>{review.review}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 )}
             </section>
 
-            <div className={styles.finalOffer}>
+            {/* FINAL OFFER */}
+            <div className={`${styles.finalOffer} ${styles.revealBlur}`}>
                 <div className={styles.finalOfferContent}>
-                    <h3>Готовы начать?</h3>
+                    <h3 className={styles.textGradientShift}>Готовы начать?</h3>
                     <p>Создадим цифровой продукт, который будет приносить вам клиентов каждый день</p>
                     <div className={styles.finalOfferButtons}>
-                        <button className={`${styles.btn} ${styles.btnP}`} onClick={() => setIsRequestModalOpen(true)}>
+                        <button className={`${styles.btn} ${styles.btnP} ${styles.hoverScaleLg} ${styles.glowPulse}`} onClick={() => setIsRequestModalOpen(true)}>
                             Заказать разработку
                         </button>
-                        <button className={`${styles.btn} ${styles.btnG}`} onClick={scrollToContact}>
+                        <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`} onClick={scrollToContact}>
                             Связаться с нами
                         </button>
                     </div>
                 </div>
             </div>
 
+            {/* CONTACT */}
             <section id="contact" className={styles.contact}>
-                <span className={`${styles.sectionTag} ${styles.reveal}`}>Контакты</span>
-                <h2 className={`${styles.contactTitle} ${styles.reveal}`}>
+                <span className={`${styles.sectionTag} ${styles.revealRight}`}>Контакты</span>
+                <h2 className={`${styles.contactTitle} ${styles.revealLeft}`}>
                     <span style={{ color: 'var(--text)' }}>Давайте</span><br />
                     <span className={styles.gradientText}>обсудим проект</span>
                 </h2>
-                <p className={`${styles.contactSub} ${styles.reveal}`}>
+                <p className={`${styles.contactSub} ${styles.revealScale}`}>
                     Оставьте заявку — мы свяжемся с вами в течение 15 минут
                 </p>
-                <div className={`${styles.contactRow} ${styles.reveal}`}>
-                    <button className={`${styles.btn} ${styles.btnP}`} onClick={() => setIsRequestModalOpen(true)}>
+                <div className={`${styles.contactRow} ${styles.revealBlur}`}>
+                    <button className={`${styles.btn} ${styles.btnP} ${styles.hoverScaleLg}`} onClick={() => setIsRequestModalOpen(true)}>
                         Оставить заявку →
                     </button>
-                    <button className={`${styles.btn} ${styles.btnG}`}>
-                        hello@ituniverse.dev
-                    </button>
+                    <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`}>hello@ituniverse.dev</button>
                 </div>
-                <div className={styles.contactSocials}>
-                    <a href="#" className={styles.socialLink}>Telegram</a>
-                    <a href="#" className={styles.socialLink}>WhatsApp</a>
-                    <a href="#" className={styles.socialLink}>VK</a>
+                <div className={`${styles.contactSocials} ${styles.revealFlip}`}>
+                    <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>Telegram</a>
+                    <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>WhatsApp</a>
+                    <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>VK</a>
                 </div>
             </section>
 
@@ -854,19 +891,8 @@ const ITUniverse: React.FC = () => {
                 <div className={styles.footerText}>© 2025 IT Universe — Разработка сайтов и мобильных приложений под ключ</div>
             </footer>
 
-            <RequestModal
-                isOpen={isRequestModalOpen}
-                onClose={() => setIsRequestModalOpen(false)}
-                onSuccess={() => showSuccess('Заявка отправлена! Мы свяжемся с вами в ближайшее время.')}
-            />
-            <ReviewModal
-                isOpen={isReviewModalOpen}
-                onClose={() => setIsReviewModalOpen(false)}
-                onSuccess={() => {
-                    showSuccess('Спасибо за отзыв!');
-                    api.getReviews().then(setReviews);
-                }}
-            />
+            <RequestModal isOpen={isRequestModalOpen} onClose={() => setIsRequestModalOpen(false)} onSuccess={() => showSuccess('Заявка отправлена! Мы свяжемся с вами в ближайшее время.')} />
+            <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} onSuccess={() => { showSuccess('Спасибо за отзыв!'); api.getReviews().then(setReviews); }} />
         </div>
     );
 };
