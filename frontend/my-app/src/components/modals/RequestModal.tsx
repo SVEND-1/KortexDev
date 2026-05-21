@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { api } from '../api/api';
-import styles from '../style/ITUniverse.module.scss';
+import { api } from '../../api/api';
+import styles from '../../style/ITUniverse.module.scss';
 
 interface RequestModalProps {
     isOpen: boolean;

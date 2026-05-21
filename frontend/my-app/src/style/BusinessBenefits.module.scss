@@ -1,0 +1,532 @@
+.businessBenefits {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    background: #0a0a0a;
+
+    @media (max-width: 768px) {
+        padding: 2rem 1rem;
+    }
+}
+
+// Header Styles
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .tag {
+        background: #1a1a1a;
+        padding: 0.3rem 1rem;
+        border-radius: 40px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        border: 1px solid #333333;
+    }
+
+    .title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #ffffff;
+
+        @media (max-width: 768px) {
+            font-size: 1.8rem;
+        }
+
+        .accent {
+            color: #ffffff;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 4px;
+        }
+    }
+
+    .subtitle {
+        color: #9ca3af;
+        margin-top: 0.75rem;
+        font-size: 1.1rem;
+
+        @media (max-width: 768px) {
+            font-size: 0.95rem;
+        }
+    }
+}
+
+// Stats Showcase
+.statsShowcase {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    @media (max-width: 880px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+    }
+
+    .statItem {
+        background: #111111;
+        border-radius: 24px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid #2a2a2a;
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-3px);
+            border-color: #3b82f6;
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.1);
+        }
+
+        .statNumber {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .statLabel {
+            color: #9ca3af;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+    }
+}
+
+// Chart Section
+.chartSection {
+    background: #111111;
+    border-radius: 28px;
+    border: 1px solid #2a2a2a;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+
+    .chartHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .legend {
+            display: flex;
+            gap: 1rem;
+
+            span {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.8rem;
+                color: #9ca3af;
+            }
+
+            .legendDot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                display: inline-block;
+            }
+        }
+    }
+
+    .chartContainer {
+        background: #0a0a0a;
+        border-radius: 20px;
+        padding: 1rem;
+        border: 1px solid #2a2a2a;
+    }
+
+    .chartNote {
+        margin-top: 1rem;
+        font-size: 0.7rem;
+        color: #6b7280;
+        text-align: center;
+    }
+}
+
+// Benefits Grid
+.benefitsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+
+    .benefitCard {
+        background: #111111;
+        border-radius: 24px;
+        border: 1px solid #2a2a2a;
+        padding: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+
+        &:hover {
+            transform: translateY(-4px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .benefitIcon {
+            font-size: 2rem;
+            min-width: 48px;
+            transition: transform 0.2s;
+        }
+
+        &:hover .benefitIcon {
+            transform: scale(1.1);
+        }
+
+        .benefitContent {
+            flex: 1;
+
+            h3 {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: #ffffff;
+            }
+
+            p {
+                color: #9ca3af;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                margin-bottom: 0.5rem;
+            }
+
+            .benefitStat {
+                display: inline-block;
+                background: #1a1a1a;
+                border-radius: 20px;
+                padding: 0.2rem 0.7rem;
+                font-size: 0.7rem;
+                font-weight: 600;
+                color: #3b82f6;
+                border: 1px solid #2a2a2a;
+            }
+        }
+    }
+}
+
+// Comparison Section
+.comparisonSection {
+    background: #111111;
+    border-radius: 28px;
+    border: 1px solid #2a2a2a;
+    padding: 2rem;
+    margin-bottom: 3rem;
+
+    .comparisonHeader {
+        text-align: center;
+        margin-bottom: 2rem;
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #9ca3af;
+        }
+    }
+
+    .comparisonGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .comparisonCard {
+        background: #0a0a0a;
+        border-radius: 24px;
+        padding: 1.5rem;
+        border: 1px solid #2a2a2a;
+        transition: all 0.3s;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .comparisonStats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .comparisonStat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #2a2a2a;
+
+            .statLabel {
+                color: #9ca3af;
+                font-size: 0.85rem;
+            }
+
+            .statValue {
+                font-weight: 600;
+                font-size: 0.85rem;
+            }
+        }
+    }
+
+    .withoutSite {
+        h4 { color: #9ca3af; }
+        .statValue { color: #6b7280; }
+    }
+
+    .withSite {
+        border-color: #3b82f6;
+
+        h4 { color: #3b82f6; }
+        .statValue { 
+            color: #ffffff;
+            font-weight: 700;
+        }
+        
+        .positive {
+            color: #3b82f6;
+        }
+    }
+}
+
+// Comparison Chart Section
+.comparisonChartSection {
+    background: #111111;
+    border-radius: 28px;
+    border: 1px solid #2a2a2a;
+    padding: 1.5rem;
+    margin-bottom: 3rem;
+
+    .chartHeader {
+        margin-bottom: 1.5rem;
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+    }
+
+    .chartContainer {
+        background: #0a0a0a;
+        border-radius: 20px;
+        padding: 1rem;
+        border: 1px solid #2a2a2a;
+    }
+}
+
+// ROI Calculator
+.roiCalculator {
+    background: #111111;
+    border-radius: 28px;
+    border: 1px solid #2a2a2a;
+    padding: 2rem;
+    margin-bottom: 3rem;
+
+    .roiHeader {
+        text-align: center;
+        margin-bottom: 2rem;
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        p {
+            color: #9ca3af;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    .calculatorGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .calculatorInputs {
+        .inputGroup {
+            margin-bottom: 1rem;
+
+            label {
+                display: block;
+                color: #9ca3af;
+                font-size: 0.8rem;
+                margin-bottom: 0.3rem;
+            }
+
+            input {
+                width: 100%;
+                background: #0a0a0a;
+                border: 1px solid #2a2a2a;
+                border-radius: 12px;
+                padding: 0.75rem;
+                color: #ffffff;
+                font-size: 1rem;
+                transition: all 0.2s;
+
+                &:focus {
+                    outline: none;
+                    border-color: #3b82f6;
+                    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+                }
+            }
+        }
+    }
+
+    .calculatorResult {
+        .resultBox {
+            background: #0a0a0a;
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #2a2a2a;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .resultLabel {
+                color: #9ca3af;
+                font-size: 0.8rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .resultNumber {
+                font-size: 2rem;
+                font-weight: 800;
+                color: #3b82f6;
+                margin-bottom: 1rem;
+            }
+
+            .roiBadge {
+                background: #1a1a1a;
+                border-radius: 40px;
+                padding: 0.3rem 1rem;
+                display: inline-block;
+                font-size: 0.8rem;
+                color: #3b82f6;
+                border: 1px solid #2a2a2a;
+            }
+        }
+    }
+}
+
+// CTA Section
+.ctaSection {
+    background: linear-gradient(135deg, #0a0a0a, #111111);
+    border-radius: 28px;
+    border: 1px solid #2a2a2a;
+    padding: 3rem 2rem;
+    text-align: center;
+
+    .ctaContent {
+        h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #9ca3af;
+            margin-bottom: 1.5rem;
+        }
+
+        .ctaButton {
+            background: #3b82f6;
+            border: none;
+            border-radius: 40px;
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: translateY(-2px);
+                background: #2563eb;
+                box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            }
+        }
+    }
+}
+
+// Animations
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.revealCard {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardFloat 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardFloat {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
