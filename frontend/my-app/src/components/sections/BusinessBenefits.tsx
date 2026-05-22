@@ -201,9 +201,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             { threshold: 0.3 }
         );
 
-        if (sectionRef.current) {
-            observer.observe(sectionRef.current);
-        }
+        if (sectionRef.current) observer.observe(sectionRef.current);
 
         return () => observer.disconnect();
     }, [hasAnimated]);
@@ -241,9 +239,9 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
 
                 const commonOptions = {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     animation: {
-                        duration: 2000,
+                        duration: 1800,
                         easing: 'easeInOutQuart' as const
                     },
                     interaction: {
@@ -262,9 +260,9 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                         legend: {
                             labels: {
                                 color: '#9ca3af',
-                                font: { size: 11, family: 'JetBrains Mono' },
-                                boxWidth: 12,
-                                boxHeight: 12,
+                                font: { size: 10, family: 'JetBrains Mono' },
+                                boxWidth: 10,
+                                boxHeight: 10,
                                 usePointStyle: true,
                                 pointStyle: 'circle'
                             },
@@ -277,14 +275,14 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             grid: { color: 'rgba(255,255,255,0.05)' },
                             ticks: {
                                 color: '#9ca3af',
-                                font: { size: 10 }
+                                font: { size: 9 }
                             }
                         },
                         x: {
                             grid: { display: false },
                             ticks: {
                                 color: '#9ca3af',
-                                font: { size: 10 }
+                                font: { size: 9 }
                             }
                         }
                     }
@@ -302,8 +300,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#E9B70B',
                                     backgroundColor: 'rgba(233, 183, 11, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 },
                                 {
@@ -312,8 +310,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#6D5CE8',
                                     backgroundColor: 'rgba(109, 92, 232, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 },
                                 {
@@ -322,8 +320,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#22c55e',
                                     backgroundColor: 'rgba(34, 197, 94, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 },
                                 {
@@ -332,8 +330,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#f97316',
                                     backgroundColor: 'rgba(249, 115, 22, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 },
                                 {
@@ -342,8 +340,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#38bdf8',
                                     backgroundColor: 'rgba(56, 189, 248, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 },
                                 {
@@ -352,8 +350,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                     borderColor: '#f43f5e',
                                     backgroundColor: 'rgba(244, 63, 94, 0.08)',
                                     borderWidth: 3,
-                                    pointRadius: 3,
-                                    tension: 0.4,
+                                    pointRadius: 2,
+                                    tension: 0.35,
                                     fill: false
                                 }
                             ]
@@ -396,12 +394,12 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                 backgroundColor: 'rgba(107, 114, 128, 0.05)',
                                 borderWidth: 2,
                                 borderDash: [8, 6],
-                                pointRadius: 3,
+                                pointRadius: 2,
                                 pointBackgroundColor: currentData.colorBefore,
                                 pointBorderColor: '#0a0a0f',
                                 pointBorderWidth: 1.5,
-                                pointHoverRadius: 7,
-                                tension: 0.4,
+                                pointHoverRadius: 5,
+                                tension: 0.35,
                                 fill: true
                             },
                             {
@@ -410,12 +408,12 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                 borderColor: currentData.colorAfter,
                                 backgroundColor: 'rgba(233, 183, 11, 0.08)',
                                 borderWidth: 3,
-                                pointRadius: 4,
+                                pointRadius: 2,
                                 pointBackgroundColor: currentData.colorAfter,
                                 pointBorderColor: '#0a0a0f',
                                 pointBorderWidth: 1.5,
-                                pointHoverRadius: 8,
-                                tension: 0.4,
+                                pointHoverRadius: 5,
+                                tension: 0.35,
                                 fill: true
                             }
                         ]
@@ -455,7 +453,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             }
         };
 
-        const timer = setTimeout(initChart, 100);
+        const timer = setTimeout(initChart, 80);
         return () => {
             clearTimeout(timer);
             if (chartInstanceRef.current) {
@@ -466,12 +464,12 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
     }, [activeMetric]);
 
     const metricsList = [
-        { name: 'Выручка', key: 'revenue', value: `+${animatedValues.revenue}%`, target: 450, suffix: '%' },
-        { name: 'Конверсия', key: 'conversion', value: `+${animatedValues.conversion}%`, target: 350, suffix: '%' },
-        { name: 'Трафик', key: 'traffic', value: `+${animatedValues.traffic}%`, target: 4500, suffix: '%' },
-        { name: 'Новые клиенты', key: 'clients', value: `+${animatedValues.clients}%`, target: 2900, suffix: '%' },
-        { name: 'Средний чек', key: 'averageCheck', value: `+${animatedValues.averageCheck}%`, target: 180, suffix: '%' },
-        { name: 'ROI', key: 'roi', value: `+${animatedValues.roi}%`, target: 200, suffix: '%' }
+        { name: 'Выручка', key: 'revenue', value: `+${animatedValues.revenue}%`, target: 450 },
+        { name: 'Конверсия', key: 'conversion', value: `+${animatedValues.conversion}%`, target: 350 },
+        { name: 'Трафик', key: 'traffic', value: `+${animatedValues.traffic}%`, target: 4500 },
+        { name: 'Новые клиенты', key: 'clients', value: `+${animatedValues.clients}%`, target: 2900 },
+        { name: 'Средний чек', key: 'averageCheck', value: `+${animatedValues.averageCheck}%`, target: 180 },
+        { name: 'ROI', key: 'roi', value: `+${animatedValues.roi}%`, target: 200 }
     ];
 
     return (
@@ -497,8 +495,10 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             <div className={styles.metricsProgress}>
                                 <div
                                     className={styles.metricsProgressFill}
-                                    style={{ width: `${(animatedValues[metric.key as keyof typeof animatedValues] / metric.target) * 100}%` }}
-                                ></div>
+                                    style={{
+                                        width: `${(animatedValues[metric.key as keyof typeof animatedValues] / metric.target) * 100}%`
+                                    }}
+                                />
                             </div>
                         </div>
                     </div>
@@ -517,6 +517,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                 : metricsData[activeMetric].description}
                         </p>
                     </div>
+
                     <div className={styles.metricToggles}>
                         {(['all', 'revenue', 'conversion', 'traffic', 'clients', 'averageCheck', 'roi'] as MetricType[]).map((metric) => (
                             <button
@@ -531,7 +532,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                 </div>
 
                 <div className={styles.chartContainer}>
-                    <canvas ref={chartRef}></canvas>
+                    <canvas ref={chartRef} />
                 </div>
 
                 <div className={styles.chartStats}>
@@ -616,7 +617,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             className={`${styles.benefitsListItem} ${visibleItems.includes(idx) ? styles.animated : ''}`}
                             style={{ animationDelay: `${idx * 0.03}s` }}
                         >
-                            <span className={styles.benefitsListBullet}></span>
+                            <span className={styles.benefitsListBullet} />
                             <span className={styles.benefitsListText}>{benefit}</span>
                         </div>
                     ))}

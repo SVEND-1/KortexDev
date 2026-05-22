@@ -1,5 +1,5 @@
 .services {
-  padding: var(--py) var(--px);
+  padding: var(--py) 0;
   background: #000;
   position: relative;
   z-index: 1;
@@ -10,10 +10,7 @@
 .services::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: radial-gradient(ellipse 80% 50% at 30% 50%, rgba(233,183,11,0.04) 0%, transparent 60%);
   pointer-events: none;
   animation: serviceGlow 8s ease-in-out infinite;
@@ -24,9 +21,17 @@
   50% { opacity: 0.6; transform: scale(1.05); }
 }
 
+.servicesInner {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 clamp(12px, 2vw, 28px);
+  position: relative;
+  z-index: 2;
+}
+
 .servicesHeader {
-  margin-bottom: 48px;
-  padding-bottom: 32px;
+  margin-bottom: 34px;
+  padding-bottom: 24px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: flex-end;
@@ -63,40 +68,37 @@
 
 .serviceToggle {
   display: flex;
-  gap: 0;
-  border: 1px solid var(--border);
-  max-width: fit-content;
-  border-radius: 60px;
-  overflow: hidden;
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(10px);
-  margin-bottom: 32px;
+  justify-content: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
 }
 
 .serviceToggleBtn {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .08em;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .1em;
   text-transform: uppercase;
   background: transparent;
-  border: none;
-  padding: 12px 28px;
+  border: 2px solid rgba(255,255,255,0.15);
+  padding: 16px 30px;
   color: rgba(255,255,255,0.55);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   position: relative;
   overflow: hidden;
+  border-radius: 80px;
 }
 
 .serviceToggleBtn::before {
   content: '';
   position: absolute;
-  top: 0;
+  inset: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(233,183,11,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(233,183,11,0.3), transparent);
   transition: left 0.4s ease;
 }
 
@@ -106,61 +108,50 @@
 
 .serviceToggleBtn:hover {
   color: #fff;
+  border-color: rgba(233,183,11,0.5);
   background: rgba(255,255,255,0.03);
+  transform: translateY(-2px);
 }
 
 .serviceToggleBtn.active {
   background: linear-gradient(135deg, #E9B70B, #6D5CE8);
+  border-color: transparent;
   color: #000;
-  font-weight: 600;
+  font-weight: 800;
+  transform: scale(1.02);
+  box-shadow: 0 6px 25px rgba(233,183,11,0.4);
 }
 
-/* Карточка услуги */
+.serviceCarousel {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 15% minmax(0, 70%) 15%;
+  align-items: stretch;
+  gap: 24px;
+  min-height: 76vh;
+}
+
+.serviceCardWrap {
+  width: 100%;
+  min-height: 76vh;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 2;
+}
+
 .serviceCard {
+  width: 100%;
+  min-height: 76vh;
   background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   border: 1px solid rgba(255,255,255,0.07);
-  padding: clamp(32px, 4vw, 56px);
+  padding: clamp(22px, 3vw, 48px);
   position: relative;
   overflow: hidden;
   transition: all 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   border-radius: 24px;
-}
-
-.serviceCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #E9B70B, #6D5CE8, transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s ease;
-}
-
-.serviceCard::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(233,183,11,0.05), transparent);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-
-.serviceCard:hover {
-  border-color: rgba(233,183,11,0.3);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-}
-
-.serviceCard:hover::before {
-  transform: scaleX(1);
-}
-
-.serviceCard:hover::after {
-  opacity: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .serviceHeader {
@@ -169,14 +160,14 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 24px;
-  margin-bottom: 40px;
-  padding-bottom: 32px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .serviceTitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(40px, 4.5vw, 64px);
+  font-size: clamp(34px, 4vw, 58px);
   letter-spacing: .04em;
   text-transform: uppercase;
   line-height: .95;
@@ -184,15 +175,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  transition: all 0.3s ease;
   margin-bottom: 8px;
-}
-
-.serviceCard:hover .serviceTitle {
-  background: linear-gradient(135deg, #E9B70B, #6D5CE8);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 
 .serviceSubtitle {
@@ -200,15 +183,12 @@
   font-weight: 300;
   color: rgba(255,255,255,0.55);
   margin-top: 8px;
-  transition: color 0.3s ease;
-}
-
-.serviceCard:hover .serviceSubtitle {
-  color: rgba(255,255,255,0.7);
+  max-width: 720px;
 }
 
 .servicePrice {
   text-align: right;
+  flex-shrink: 0;
 }
 
 .priceValue {
@@ -220,11 +200,6 @@
   background-clip: text;
   color: transparent;
   display: block;
-  transition: all 0.3s ease;
-}
-
-.serviceCard:hover .priceValue {
-  transform: scale(1.05);
 }
 
 .priceLabel {
@@ -235,89 +210,56 @@
   color: rgba(255,255,255,0.28);
 }
 
-/* Сетка фич - улучшенный дизайн */
 .serviceFeatures {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-  margin-bottom: 48px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .featureItem {
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 16px;
-  padding: 24px;
+  padding: 18px;
   transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.featureItem::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #E9B70B, #6D5CE8);
-  transition: width 0.4s ease;
 }
 
 .featureItem:hover {
   background: rgba(255,255,255,0.04);
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: rgba(233,183,11,0.3);
-}
-
-.featureItem:hover::before {
-  width: 100%;
 }
 
 .featureContent h4 {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   color: #fff;
-  margin-bottom: 10px;
-  transition: color 0.3s ease;
-}
-
-.featureItem:hover .featureContent h4 {
-  color: #E9B70B;
+  margin-bottom: 8px;
 }
 
 .featureContent p {
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(255,255,255,0.55);
-  line-height: 1.6;
+  line-height: 1.5;
   margin-bottom: 0;
 }
 
-/* Примеры для бизнеса - улучшенный дизайн */
 .serviceExamples {
   background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(233,183,11,0.02));
   border: 1px solid rgba(233,183,11,0.15);
   border-radius: 20px;
-  padding: 28px 32px;
-  margin-bottom: 40px;
-  transition: all 0.3s ease;
-}
-
-.serviceExamples:hover {
-  border-color: rgba(233,183,11,0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 18px 22px;
+  margin-bottom: 18px;
 }
 
 .serviceExamples h4 {
   font-family: 'Rajdhani', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.02em;
   color: #E9B70B;
-  margin-bottom: 28px;
+  margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -328,79 +270,41 @@
 .serviceExamples h4::before {
   content: '✦';
   font-size: 18px;
-  animation: starRotate 3s linear infinite;
-}
-
-@keyframes starRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 .examplesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
 }
 
 .exampleItem {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 20px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.exampleItem::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(233,183,11,0.1), transparent);
-  transition: left 0.5s ease;
-}
-
-.exampleItem:hover {
-  background: rgba(233,183,11,0.08);
-  border-color: rgba(233,183,11,0.3);
-  transform: translateX(6px);
-}
-
-.exampleItem:hover::before {
-  left: 100%;
 }
 
 .exampleItem strong {
   display: block;
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: -.01em;
   margin-bottom: 6px;
-  transition: color 0.3s ease;
-}
-
-.exampleItem:hover strong {
-  color: #E9B70B;
 }
 
 .exampleFeature {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  letter-spacing: .04em;
   color: rgba(255,255,255,0.55);
   display: block;
-  line-height: 1.4;
+  line-height: 1.45;
+  max-width: 220px;
 }
 
-/* Кнопка */
 .serviceBtn {
   width: 100%;
   font-family: 'JetBrains Mono', monospace;
@@ -414,9 +318,7 @@
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   cursor: pointer;
   border-radius: 40px;
-  margin-top: 16px;
-  position: relative;
-  overflow: hidden;
+  margin-top: auto;
 }
 
 .serviceBtn:hover {
@@ -426,26 +328,145 @@
   box-shadow: 0 5px 20px rgba(233,183,11,0.3);
 }
 
-.serviceBtn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
+.sideCard {
   width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.5s ease;
+  min-height: 76vh;
+  padding: 24px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.82;
+  transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
 }
 
-.serviceBtn:hover::before {
-  left: 100%;
+.sideCard:hover {
+  opacity: 1;
+  transform: scale(1.02);
+  border-color: rgba(233,183,11,0.22);
 }
 
-/* Адаптив */
+.sideCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.previewBadge {
+  align-self: flex-start;
+  display: inline-flex;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #E9B70B;
+  background: rgba(233,183,11,0.08);
+  border: 1px solid rgba(233,183,11,0.18);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.sidePrice {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #E9B70B;
+  white-space: nowrap;
+}
+
+.sideTitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.sideSubtitle {
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255,255,255,0.78);
+  margin-bottom: 14px;
+}
+
+.sideCardsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sideMiniCard {
+  min-height: 52px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sideMiniDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #E9B70B;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(233,183,11,0.35);
+}
+
+.sideMiniText {
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.82);
+}
+
+.sideLeft {
+  transform: translateX(8px) scale(0.98);
+}
+
+.sideRight {
+  transform: translateX(-8px) scale(0.98);
+}
+
+@media (max-width: 1200px) {
+  .serviceCarousel {
+    grid-template-columns: 10% minmax(0, 80%) 10%;
+  }
+}
+
 @media (max-width: 1024px) {
+  .serviceCarousel {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    min-height: auto;
+  }
+
+  .sideCard {
+    display: none;
+  }
+
+  .serviceCardWrap {
+    min-height: auto;
+  }
+
+  .serviceCard {
+    min-height: auto;
+  }
+
   .serviceFeatures {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
   }
 
   .serviceHeader {
@@ -459,18 +480,9 @@
 }
 
 @media (max-width: 768px) {
-  .serviceToggle {
-    width: 100%;
-    justify-content: center;
-    border-radius: 16px;
-    flex-wrap: wrap;
-  }
-
   .serviceToggleBtn {
-    padding: 10px 20px;
-    font-size: 10px;
-    flex: 1;
-    text-align: center;
+    padding: 14px 22px;
+    font-size: 13px;
   }
 
   .servicesHeader {
@@ -480,54 +492,31 @@
   }
 
   .serviceCard {
-    padding: 24px;
-  }
-
-  .featureItem {
     padding: 20px;
   }
 
-  .featureContent h4 {
-    font-size: 16px;
+  .featureItem {
+    padding: 16px;
   }
 
-  .featureContent p {
-    font-size: 13px;
+  .serviceExamples {
+    padding: 16px;
   }
 
   .examplesGrid {
     grid-template-columns: 1fr;
-  }
-
-  .serviceExamples {
-    padding: 20px;
-  }
-
-  .serviceExamples h4 {
-    font-size: 18px;
-  }
-
-  .exampleItem {
-    padding: 12px 16px;
-  }
-
-  .exampleItem strong {
-    font-size: 14px;
   }
 }
 
 @media (max-width: 480px) {
   .serviceToggle {
     flex-direction: column;
-    border-radius: 12px;
+    width: 100%;
   }
 
   .serviceToggleBtn {
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-  }
-
-  .serviceToggleBtn:last-child {
-    border-bottom: none;
+    width: 100%;
+    text-align: center;
   }
 
   .priceValue {
@@ -541,13 +530,5 @@
   .serviceBtn {
     padding: 12px 24px;
     font-size: 11px;
-  }
-
-  .featureItem {
-    padding: 16px;
-  }
-
-  .serviceExamples h4 {
-    font-size: 16px;
   }
 }

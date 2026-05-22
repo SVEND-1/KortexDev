@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from '../../style/ITUniverse.module.scss';
+import styles from '../../style/Hero.module.scss';
 
 interface HeroProps {
     onRequestClick: () => void;
@@ -36,7 +36,7 @@ const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
         }
 
         return () => clearTimeout(timeout);
-    }, [typedText, isDeleting, textIndex]);
+    }, [typedText, isDeleting, textIndex, words]);
 
     return (
         <section className={styles.hero}>
