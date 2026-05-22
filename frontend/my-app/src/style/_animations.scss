@@ -1,192 +1,201 @@
-/* ────────────────────────────────────────────────────────────────── */
-/*                    ONLY ANIMATIONS FROM SCREENSHOT                */
-/* ────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════
+   АНИМАЦИИ — Valar Atomics Style
+   ══════════════════════════════════════ */
 
-/* ========== 1. CODE LINES ANIMATION (из скриншота) ========== */
+/* ── Страница ── */
+@keyframes pageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Код-строки ── */
 @keyframes lineIn {
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes codeScroll {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-22px);
-  }
-}
-
-/* Класс для строк кода */
 .cl {
   display: flex;
-  gap: 16px;
-  padding: 3px 20px;
-  font-family: 'Geist Mono', 'SF Mono', monospace;
-  font-size: 11.5px;
+  gap: 14px;
+  padding: 2px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   opacity: 0;
-  animation: lineIn 0.5s forwards, codeScroll 18s 2s linear infinite;
+  animation: lineIn .4s forwards;
 }
 
-/* ========== 2. MONITOR FLOAT ANIMATION (из скриншота) ========== */
-@keyframes floatMon {
-  0%, 100% {
-    transform: translateY(0) rotate(-0.3deg);
-  }
-  50% {
-    transform: translateY(-16px) rotate(0.3deg);
-  }
-}
-
-/* ========== 3. DEVICES FLOAT ANIMATION (из скриншота) ========== */
-@keyframes floatDev {
-  0%, 100% {
-    transform: translate(0, 0) rotate(var(--rot, 0deg));
-  }
-  50% {
-    transform: translate(var(--fx, 6px), var(--fy, -12px)) rotate(var(--rot2, 2deg));
-  }
-}
-
-/* ========== 4. ORB FLOAT BACKGROUND (из скриншота) ========== */
-@keyframes orbFloat {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(4%, 6%) scale(1.08);
-  }
-}
-
-/* ========== 5. PARTICLE FLOATING (из скриншота) ========== */
-@keyframes pFloat {
-  0%, 100% {
-    opacity: 0;
-    transform: translateY(0) scale(0);
-  }
-  30% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.3;
-    transform: translateY(-40px) scale(1);
-  }
-}
-
-/* ========== 6. HERO TEXT FADE UP (из скриншота) ========== */
-@keyframes slideUpFade {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* ── Появление контента ── */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes blurIn {
+  from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes flipIn {
+  from { opacity: 0; transform: translateY(16px) rotateX(10deg); }
+  to   { opacity: 1; transform: translateY(0) rotateX(0); }
 }
 
-/* ========== 7. BLINKING BADGE (из скриншота) ========== */
-@keyframes blink {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 10px var(--accent);
-  }
-  50% {
-    opacity: 0.3;
-    box-shadow: 0 0 4px var(--accent);
-  }
+/* ── Reveal-классы (IntersectionObserver) ── */
+.reveal,
+.revealScale,
+.revealLeft,
+.revealRight,
+.revealBlur,
+.revealFlip,
+.staggerItem,
+.staggerScale,
+.benefitCard {
+  opacity: 0;
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out), filter .7s var(--ease-out);
 }
 
-/* ========== 8. SCROLL ARROW PULSE (из скриншота) ========== */
-@keyframes arrowPulse {
-  0%, 100% {
-    opacity: 0.2;
-    transform: scaleY(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scaleY(1.1);
-  }
+.reveal       { transform: translateY(24px); }
+.revealScale  { transform: translateY(20px) scale(0.97); }
+.revealLeft   { transform: translateX(-24px); }
+.revealRight  { transform: translateX(24px); }
+.revealBlur   { transform: translateY(14px); filter: blur(5px); }
+.revealFlip   { transform: translateY(18px) rotateX(8deg); }
+.staggerItem  { transform: translateY(18px); }
+.staggerScale { transform: scale(0.95); }
+.benefitCard  { transform: translateY(20px); }
+
+.visible {
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
 }
 
-/* ========== 9. OFFER BANNER SHIMMER (из скриншота) ========== */
+/* ── Золотой пульс на CTA ── */
+@keyframes goldPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(233,183,9,0); }
+  50%      { box-shadow: 0 0 0 10px rgba(233,183,9,0.1); }
+}
+.glowPulse { animation: goldPulse 2.5s ease-in-out infinite; }
+
+/* ── Shimmer ── */
 @keyframes shimmer {
-  0%, 100% {
-    transform: translateX(-100%);
-  }
-  50% {
-    transform: translateX(100%);
-  }
+  0%,100% { transform: translateX(-100%); opacity: 0; }
+  50%      { transform: translateX(100%);  opacity: 1; }
+}
+@keyframes tagShimmer {
+  0%   { left: -100%; }
+  60%  { left: 120%; }
+  100% { left: 120%; }
+}
+@keyframes bannerSweep {
+  0%   { left: -200%; }
+  100% { left:  200%; }
 }
 
-/* ========== 10. TOAST NOTIFICATION (из скриншота) ========== */
-@keyframes toastIn {
-  from {
-    opacity: 0;
-    transform: translateX(-50%) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-}
-
-/* ========== 11. OVERLAY & MODAL (из скриншота) ========== */
+/* ── Оверлей / Модал ── */
 @keyframes overlayIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
-
 @keyframes modalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.94) translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ========== 12. BASIC REVEAL (минимальный для контента) ========== */
-.reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  &.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ── Тост ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
-/* ========== 13. GRADIENT SHIFT (для текста) ========== */
+/* ── Marquee (отзывы) ── */
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Волна (AnimatedWaveText) ── */
+@keyframes waveChar {
+  0%,60%,100% { transform: translateY(0); }
+  30%          { transform: translateY(-7px); }
+}
+.textWaveContainer { display: inline-flex; }
+.textWaveLetter {
+  display: inline-block;
+  animation: waveChar 1.8s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.05s);
+}
+
+/* ── Текст-градиент ── */
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.textGradientShift {
+  background: linear-gradient(135deg, #fff 0%, var(--gold) 45%, #fff 80%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+}
 
-/* ========== 14. SCROLLBAR (из скриншота) ========== */
-::-webkit-scrollbar { width: 1px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
+/* ── Hover-утилиты ── */
+.hoverScale    { transition: transform .2s var(--ease-spring); &:hover { transform: scale(1.03); } }
+.hoverScaleLg  { transition: transform .25s var(--ease-spring); &:hover { transform: scale(1.05); } }
+.hoverRotate   { transition: transform .3s var(--ease-spring); &:hover { transform: rotate(10deg) scale(1.08); } }
+.cardRaise     { transition: transform .25s var(--ease-spring); &:hover { transform: translateY(-5px); } }
+
+/* ── Частицы ── */
+@keyframes pFloat {
+  0%,100% { opacity: 0; transform: translateY(0) scale(0); }
+  30%     { opacity: .5; }
+  50%     { opacity: .2; transform: translateY(-40px) scale(1); }
+}
+
+/* ── Счётчик (цифры) ── */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Звёзды ── */
+@keyframes starPop {
+  from { opacity: 0; transform: scale(0); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Мигание бейджа ── */
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: .3; }
+}
+
+/* ── Стрелка вниз ── */
+@keyframes arrowPulse {
+  0%,100% { opacity: .2; transform: scaleY(1); }
+  50%      { opacity: 1;  transform: scaleY(1.1); }
+}
+
+/* ── Линия графика ── */
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+/* ── Бар графика ── */
+@keyframes barGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
 }

@@ -1,27 +1,63 @@
+/* ══════════════════════════════════════════
+   ДИЗАЙН-СИСТЕМА — Valar Atomics Style
+   ══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
 :root {
-  --bg:        #050505;
-  --bg2:       #0a0a0a;
-  --bg3:       #0f0f0f;
-  --surface:   #141414;
-  --surface2:  #1a1a1a;
-  --surface3:  #222222;
-  --border:    rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.15);
-  --border-strong: rgba(255,255,255,0.2);
-  --text:      #ffffff;
-  --text2:     #a0a0a0;
-  --muted:     #666666;
-  --accent:    #ffffff;
-  --accent2:   #e0e0e0;
-  --accent3:   #c0c0c0;
-  --green:     #ffffff;
-  --cyan:      #ffffff;
-  --pink:      #ffffff;
-  --orange:    #ffffff;
-  --glow:      rgba(255,255,255,0.1);
-  --glow2:     rgba(255,255,255,0.05);
-  --radius:    12px;
-  --radius-lg: 20px;
+  /* ── Фон ── */
+  --bg:        #000;
+  --bg2:       #020202;
+  --bg3:       #080808;
+  --surface:   #0c0c0c;
+  --surface2:  #101010;
+  --surface3:  #161616;
+
+  /* ── Границы ── */
+  --border:          rgba(255,255,255,0.06);
+  --border-hover:    rgba(255,255,255,0.14);
+  --border-strong:   rgba(255,255,255,0.22);
+
+  /* ── Текст ── */
+  --text:    #fff;
+  --text2:   rgba(255,255,255,0.48);
+  --muted:   rgba(255,255,255,0.24);
+
+  /* ── Золото (главный акцент) ── */
+  --gold:    #e9b709;
+  --gold-d:  #b98e00;
+  --gold-bg: rgba(233,183,9,0.08);
+
+  /* ── Алиасы (совместимость со старым кодом) ── */
+  --accent:    var(--gold);
+  --accent2:   var(--gold);
+  --accent3:   var(--gold-d);
+  --green:     var(--gold);
+  --cyan:      var(--gold);
+  --pink:      var(--gold);
+  --orange:    var(--gold);
+  --glow:      rgba(233,183,9,0.15);
+  --glow2:     rgba(233,183,9,0.06);
+
+  /* ── Без скруглений — жёсткая геометрия ── */
+  --radius:    0;
+  --radius-lg: 0;
+
+  /* ── Типографика ── */
+  --font-display: 'Bebas Neue', 'Arial Black', sans-serif;
+  --font-body:    'IBM Plex Sans', sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+
+  /* ── Отступы ── */
+  --nav-h:     68px;
+  --px:        clamp(20px, 5vw, 80px);
+  --py:        clamp(80px, 10vw, 160px);
+
+  /* ── Easing ── */
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 768px) {
+  :root { --px: 20px; --py: 64px; }
 }

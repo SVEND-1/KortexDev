@@ -1,222 +1,481 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../../style/BusinessBenefits.module.scss';
+import { Chart, registerables } from 'chart.js';
 
-interface Benefit {
-    icon: string;
-    title: string;
-    description: string;
-    stat?: string;
-}
+Chart.register(...registerables);
 
 interface BusinessBenefitsProps {
     onRequestClick?: () => void;
 }
 
-const BusinessBenefits: React.FC<BusinessBenefitsProps> = ({ onRequestClick }) => {
-    const [roiValue, setRoiValue] = useState(500000);
-    const [monthlyProfit, setMonthlyProfit] = useState(150000);
-    const chartRef = useRef<HTMLCanvasElement>(null);
-    const comparisonChartRef = useRef<HTMLCanvasElement>(null);
-    const chartInstanceRef = useRef<any>(null);
-    const comparisonChartInstanceRef = useRef<any>(null);
+type MetricType = 'all' | 'revenue' | 'conversion' | 'roi' | 'traffic' | 'clients' | 'averageCheck';
 
-    const benefits: Benefit[] = [
-        { icon: '💰', title: 'Увеличение прибыли', description: 'Продажи 24/7 без выходных. Ваш бизнес работает даже когда вы спите, принося стабильный доход.', stat: '+73%' },
-        { icon: '📉', title: 'Снижение расходов', description: 'Меньше ручного труда — меньше ошибок и затрат. Автоматизация сокращает операционные расходы на 30-50%.', stat: '-42%' },
-        { icon: '📈', title: 'Быстрый ROI', description: 'Инвестиции в сайт окупаются за 3-6 месяцев за счёт роста продаж и оптимизации процессов.', stat: '3-6 мес' },
-        { icon: '📋', title: 'Сбор контактов', description: 'База клиентов растёт автоматически. Захват email, телефонов и соцсетей посетителей.', stat: '+280%' },
-        { icon: '📧', title: 'Email и SMS рассылки', description: 'Информируйте клиентов об акциях, новинках и персональных предложениях. Повторные продажи.', stat: '45% ROI' },
-        { icon: '🔍', title: 'SEO-продвижение', description: 'Привлечение клиентов из поиска Яндекс и Google. Рост органического трафика без рекламного бюджета.', stat: 'бесплатно' },
-        { icon: '🔄', title: 'Ретаргетинг', description: 'Возвращайте посетителей, которые не купили. Показывайте рекламу тем, кто уже интересовался вами.', stat: '+65% конв.' },
-        { icon: '⭐', title: 'Удобство для клиентов', description: 'Онлайн запись 24/7, заказ в один клик, оплата картой — клиенты выбирают тех, кто заботится о их времени.', stat: '92%' },
-        { icon: '📦', title: 'Прозрачность', description: 'Статус заказа, история покупок, отслеживание доставки — доверие клиентов растёт с каждым шагом.', stat: '+45% доверия' },
-        { icon: '🎁', title: 'Бонусы и лояльность', description: 'Персональные рекомендации, программа лояльности, скидки за отзывы — клиенты возвращаются снова.', stat: 'LTV +67%' },
-        { icon: '🗣️', title: 'Отзывы и рейтинги', description: 'Социальное доказательство работает лучше любой рекламы. Собирайте и показывайте отзывы.', stat: '+34% конв.' },
-        { icon: '📊', title: 'Аналитика продаж', description: 'Отслеживайте, откуда приходят клиенты, какие услуги популярны, где теряете прибыль.', stat: 'в реальном времени' },
-        { icon: '🔄', title: 'CRM интеграция', description: 'Все заказы и клиенты автоматически попадают в вашу CRM. Ничего не теряется, всё под контролем.', stat: 'автоматически' },
-        { icon: '📑', title: 'Отчёты в 1 клик', description: 'Продажи, прибыль, популярные товары, эффективность рекламы — любые отчёты формируются мгновенно.', stat: '1 секунда' },
-        { icon: '👥', title: 'Контроль персонала', description: 'Видите кто взял заказ, сколько времени заняла обработка, уровень удовлетворённости клиентов.', stat: 'прозрачно' },
-        { icon: '⚙️', title: 'Автоматизация процессов', description: 'Автоматическое выставление счетов, отправка чеков, уведомления клиентам — меньше рутины.', stat: '-35% времени' },
-        { icon: '🚀', title: 'Масштабируемость', description: 'Легко добавляйте новые фичи: интернет-магазин, онлайн запись, интеграции. Сайт растёт вместе с вашим бизнесом.', stat: 'без ограничений' },
-        { icon: '🔗', title: 'Интеграция с 1С и кассами', description: 'Автоматический обмен данными с 1С, эквайринг, маркировка, ЕГАИС — всё работает "из коробки".', stat: 'готово' }
+interface MetricData {
+    title: string;
+    before: number[];
+    after: number[];
+    beforeLabel: string;
+    afterLabel: string;
+    unit: string;
+    maxValue: number;
+    minValue?: number;
+    colorBefore: string;
+    colorAfter: string;
+    description: string;
+}
+
+const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
+    const [activeMetric, setActiveMetric] = useState<MetricType>('all');
+    const chartRef = useRef<HTMLCanvasElement | null>(null);
+    const chartInstanceRef = useRef<Chart | null>(null);
+    const sectionRef = useRef<HTMLElement | null>(null);
+    const [animatedValues, setAnimatedValues] = useState({
+        revenue: 0,
+        conversion: 0,
+        traffic: 0,
+        clients: 0,
+        averageCheck: 0,
+        roi: 0
+    });
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const [visibleItems, setVisibleItems] = useState<number[]>([]);
+
+    const metricsData: Record<Exclude<MetricType, 'all'>, MetricData> = {
+        revenue: {
+            title: 'Выручка',
+            before: [100, 102, 105, 108, 110, 112, 115, 118, 120, 122, 125, 128],
+            after: [100, 125, 158, 195, 238, 285, 340, 395, 445, 490, 535, 580],
+            beforeLabel: 'Без сайта (тыс. ₽)',
+            afterLabel: 'С сайтом (тыс. ₽)',
+            unit: 'тыс. ₽',
+            maxValue: 650,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Рост выручки в 4.5 раза за первый год после запуска сайта'
+        },
+        conversion: {
+            title: 'Конверсия',
+            before: [1.2, 1.2, 1.3, 1.3, 1.4, 1.4, 1.5, 1.5, 1.6, 1.6, 1.7, 1.8],
+            after: [1.2, 1.8, 2.5, 3.2, 4.0, 4.5, 5.0, 5.3, 5.6, 5.8, 6.0, 6.2],
+            beforeLabel: 'Без сайта (%)',
+            afterLabel: 'С сайтом (%)',
+            unit: '%',
+            maxValue: 8,
+            minValue: 0,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Конверсия увеличивается в 3-5 раз благодаря удобству и автоматизации'
+        },
+        roi: {
+            title: 'Окупаемость (ROI)',
+            before: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            after: [-500, -400, -300, -150, 50, 250, 450, 600, 750, 850, 950, 1050],
+            beforeLabel: 'Без сайта (тыс. ₽)',
+            afterLabel: 'С сайтом (тыс. ₽)',
+            unit: 'тыс. ₽',
+            maxValue: 1200,
+            minValue: -600,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Инвестиции окупаются через 4-5 месяцев, ROI за год более 200%'
+        },
+        traffic: {
+            title: 'Трафик',
+            before: [30, 32, 35, 33, 38, 40, 42, 45, 43, 48, 50, 52],
+            after: [50, 120, 250, 400, 620, 850, 1100, 1350, 1600, 1850, 2100, 2400],
+            beforeLabel: 'Без сайта (пос./день)',
+            afterLabel: 'С сайтом (пос./день)',
+            unit: 'посетителей',
+            maxValue: 2600,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Рост трафика в 45 раз благодаря SEO и рекламе'
+        },
+        clients: {
+            title: 'Новые клиенты',
+            before: [5, 6, 5, 7, 6, 8, 7, 9, 8, 10, 9, 11],
+            after: [5, 15, 28, 45, 68, 95, 125, 160, 198, 240, 285, 335],
+            beforeLabel: 'Без сайта (клиентов/мес)',
+            afterLabel: 'С сайтом (клиентов/мес)',
+            unit: 'клиентов',
+            maxValue: 380,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Количество новых клиентов увеличивается в 30 раз'
+        },
+        averageCheck: {
+            title: 'Средний чек',
+            before: [2500, 2500, 2600, 2550, 2600, 2650, 2700, 2750, 2800, 2850, 2900, 3000],
+            after: [2500, 3200, 3800, 4200, 4800, 5200, 5600, 5900, 6200, 6500, 6700, 7000],
+            beforeLabel: 'Без сайта (₽)',
+            afterLabel: 'С сайтом (₽)',
+            unit: '₽',
+            maxValue: 7500,
+            colorBefore: '#6b7280',
+            colorAfter: '#E9B70B',
+            description: 'Средний чек растёт благодаря up-sell и кросс-продажам'
+        }
+    };
+
+    const allMetricsDescription = 'Общий взгляд на все ключевые бизнес-метрики в одном графике';
+
+    const benefitsList = [
+        'Увеличение прибыли до 73% за первый год',
+        'Снижение операционных расходов на 42%',
+        'Бизнес работает 24/7 без выходных',
+        'Автоматический сбор контактов клиентов',
+        'Email и SMS рассылки для повторных продаж',
+        'SEO-продвижение — бесплатный трафик',
+        'Ретаргетинг для возврата клиентов',
+        'Удобство для клиентов — онлайн запись 24/7',
+        'Прозрачность — статус заказа онлайн',
+        'Программа лояльности и бонусы',
+        'Отзывы и рейтинги — социальное доказательство',
+        'Аналитика продаж в реальном времени',
+        'CRM интеграция — всё под контролем',
+        'Отчёты в 1 клик по всем метрикам',
+        'Контроль персонала — прозрачность',
+        'Автоматизация процессов — меньше рутины',
+        'Масштабируемость — без ограничений',
+        'Интеграция с 1С и кассами'
     ];
 
-    // Инициализация графиков
     useEffect(() => {
-        const initCharts = async () => {
-            if (typeof window !== 'undefined' && chartRef.current && comparisonChartRef.current) {
-                try {
-                    const ChartModule = await import('chart.js/auto');
-                    const Chart = ChartModule.default;
-                    
-                    if (chartInstanceRef.current) {
-                        chartInstanceRef.current.destroy();
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const index = parseInt((entry.target as HTMLElement).dataset.index || '0');
+                        setVisibleItems(prev => [...prev, index]);
+                        observer.unobserve(entry.target);
                     }
-                    if (comparisonChartInstanceRef.current) {
-                        comparisonChartInstanceRef.current.destroy();
-                    }
+                });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+        );
 
-                    // График роста продаж
-                    chartInstanceRef.current = new Chart(chartRef.current, {
+        const items = document.querySelectorAll(`.${styles.benefitsListItem}`);
+        items.forEach((item, idx) => {
+            (item as HTMLElement).dataset.index = idx.toString();
+            observer.observe(item);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !hasAnimated) {
+                        setHasAnimated(true);
+                        const targets = {
+                            revenue: 450,
+                            conversion: 350,
+                            traffic: 4500,
+                            clients: 2900,
+                            averageCheck: 180,
+                            roi: 200
+                        };
+                        const duration = 2000;
+                        const stepTime = 20;
+                        const steps = duration / stepTime;
+                        let currentStep = 0;
+
+                        const interval = setInterval(() => {
+                            currentStep++;
+                            const progress = Math.min(1, currentStep / steps);
+                            setAnimatedValues({
+                                revenue: Math.floor(targets.revenue * progress),
+                                conversion: Math.floor(targets.conversion * progress),
+                                traffic: Math.floor(targets.traffic * progress),
+                                clients: Math.floor(targets.clients * progress),
+                                averageCheck: Math.floor(targets.averageCheck * progress),
+                                roi: Math.floor(targets.roi * progress)
+                            });
+                            if (progress === 1) clearInterval(interval);
+                        }, stepTime);
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [hasAnimated]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add(styles.visible);
+                    }
+                });
+            },
+            { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+        );
+
+        const revealElements = document.querySelectorAll(`.${styles.reveal}`);
+        revealElements.forEach((el) => observer.observe(el));
+
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const initChart = () => {
+            if (!chartRef.current) return;
+
+            try {
+                if (chartInstanceRef.current) {
+                    chartInstanceRef.current.destroy();
+                }
+
+                const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+                const ctx = chartRef.current.getContext('2d');
+                if (!ctx) return;
+
+                const commonOptions = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutQuart' as const
+                    },
+                    interaction: {
+                        mode: 'index' as const,
+                        intersect: false
+                    },
+                    plugins: {
+                        tooltip: {
+                            backgroundColor: '#0a0a0f',
+                            titleColor: '#ffffff',
+                            bodyColor: '#d1d5db',
+                            borderColor: '#E9B70B',
+                            borderWidth: 1,
+                            padding: 10
+                        },
+                        legend: {
+                            labels: {
+                                color: '#9ca3af',
+                                font: { size: 11, family: 'JetBrains Mono' },
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            },
+                            position: 'top' as const,
+                            align: 'center' as const
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: {
+                                color: '#9ca3af',
+                                font: { size: 10 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: '#9ca3af',
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                };
+
+                if (activeMetric === 'all') {
+                    chartInstanceRef.current = new Chart(ctx, {
                         type: 'line',
                         data: {
-                            labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+                            labels: months,
                             datasets: [
                                 {
-                                    label: 'Без сайта (тыс. ₽)',
-                                    data: [100, 102, 105, 108, 110, 112, 115, 118, 120, 122, 125, 128],
-                                    borderColor: '#6b7280',
-                                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
-                                    borderWidth: 2,
+                                    label: 'Выручка (с сайтом)',
+                                    data: metricsData.revenue.after,
+                                    borderColor: '#E9B70B',
+                                    backgroundColor: 'rgba(233, 183, 11, 0.08)',
+                                    borderWidth: 3,
                                     pointRadius: 3,
-                                    pointBackgroundColor: '#6b7280',
-                                    pointBorderColor: '#1a1a2e',
-                                    pointBorderWidth: 1,
-                                    tension: 0.3,
-                                    fill: true
+                                    tension: 0.4,
+                                    fill: false
                                 },
                                 {
-                                    label: 'С сайтом (тыс. ₽)',
-                                    data: [100, 125, 158, 195, 238, 285, 340, 395, 445, 490, 535, 580],
-                                    borderColor: '#3b82f6',
-                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                    borderWidth: 2.5,
-                                    pointRadius: 4,
-                                    pointBackgroundColor: '#3b82f6',
-                                    pointBorderColor: '#1a1a2e',
-                                    pointBorderWidth: 1,
-                                    tension: 0.3,
-                                    fill: true
+                                    label: 'Конверсия',
+                                    data: metricsData.conversion.after,
+                                    borderColor: '#6D5CE8',
+                                    backgroundColor: 'rgba(109, 92, 232, 0.08)',
+                                    borderWidth: 3,
+                                    pointRadius: 3,
+                                    tension: 0.4,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Трафик',
+                                    data: metricsData.traffic.after,
+                                    borderColor: '#22c55e',
+                                    backgroundColor: 'rgba(34, 197, 94, 0.08)',
+                                    borderWidth: 3,
+                                    pointRadius: 3,
+                                    tension: 0.4,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Новые клиенты',
+                                    data: metricsData.clients.after,
+                                    borderColor: '#f97316',
+                                    backgroundColor: 'rgba(249, 115, 22, 0.08)',
+                                    borderWidth: 3,
+                                    pointRadius: 3,
+                                    tension: 0.4,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Средний чек',
+                                    data: metricsData.averageCheck.after.map(v => v / 1000),
+                                    borderColor: '#38bdf8',
+                                    backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                                    borderWidth: 3,
+                                    pointRadius: 3,
+                                    tension: 0.4,
+                                    fill: false
+                                },
+                                {
+                                    label: 'ROI',
+                                    data: metricsData.roi.after,
+                                    borderColor: '#f43f5e',
+                                    backgroundColor: 'rgba(244, 63, 94, 0.08)',
+                                    borderWidth: 3,
+                                    pointRadius: 3,
+                                    tension: 0.4,
+                                    fill: false
                                 }
                             ]
                         },
                         options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
+                            ...commonOptions,
+                            scales: {
+                                ...commonOptions.scales,
+                                y: {
+                                    ...commonOptions.scales.y,
+                                    min: -600,
+                                    max: 2600
+                                }
+                            },
                             plugins: {
+                                ...commonOptions.plugins,
                                 tooltip: {
-                                    mode: 'index',
-                                    intersect: false,
-                                    backgroundColor: '#1a1a2e',
-                                    titleColor: '#ffffff',
-                                    bodyColor: '#d1d5db',
-                                    borderColor: '#333333',
-                                    borderWidth: 1,
+                                    ...commonOptions.plugins.tooltip,
                                     callbacks: {
-                                        label: (context: any) => {
-                                            return `${context.dataset.label}: ${context.raw}K ₽`;
-                                        }
+                                        label: (context) => `${context.dataset.label}: ${context.raw}`
                                     }
-                                },
-                                legend: {
-                                    labels: {
-                                        color: '#9ca3af',
-                                        font: { size: 11, family: 'Inter' },
-                                        boxWidth: 12,
-                                        usePointStyle: true
-                                    },
-                                    position: 'top'
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    grid: { color: '#333333', lineWidth: 0.5 },
-                                    ticks: { color: '#9ca3af', callback: (val: any) => val + 'K' }
-                                },
-                                x: {
-                                    grid: { display: false },
-                                    ticks: { color: '#9ca3af', font: { size: 10 } }
                                 }
                             }
                         }
                     });
-
-                    // График сравнения
-                    comparisonChartInstanceRef.current = new Chart(comparisonChartRef.current, {
-                        type: 'bar',
-                        data: {
-                            labels: ['Трафик', 'Конверсия', 'Средний чек', 'LTV', 'Узнаваемость'],
-                            datasets: [
-                                {
-                                    label: 'Без сайта',
-                                    data: [30, 1.2, 2500, 8000, 25],
-                                    backgroundColor: 'rgba(107, 114, 128, 0.7)',
-                                    borderRadius: 8
-                                },
-                                {
-                                    label: 'С сайтом',
-                                    data: [100, 4.8, 5200, 24500, 92],
-                                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                                    borderRadius: 8
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: true,
-                            plugins: {
-                                tooltip: {
-                                    backgroundColor: '#1a1a2e',
-                                    titleColor: '#ffffff',
-                                    bodyColor: '#d1d5db',
-                                    borderColor: '#333333',
-                                    borderWidth: 1
-                                },
-                                legend: {
-                                    labels: {
-                                        color: '#9ca3af',
-                                        font: { size: 11 },
-                                        boxWidth: 12
-                                    },
-                                    position: 'top'
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    grid: { color: '#333333', lineWidth: 0.5 },
-                                    ticks: { color: '#9ca3af' }
-                                },
-                                x: {
-                                    grid: { display: false },
-                                    ticks: { color: '#9ca3af', font: { size: 11 } }
-                                }
-                            }
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error initializing charts:', error);
+                    return;
                 }
+
+                const currentData = metricsData[activeMetric];
+
+                chartInstanceRef.current = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: currentData.beforeLabel,
+                                data: currentData.before,
+                                borderColor: currentData.colorBefore,
+                                backgroundColor: 'rgba(107, 114, 128, 0.05)',
+                                borderWidth: 2,
+                                borderDash: [8, 6],
+                                pointRadius: 3,
+                                pointBackgroundColor: currentData.colorBefore,
+                                pointBorderColor: '#0a0a0f',
+                                pointBorderWidth: 1.5,
+                                pointHoverRadius: 7,
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: currentData.afterLabel,
+                                data: currentData.after,
+                                borderColor: currentData.colorAfter,
+                                backgroundColor: 'rgba(233, 183, 11, 0.08)',
+                                borderWidth: 3,
+                                pointRadius: 4,
+                                pointBackgroundColor: currentData.colorAfter,
+                                pointBorderColor: '#0a0a0f',
+                                pointBorderWidth: 1.5,
+                                pointHoverRadius: 8,
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        ...commonOptions,
+                        scales: {
+                            ...commonOptions.scales,
+                            y: {
+                                ...commonOptions.scales.y,
+                                min: currentData.minValue ?? 0,
+                                max: currentData.maxValue
+                            }
+                        },
+                        plugins: {
+                            ...commonOptions.plugins,
+                            tooltip: {
+                                ...commonOptions.plugins.tooltip,
+                                callbacks: {
+                                    label: (context) => {
+                                        const label = context.dataset.label || '';
+                                        const rawValue = context.raw;
+                                        const value = typeof rawValue === 'number' ? rawValue : 0;
+
+                                        if (activeMetric === 'conversion') return `${label}: ${value}%`;
+                                        if (activeMetric === 'averageCheck') return `${label}: ${value.toLocaleString()} ₽`;
+                                        if (activeMetric === 'clients') return `${label}: ${value} чел.`;
+                                        return `${label}: ${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error initializing chart:', error);
             }
         };
 
-        initCharts();
-
+        const timer = setTimeout(initChart, 100);
         return () => {
+            clearTimeout(timer);
             if (chartInstanceRef.current) {
                 chartInstanceRef.current.destroy();
                 chartInstanceRef.current = null;
             }
-            if (comparisonChartInstanceRef.current) {
-                comparisonChartInstanceRef.current.destroy();
-                comparisonChartInstanceRef.current = null;
-            }
         };
-    }, []);
+    }, [activeMetric]);
 
-    const calculateROI = () => {
-        const investment = roiValue;
-        const monthly = monthlyProfit;
-        const yearlyProfit = monthly * 12;
-        const roi = ((yearlyProfit - investment) / investment) * 100;
-        const paybackMonths = investment / monthly;
-        return { roi: Math.max(0, Math.floor(roi)), paybackMonths: paybackMonths.toFixed(1) };
-    };
-
-    const { roi, paybackMonths } = calculateROI();
+    const metricsList = [
+        { name: 'Выручка', key: 'revenue', value: `+${animatedValues.revenue}%`, target: 450, suffix: '%' },
+        { name: 'Конверсия', key: 'conversion', value: `+${animatedValues.conversion}%`, target: 350, suffix: '%' },
+        { name: 'Трафик', key: 'traffic', value: `+${animatedValues.traffic}%`, target: 4500, suffix: '%' },
+        { name: 'Новые клиенты', key: 'clients', value: `+${animatedValues.clients}%`, target: 2900, suffix: '%' },
+        { name: 'Средний чек', key: 'averageCheck', value: `+${animatedValues.averageCheck}%`, target: 180, suffix: '%' },
+        { name: 'ROI', key: 'roi', value: `+${animatedValues.roi}%`, target: 200, suffix: '%' }
+    ];
 
     return (
-        <section id="business-benefits" className={styles.businessBenefits}>
-            {/* Header */}
+        <section id="business-benefits" className={styles.businessBenefits} ref={sectionRef}>
             <div className={`${styles.header} ${styles.reveal}`}>
                 <span className={styles.tag}>Почему это выгодно</span>
                 <h2 className={styles.title}>
@@ -227,166 +486,140 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = ({ onRequestClick }) =
                 </p>
             </div>
 
-            {/* Stats Showcase */}
-            <div className={`${styles.statsShowcase} ${styles.reveal}`}>
-                <div className={styles.statItem}>
-                    <div className={styles.statNumber}>+73%</div>
-                    <div className={styles.statLabel}>Средний рост продаж</div>
-                </div>
-                <div className={styles.statItem}>
-                    <div className={styles.statNumber}>-42%</div>
-                    <div className={styles.statLabel}>Снижение операционных расходов</div>
-                </div>
-                <div className={styles.statItem}>
-                    <div className={styles.statNumber}>24/7</div>
-                    <div className={styles.statLabel}>Бизнес работает без выходных</div>
-                </div>
-                <div className={styles.statItem}>
-                    <div className={styles.statNumber}>3-6 мес</div>
-                    <div className={styles.statLabel}>Средний ROI</div>
-                </div>
-            </div>
-
-            {/* Growth Chart Section */}
-            <div className={`${styles.chartSection} ${styles.reveal}`}>
-                <div className={styles.chartHeader}>
-                    <h3>📈 Рост прибыли после запуска сайта</h3>
-                    <div className={styles.legend}>
-                        <span><span className={styles.legendDot} style={{ background: '#6b7280' }}></span>Без сайта</span>
-                        <span><span className={styles.legendDot} style={{ background: '#3b82f6' }}></span>С сайтом</span>
-                    </div>
-                </div>
-                <div className={styles.chartContainer}>
-                    <canvas ref={chartRef} width="600" height="220" style={{ width: '100%', height: '220px' }}></canvas>
-                </div>
-                <div className={styles.chartNote}>
-                    📊 Данные на основе реальных проектов за 2024-2025 год
-                </div>
-            </div>
-
-            {/* Benefits Grid */}
-            <div className={styles.benefitsGrid}>
-                {benefits.map((benefit, idx) => (
-                    <div key={idx} className={`${styles.benefitCard} ${styles.revealCard}`} style={{ animationDelay: `${idx * 0.02}s` }}>
-                        <div className={styles.benefitIcon}>{benefit.icon}</div>
-                        <div className={styles.benefitContent}>
-                            <h3>{benefit.title}</h3>
-                            <p>{benefit.description}</p>
-                            {benefit.stat && <span className={styles.benefitStat}>{benefit.stat}</span>}
+            <div className={`${styles.metricsList} ${styles.reveal}`}>
+                {metricsList.map((metric, idx) => (
+                    <div key={idx} className={styles.metricsListItem}>
+                        <span className={styles.metricsName}>{metric.name}</span>
+                        <div className={styles.metricsValueWrapper}>
+                            <span className={styles.metricsValue} style={{ color: '#E9B70B' }}>
+                                {metric.value}
+                            </span>
+                            <div className={styles.metricsProgress}>
+                                <div
+                                    className={styles.metricsProgressFill}
+                                    style={{ width: `${(animatedValues[metric.key as keyof typeof animatedValues] / metric.target) * 100}%` }}
+                                ></div>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
 
-            {/* Comparison Section */}
-            <div className={`${styles.comparisonSection} ${styles.reveal}`}>
-                <div className={styles.comparisonHeader}>
-                    <h3>⚡ Сравнение с конкурентами</h3>
-                    <p>Ваш бизнес без сайта vs с современным цифровым продуктом</p>
-                </div>
-                <div className={styles.comparisonGrid}>
-                    <div className={`${styles.comparisonCard} ${styles.withoutSite}`}>
-                        <h4>📭 Без сайта</h4>
-                        <div className={styles.comparisonStats}>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Посетителей в день</span>
-                                <span className={styles.statValue}>~30-50</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Конверсия</span>
-                                <span className={styles.statValue}>1-2%</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Рабочие часы</span>
-                                <span className={styles.statValue}>9:00-18:00</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Способы оплаты</span>
-                                <span className={styles.statValue}>Наличные / Перевод</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={`${styles.comparisonCard} ${styles.withSite}`}>
-                        <h4>🚀 С сайтом / приложением</h4>
-                        <div className={styles.comparisonStats}>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Посетителей в день</span>
-                                <span className={`${styles.statValue} ${styles.positive}`}>500-5000+</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Конверсия</span>
-                                <span className={`${styles.statValue} ${styles.positive}`}>3-8%</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Рабочие часы</span>
-                                <span className={`${styles.statValue} ${styles.positive}`}>24/7</span>
-                            </div>
-                            <div className={styles.comparisonStat}>
-                                <span className={styles.statLabel}>Способы оплаты</span>
-                                <span className={`${styles.statValue} ${styles.positive}`}>Все способы + Apple/Google Pay</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Comparison Bar Chart */}
-            <div className={`${styles.comparisonChartSection} ${styles.reveal}`}>
+            <div className={`${styles.chartSection} ${styles.reveal}`}>
                 <div className={styles.chartHeader}>
-                    <h3>📊 Ключевые метрики: Сайт vs Без сайта</h3>
+                    <div className={styles.chartTitleBlock}>
+                        <h3>
+                            {activeMetric === 'all' ? 'Общий обзор всех метрик' : 'Динамика роста после запуска сайта'}
+                        </h3>
+                        <p>
+                            {activeMetric === 'all'
+                                ? allMetricsDescription
+                                : metricsData[activeMetric].description}
+                        </p>
+                    </div>
+                    <div className={styles.metricToggles}>
+                        {(['all', 'revenue', 'conversion', 'traffic', 'clients', 'averageCheck', 'roi'] as MetricType[]).map((metric) => (
+                            <button
+                                key={metric}
+                                className={`${styles.metricBtn} ${activeMetric === metric ? styles.active : ''}`}
+                                onClick={() => setActiveMetric(metric)}
+                            >
+                                {metric === 'all' ? 'Все' : metricsData[metric].title}
+                            </button>
+                        ))}
+                    </div>
                 </div>
+
                 <div className={styles.chartContainer}>
-                    <canvas ref={comparisonChartRef} width="600" height="240" style={{ width: '100%', height: '240px' }}></canvas>
+                    <canvas ref={chartRef}></canvas>
+                </div>
+
+                <div className={styles.chartStats}>
+                    {activeMetric === 'all' ? (
+                        <>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Метрик в сравнении</span>
+                                <strong className={styles.chartStatValue}>6</strong>
+                            </div>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Режим</span>
+                                <strong className={styles.chartStatValue}>Все в одном</strong>
+                            </div>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Фокус</span>
+                                <strong className={styles.chartStatValue} style={{ color: '#E9B70B' }}>
+                                    Общий эффект
+                                </strong>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Начало года</span>
+                                <strong className={styles.chartStatValue}>
+                                    {activeMetric === 'revenue' ? '100 тыс. ₽' :
+                                        activeMetric === 'conversion' ? '1.2%' :
+                                            activeMetric === 'traffic' ? '30 пос.' :
+                                                activeMetric === 'clients' ? '5 клиентов' :
+                                                    activeMetric === 'averageCheck' ? '2500 ₽' :
+                                                        '0 ₽'}
+                                </strong>
+                            </div>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Конец года</span>
+                                <strong className={styles.chartStatValue}>
+                                    {activeMetric === 'revenue' ? '580 тыс. ₽' :
+                                        activeMetric === 'conversion' ? '6.2%' :
+                                            activeMetric === 'traffic' ? '2400 пос.' :
+                                                activeMetric === 'clients' ? '335 клиентов' :
+                                                    activeMetric === 'averageCheck' ? '7000 ₽' :
+                                                        '1050 тыс. ₽'}
+                                </strong>
+                            </div>
+                            <div className={styles.chartStat}>
+                                <span className={styles.chartStatLabel}>Рост</span>
+                                <strong className={styles.chartStatValue} style={{ color: '#E9B70B' }}>
+                                    {activeMetric === 'revenue' ? '+480%' :
+                                        activeMetric === 'conversion' ? '+416%' :
+                                            activeMetric === 'traffic' ? '+7900%' :
+                                                activeMetric === 'clients' ? '+6600%' :
+                                                    activeMetric === 'averageCheck' ? '+180%' :
+                                                        'окупаемость'}
+                                </strong>
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                <div className={styles.chartInsight}>
+                    <div className={styles.insightCard}>
+                        <strong>Ключевое открытие</strong>
+                        <p>Запуск сайта увеличивает выручку в 4.5 раза за первый год</p>
+                    </div>
+                    <div className={styles.insightCard}>
+                        <strong>Точка безубыточности</strong>
+                        <p>В среднем через 4-5 месяцев после запуска</p>
+                    </div>
+                    <div className={styles.insightCard}>
+                        <strong>ROI превышает 200%</strong>
+                        <p>При правильной настройке и продвижении</p>
+                    </div>
                 </div>
             </div>
 
-            {/* ROI Calculator */}
-            <div className={`${styles.roiCalculator} ${styles.reveal}`}>
-                <div className={styles.roiHeader}>
-                    <h3>💰 Рассчитайте окупаемость сайта</h3>
-                    <p>Узнайте, через сколько месяцев ваш сайт начнёт приносить чистую прибыль</p>
-                </div>
-                <div className={styles.calculatorGrid}>
-                    <div className={styles.calculatorInputs}>
-                        <div className={styles.inputGroup}>
-                            <label>💰 Стоимость разработки (₽)</label>
-                            <input
-                                type="number"
-                                value={roiValue}
-                                onChange={(e) => setRoiValue(Number(e.target.value))}
-                                step="50000"
-                            />
+            <div className={`${styles.benefitsListSection} ${styles.reveal}`}>
+                <h3 className={styles.benefitsListTitle}>Что вы получаете</h3>
+                <div className={styles.benefitsListGrid}>
+                    {benefitsList.map((benefit, idx) => (
+                        <div
+                            key={idx}
+                            className={`${styles.benefitsListItem} ${visibleItems.includes(idx) ? styles.animated : ''}`}
+                            style={{ animationDelay: `${idx * 0.03}s` }}
+                        >
+                            <span className={styles.benefitsListBullet}></span>
+                            <span className={styles.benefitsListText}>{benefit}</span>
                         </div>
-                        <div className={styles.inputGroup}>
-                            <label>📈 Ожидаемая ежемесячная прибыль от сайта (₽)</label>
-                            <input
-                                type="number"
-                                value={monthlyProfit}
-                                onChange={(e) => setMonthlyProfit(Number(e.target.value))}
-                                step="10000"
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.calculatorResult}>
-                        <div className={styles.resultBox}>
-                            <div className={styles.resultLabel}>Окупаемость</div>
-                            <div className={styles.resultNumber}>{paybackMonths} мес.</div>
-                            <div className={styles.resultLabel}>ROI (за год)</div>
-                            <div className={styles.resultNumber}>{roi}%</div>
-                            {roi > 100 && <div className={styles.roiBadge}>📈 Высокая эффективность!</div>}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* CTA */}
-            <div className={`${styles.ctaSection} ${styles.reveal}`}>
-                <div className={styles.ctaContent}>
-                    <h3>Готовы увеличить прибыль вашего бизнеса?</h3>
-                    <p>Создадим цифровой продукт, который будет работать на вас 24/7</p>
-                    <button className={styles.ctaButton} onClick={onRequestClick}>
-                        Рассчитать стоимость проекта →
-                    </button>
+                    ))}
                 </div>
             </div>
         </section>

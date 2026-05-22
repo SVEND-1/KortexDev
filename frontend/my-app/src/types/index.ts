@@ -50,13 +50,13 @@ export interface ServiceCard {
     subtitle: string;
     price?: string;
     features: {
-        icon: string;
+        icon?: string;
         title: string;
         description: string;
     }[];
     examples: {
         industry: string;
         specialFeature: string;
-        icon: string;
+        icon?: string;
     }[];
 }

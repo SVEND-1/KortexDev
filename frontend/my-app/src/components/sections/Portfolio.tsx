@@ -11,14 +11,14 @@ interface PortfolioProps {
     onRequestClick: () => void;
 }
 
-const Portfolio: React.FC<PortfolioProps> = ({ 
-    projects, 
-    loading, 
-    currentImageIndex, 
-    onNextImage, 
-    onPrevImage, 
-    onRequestClick 
-}) => {
+const Portfolio: React.FC<PortfolioProps> = ({
+                                                 projects,
+                                                 loading,
+                                                 currentImageIndex,
+                                                 onNextImage,
+                                                 onPrevImage,
+                                                 onRequestClick
+                                             }) => {
     const getImageUrl = (imagePath: string) => {
         if (!imagePath) return '';
         if (imagePath.startsWith('data:')) return imagePath;
@@ -93,7 +93,7 @@ const Portfolio: React.FC<PortfolioProps> = ({
                 <div className={styles.loader}>Загрузка проектов...</div>
             ) : projects.length > 0 ? (
                 <div className={styles.projectsGrid}>
-                    {projects.map((project, projectIdx) => {
+                    {projects.map((project) => {
                         const projectType = getProjectType(project.name);
                         const projectTypeLabel = getProjectTypeLabel(projectType);
                         const hasImages = project.images && project.images.length > 0;
@@ -101,10 +101,9 @@ const Portfolio: React.FC<PortfolioProps> = ({
                         const currentIndex = currentImageIndex[project.id] || 0;
                         const currentImageUrl = hasImages ? getImageUrl(images[currentIndex]) : null;
                         const totalImages = images.length;
-                        const isFeatured = projectIdx === 0;
 
                         return (
-                            <div key={project.id} className={`${styles.projectCard} ${isFeatured ? styles.featured : ''} ${styles.revealScale}`}>
+                            <div key={project.id} className={`${styles.projectCard} ${styles.revealScale}`}>
                                 <div className={styles.projectThumb}>
                                     {hasImages && currentImageUrl ? (
                                         <>
@@ -112,16 +111,16 @@ const Portfolio: React.FC<PortfolioProps> = ({
                                             <div className={styles.projectImageOverlay}></div>
                                             {totalImages > 1 && (
                                                 <>
-                                                    <button className={`${styles.projectCarouselPrev} ${styles.hoverScale}`} onClick={(e) => { e.stopPropagation(); onPrevImage(project.id, totalImages); }}>‹</button>
-                                                    <button className={`${styles.projectCarouselNext} ${styles.hoverScale}`} onClick={(e) => { e.stopPropagation(); onNextImage(project.id, totalImages); }}>›</button>
+                                                    <button className={styles.projectCarouselPrev} onClick={(e) => { e.stopPropagation(); onPrevImage(project.id, totalImages); }}>‹</button>
+                                                    <button className={styles.projectCarouselNext} onClick={(e) => { e.stopPropagation(); onNextImage(project.id, totalImages); }}>›</button>
                                                     <div className={styles.projectCarouselCounter}>{currentIndex + 1} / {totalImages}</div>
                                                 </>
                                             )}
                                         </>
                                     ) : (
-                                        <div className={styles.projectPlaceholder} style={{ background: getGradientColor(project.name), width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '12px' }}>
-                                            <span style={{ fontSize: '40px', opacity: 0.6 }}>{getProjectTypeIcon(project.name)}</span>
-                                            <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', fontWeight: 600, letterSpacing: '-0.01em' }}>{project.name}</span>
+                                        <div className={styles.projectPlaceholder} style={{ background: getGradientColor(project.name) }}>
+                                            <span className={styles.placeholderIcon}>{getProjectTypeIcon(project.name)}</span>
+                                            <span className={styles.placeholderText}>{project.name}</span>
                                         </div>
                                     )}
                                     <div className={styles.thumbLine}></div>

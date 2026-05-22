@@ -1,815 +1,265 @@
-:root {
-  --bg: #04080f;
-  --green: #00ff88;
-  --cyan: #00d4ff;
-  --blue: #0057ff;
-  --dim: #1a2a3a;
-  --text: #c4d8e8;
-  --muted: #4a6070;
-  --glow-g: rgba(0, 255, 136, 0.35);
-  --red: #ff4444;
-}
-
-/* Login Page */
 .loginContainer {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0f1a, #04080f);
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 .loginBox {
-  background: rgba(5, 12, 22, 0.95);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 20px;
-  padding: 40px;
+  background: #000;
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 52px 44px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 0 40px rgba(0, 212, 255, 0.1);
+  max-width: 380px;
+  position: relative;
+
+  /* Золотая линия сверху */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: #e9b709;
+  }
 }
 
 .loginHeader {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .logo {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 24px;
-  color: var(--green);
-  text-shadow: 0 0 20px var(--green);
-  margin-bottom: 16px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 10px;
+  span { color: #e9b709; }
 }
 
 .loginHeader h1 {
-  font-size: 20px;
-  color: var(--text);
-  font-weight: 400;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
 }
 
 .loginForm {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
 }
 
 .inputGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+
+  label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+  }
+
+  input {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #fff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+    &::placeholder { color: rgba(255,255,255,.2); }
+    &:focus { border-color: #e9b709; }
+  }
 }
 
-.inputGroup label {
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+.loginError {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .06em;
   text-transform: uppercase;
+  color: #ff4444;
+  border-left: 2px solid #ff4444;
+  padding-left: 10px;
 }
 
-.inputGroup input {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 14px;
-  color: var(--text);
-  transition: all 0.3s;
-}
-
-.inputGroup input:focus {
-  outline: none;
-  border-color: var(--cyan);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
-}
-
-.loginBtn {
-  background: linear-gradient(135deg, var(--green), var(--cyan));
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
-}
-
-.loginBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px var(--glow-g);
-}
-
-.error {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--red);
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 12px;
-  color: var(--red);
-  text-align: center;
-}
-
-/* Admin Dashboard */
+/* ── Admin Panel ── */
 .adminContainer {
   min-height: 100vh;
-  background: var(--bg);
-  color: var(--text);
+  background: #000;
+  color: #fff;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-.adminNav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(4, 8, 15, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+.adminHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
-  height: 60px;
-  z-index: 100;
-}
+  padding: 20px clamp(20px,5vw,80px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 
-.navLogo {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 18px;
-  color: var(--green);
-  text-shadow: 0 0 20px var(--green);
-}
-
-.navTabs {
-  display: flex;
-  gap: 10px;
-}
-
-.tabBtn {
-  background: transparent;
-  border: none;
-  padding: 8px 20px;
-  font-size: 14px;
-  color: var(--muted);
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.3s;
-}
-
-.tabBtn:hover {
-  color: var(--cyan);
-  background: rgba(0, 212, 255, 0.05);
-}
-
-.tabBtn.active {
-  color: var(--green);
-  background: rgba(0, 255, 136, 0.1);
-  border-bottom: 2px solid var(--green);
-}
-
-.logoutBtn {
-  background: transparent;
-  border: 1px solid rgba(255, 68, 68, 0.3);
-  padding: 6px 16px;
-  border-radius: 6px;
-  color: var(--red);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.logoutBtn:hover {
-  background: rgba(255, 68, 68, 0.1);
-  border-color: var(--red);
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+    span { color: #e9b709; }
+  }
 }
 
 .adminContent {
-  padding-top: 80px;
-  padding: 80px 30px 30px;
+  padding: 40px clamp(20px,5vw,80px);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.tabContent {
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.tabHeader {
+/* Табы */
+.adminTabs {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 16px;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,.07);
+  margin-bottom: 36px;
+  max-width: fit-content;
 }
 
-.tabHeader h2 {
-  font-size: 22px;
+.adminTab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
   font-weight: 500;
-}
-
-.createBtn {
-  background: linear-gradient(135deg, var(--green), var(--cyan));
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: transparent;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #000;
+  border-right: 1px solid rgba(255,255,255,.07);
+  padding: 10px 22px;
+  color: rgba(255,255,255,.35);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all .2s;
+
+  &:last-child { border-right: none; }
+  &:hover { color: rgba(255,255,255,.7); background: rgba(255,255,255,.03); }
+
+  &.active {
+    background: #e9b709;
+    color: #000;
+    font-weight: 600;
+    border-right-color: #e9b709;
+  }
 }
 
-.createBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px var(--glow-g);
+.adminSection {
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(24px,3vw,36px);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
 }
 
-/* Tables */
-.tableWrapper {
-  overflow-x: auto;
+/* Форма добавления */
+.addProjectForm {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: #080808;
+
+  input[type="text"],
+  input[type="file"] {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #fff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    flex: 1;
+    min-width: 200px;
+    outline: none;
+    transition: border-color .2s;
+    &:focus { border-color: #e9b709; }
+    &::placeholder { color: rgba(255,255,255,.2); }
+  }
 }
 
+/* Таблица */
 .dataTable {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(5, 12, 22, 0.5);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.dataTable th,
-.dataTable td {
-  padding: 14px 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(0, 212, 255, 0.05);
-}
-
-.dataTable th {
-  background: rgba(0, 212, 255, 0.05);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
-  font-weight: 600;
-}
-
-.dataTable td {
   font-size: 13px;
+
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.3);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  td {
+    padding: 12px 14px;
+    color: rgba(255,255,255,.65);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    vertical-align: middle;
+  }
+
+  tr:hover td { background: rgba(255,255,255,.02); }
 }
 
-.projectIcon {
-  font-size: 24px;
-}
-
-.projectName {
+/* Кнопки */
+.btnDelete {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
   font-weight: 500;
-}
-
-.imagePreview {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.thumbnail {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.noImage {
-  color: var(--muted);
-  font-size: 11px;
-}
-
-.reviewText {
-  max-width: 300px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.requestType {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.requestType.telegram {
-  background: rgba(0, 212, 255, 0.1);
-  color: var(--cyan);
-}
-
-.requestType.vk {
-  background: rgba(0, 100, 255, 0.1);
-  color: #4680ff;
-}
-
-.deleteBtn {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid rgba(255, 68, 68, 0.3);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  color: var(--red);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.deleteBtn:hover {
-  background: rgba(255, 68, 68, 0.2);
-  border-color: var(--red);
-}
-
-/* Message */
-.message {
-  position: fixed;
-  top: 70px;
-  right: 20px;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  z-index: 1000;
-  animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-.message.success {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid var(--green);
-  color: var(--green);
-}
-
-.message.error {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--red);
-  color: var(--red);
-}
-
-/* Modal */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal {
-  background: rgba(5, 15, 28, 0.95);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 16px;
-  padding: 32px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-}
-
-/* Расширенная модалка с превью */
-.modalWide {
-  max-width: 900px;
-}
-
-.modalClose {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.modal h3 {
-  font-size: 24px;
-  margin-bottom: 24px;
-  color: var(--text);
-}
-
-/* Тело модалки — два столбца */
-.modalBody {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-}
-
-.modalForm {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  flex: 1;
-  min-width: 0;
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.formGroup label {
-  font-size: 12px;
-  color: var(--muted);
+  letter-spacing: .08em;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.formGroup input {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 8px;
-  padding: 10px 14px;
-  color: var(--text);
-  font-size: 14px;
-}
-
-.formGroup input:focus {
-  outline: none;
-  border-color: var(--cyan);
-}
-
-.formGroup small {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.modalButtons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 10px;
-}
-
-.cancelBtn {
   background: transparent;
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  padding: 10px 20px;
-  border-radius: 8px;
-  color: var(--text);
+  border: 1px solid rgba(255,68,68,.35);
+  color: rgba(255,68,68,.65);
+  padding: 5px 12px;
   cursor: pointer;
+  transition: all .2s;
+  &:hover { background: rgba(255,68,68,.08); border-color: #ff4444; color: #ff4444; }
 }
 
-.submitBtn {
-  background: linear-gradient(135deg, var(--green), var(--cyan));
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  color: #000;
-  cursor: pointer;
-}
-
-.submitBtn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-/* Панель превью */
-.previewPanel {
-  width: 320px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.previewLabel {
+.logoutBtn {
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  margin: 0;
-}
-
-/* Карточка проекта — имитация главной страницы */
-.projectCard {
-  background: rgba(5, 12, 22, 0.8);
-  border: 1px solid rgba(0, 212, 255, 0.15);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: border-color 0.3s;
-}
-
-.projectCard:hover {
-  border-color: rgba(0, 255, 136, 0.3);
-}
-
-.cardImageArea {
-  width: 100%;
-  height: 200px;
-  background: rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
-}
-
-.cardMainImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Кнопки карусели */
-.carouselBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
-  border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s;
-  z-index: 10;
-}
-
-.carouselBtn:hover:not(:disabled) {
-  background: rgba(0, 255, 136, 0.8);
-  color: #000;
-}
-
-.carouselBtn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.carouselPrev {
-  left: 8px;
-}
-
-.carouselNext {
-  right: 8px;
-}
-
-/* Индикатор текущего изображения */
-.carouselIndicator {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  color: var(--cyan);
-  z-index: 10;
-}
-
-/* Миниатюры */
-.carouselThumbs {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  display: flex;
-  gap: 6px;
-  z-index: 10;
-}
-
-.carouselThumb {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 0;
-  transition: all 0.2s;
-}
-
-.carouselThumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.carouselThumb.active {
-  border-color: var(--green);
-  box-shadow: 0 0 8px var(--green);
-}
-
-.carouselThumbMore {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: var(--cyan);
-  font-weight: 600;
-}
-
-.cardExtraImages {
-  position: absolute;
-  bottom: 6px;
-  right: 6px;
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.cardThumb {
-  width: 36px;
-  height: 36px;
-  object-fit: cover;
-  border-radius: 5px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
-}
-
-.cardMoreCount {
-  background: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 5px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  color: var(--cyan);
-  font-weight: 600;
-}
-
-.cardImagePlaceholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: var(--muted);
-}
-
-.cardImagePlaceholder span {
-  font-size: 32px;
-  opacity: 0.4;
-}
-
-.cardImagePlaceholder p {
-  font-size: 11px;
-  opacity: 0.5;
-  margin: 0;
-}
-
-.cardInfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-}
-
-.cardIcon {
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.cardName {
-  font-size: 13px;
   font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.previewImageCount {
-  font-size: 11px;
-  color: var(--muted);
-  margin: 0;
-  text-align: center;
-}
-
-.loader {
-  text-align: center;
-  padding: 60px;
-  color: var(--muted);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .adminNav {
-    padding: 0 15px;
-    flex-wrap: wrap;
-    height: auto;
-    padding: 10px;
-  }
-
-  .navTabs {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    margin-top: 10px;
-  }
-
-  .tabBtn {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  .adminContent {
-    padding: 100px 15px 20px;
-  }
-
-  .tabHeader {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .dataTable th,
-  .dataTable td {
-    padding: 10px 12px;
-  }
-
-  .reviewText {
-    max-width: 150px;
-  }
-
-  .modal {
-    padding: 20px;
-    width: 95%;
-  }
-
-  .modalWide {
-    max-width: 95%;
-  }
-
-  .modalBody {
-    flex-direction: column;
-  }
-
-  .previewPanel {
-    width: 100%;
-  }
-
-  .carouselThumb {
-    width: 32px;
-    height: 32px;
-  }
-
-  .carouselThumbMore {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-.emptyState {
-  text-align: center;
-  padding: 60px 20px;
-  background: rgba(5, 12, 22, 0.5);
-  border-radius: 12px;
-  border: 1px dashed rgba(0, 212, 255, 0.2);
-  color: var(--muted);
-}
-
-.emptyState p {
-  margin-bottom: 20px;
-  font-size: 16px;
-}
-
-.errorBanner {
-  background: rgba(255, 68, 68, 0.1);
-  border: 1px solid var(--red);
-  border-radius: 8px;
-  padding: 12px 20px;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: var(--red);
-}
-
-.errorBanner button {
-  background: rgba(255, 68, 68, 0.2);
-  border: 1px solid var(--red);
-  border-radius: 6px;
-  padding: 6px 14px;
-  color: var(--red);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.45);
+  padding: 8px 20px;
   cursor: pointer;
+  transition: all .2s;
+  &:hover { border-color: rgba(255,255,255,.4); color: #fff; }
 }

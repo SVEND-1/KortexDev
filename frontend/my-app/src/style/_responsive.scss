@@ -1,86 +1,61 @@
-/* ────────────────── RESPONSIVE ────────────────── */
-@media (max-width: 1100px) {
-  .hero {
-    padding: 0 48px;
-    gap: 48px;
-    padding-top: 80px;
-  }
-  .nav { width: calc(100% - 48px); }
+/* ══════════════════════════════════════
+   RESPONSIVE — Valar Atomics Style
+   ══════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .navLinks { display: none !important; }
+  .navCta   { display: none !important; }
+  .mobileMenuToggle { display: flex !important; }
+
+  .hero { grid-template-columns: 1fr; }
+  .heroLeft { padding-top: clamp(40px,6vw,80px); }
+  .panel { border-left: none; border-top: 1px solid var(--border); }
 }
 
 @media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 100px 32px 60px;
-    gap: 48px;
-    min-height: auto;
-    text-align: center;
-    .heroText {
-      align-items: center;
-      order: -1;
-      .heroDesc { max-width: 100%; }
-      .ctaRow { justify-content: center; }
-      .statsRow { justify-content: center; }
-    }
-    .monitorWrap { max-width: 460px; margin: 0 auto; }
-    .scrollHint { display: none; }
-  }
-
-  .services, .benefits, .portfolio, .reviews, .businessBenefitsShort {
-    padding: 80px 32px;
-  }
-
-  .sectionSep { margin: 0 32px; }
-
-  .projectsGrid {
-    grid-template-columns: 1fr 1fr;
-    .projectCard.featured {
-      grid-column: 1 / -1;
-      .projectThumb { height: 300px; }
-    }
-  }
-
-  .nav {
-    width: calc(100% - 32px);
-    top: 12px;
-    padding: 0 16px;
-    .navLinks { display: none; }
-    .navCta { display: none; }
-    .mobileMenuToggle { display: flex; }
-  }
-
-  .shortBenefitsGrid { flex-direction: column; }
-  .finalOffer { margin: 40px 32px; }
-  .contact { padding: 80px 32px; }
-  .footer { padding: 24px 32px; }
+  .projectsGrid { grid-template-columns: repeat(2, 1fr); }
+  .projectCard.featured { grid-column: 1 / -1; }
 }
 
-@media (max-width: 640px) {
-  .hero { padding: 80px 20px 50px; }
+@media (max-width: 768px) {
+  .benefitsGrid { grid-template-columns: 1fr; }
+  .statsBlock   { grid-template-columns: 1fr; }
+  .serviceFeatures { grid-template-columns: 1fr; }
+  .portfolioHeader { flex-direction: column; align-items: flex-start; }
+  .reviewsHeader   { flex-direction: column; align-items: flex-start; }
+  .contactRow  { flex-direction: column; align-items: flex-start; }
+  .finalOfferButtons { flex-direction: column; }
+  .serviceToggle { flex-wrap: wrap; }
+}
 
-  .projectsGrid {
-    grid-template-columns: 1fr;
-    .projectCard.featured {
-      grid-column: 1 / -1;
-      .projectThumb { height: 220px; }
-    }
+@media (max-width: 600px) {
+  .projectsGrid { grid-template-columns: 1fr; }
+
+  .hero {
+    .heroTitle { font-size: clamp(60px, 16vw, 96px); }
+    .heroActions { flex-direction: column; }
   }
 
-  .reviewsMarquee { animation-duration: 30s; }
-  .reviewCard { width: 300px; }
+  .btnPrimary,
+  .btnSecondary { width: 100%; justify-content: center; }
 
-  .services, .benefits, .portfolio, .reviews, .businessBenefitsShort {
-    padding: 60px 20px;
+  .mockBody { grid-template-columns: 1fr; }
+  .floating1,.floating2,.floating3 { display: none; }
+
+  .modal { margin: 10px; max-width: calc(100vw - 20px); }
+
+  .sectionSep { margin: 0 20px; }
+  .offerBanner { padding: 12px var(--px); }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
+}
 
-  .finalOffer {
-    margin: 30px 20px;
-    .finalOfferContent { padding: 48px 24px; }
-  }
-
-  .contact { padding: 60px 20px; }
-  .footer { padding: 20px; flex-direction: column; align-items: center; text-align: center; }
-
-  .projectThumb { height: 180px; }
-  .projectCard.featured .projectThumb { height: 240px; }
+@media (max-width: 480px) {
+  .card h3 { font-size: 15px; }
+  .reviewCard { width: 290px; }
+  .serviceCard { padding: 24px 20px; }
 }
