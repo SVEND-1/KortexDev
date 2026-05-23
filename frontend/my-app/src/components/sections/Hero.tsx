@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from '../../style/Hero.module.scss';
 
 interface HeroProps {
@@ -7,37 +7,6 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
-    const [typedText, setTypedText] = useState('');
-    const [textIndex, setTextIndex] = useState(0);
-    const [isDeleting, setIsDeleting] = useState(false);
-
-    const words = ['Лендинги', 'Веб-платформы', 'Мобильные приложения'];
-
-    // Эффект печатающей машинки
-    useEffect(() => {
-        const currentWord = words[textIndex];
-        let timeout: ReturnType<typeof setTimeout>;
-
-        if (isDeleting) {
-            timeout = setTimeout(() => {
-                setTypedText(currentWord.substring(0, typedText.length - 1));
-                if (typedText.length === 0) {
-                    setIsDeleting(false);
-                    setTextIndex((textIndex + 1) % words.length);
-                }
-            }, 50);
-        } else {
-            timeout = setTimeout(() => {
-                setTypedText(currentWord.substring(0, typedText.length + 1));
-                if (typedText.length === currentWord.length) {
-                    setIsDeleting(true);
-                }
-            }, 100);
-        }
-
-        return () => clearTimeout(timeout);
-    }, [typedText, isDeleting, textIndex, words]);
-
     return (
         <section className={styles.hero}>
             {/* Анимированный фон с частицами */}
@@ -59,7 +28,7 @@ const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
                 ))}
             </div>
 
-            {/* Левая колонка с текстом */}
+            {/* Текстовый блок */}
             <div className={styles.heroLeft}>
                 <div className={styles.eyebrow}>
                     <span className={styles.eyebrowDot}></span>
@@ -67,18 +36,13 @@ const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
                 </div>
 
                 <h1 className={styles.heroTitle}>
-                    Создаём<br />
-                    цифровые<br />
-                    <span className={styles.typedWrapper}>
-                        <span className={styles.typedText}>{typedText}</span>
-                        <span className={styles.cursor}>|</span>
-                    </span>
+                    Цифровые продукты,<br />
+                    которые продают
                 </h1>
 
                 <p className={styles.heroSubtitle}>
-                    Лендинги, веб-платформы и мобильные приложения под ключ.
-                    Индивидуальный дизайн, админ-панель, онлайн оплата и не только.
-                    Продукт, который работает на ваш бизнес 24/7.
+                    Лендинги, веб-платформы и мобильные приложения под ключ — с дизайном,
+                    логикой и запуском без лишней воды.
                 </p>
 
                 <div className={styles.heroActions}>
@@ -88,6 +52,7 @@ const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
                             <path d="M5 12h14M12 5l7 7-7 7"/>
                         </svg>
                     </button>
+
                     <button className={styles.btnSecondary} onClick={onConsultationClick}>
                         <span>Бесплатная консультация</span>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
