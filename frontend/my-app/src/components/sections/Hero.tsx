@@ -1,66 +1,93 @@
 import React from 'react';
 import styles from '../../style/Hero.module.scss';
+import heroImage from '../../assets/hero.webp'; // ← импорт картинки
 
 interface HeroProps {
-    onRequestClick: () => void;
-    onConsultationClick: () => void;
+    onBookDemo: () => void;
 }
 
-const Hero: React.FC<HeroProps> = ({ onRequestClick, onConsultationClick }) => {
+const Hero: React.FC<HeroProps> = ({ onBookDemo }) => {
     return (
         <section className={styles.hero}>
             {/* Анимированный фон с частицами */}
             <div className={styles.heroParticles}>
-                {[...Array(30)].map((_, i) => (
+                {[...Array(40)].map((_, i) => (
                     <div
                         key={i}
                         className={styles.particle}
                         style={{
                             left: `${Math.random() * 100}%`,
                             top: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 5}s`,
-                            animationDuration: `${3 + Math.random() * 4}s`,
-                            width: `${2 + Math.random() * 4}px`,
-                            height: `${2 + Math.random() * 4}px`,
-                            opacity: 0.1 + Math.random() * 0.3
+                            animationDelay: `${Math.random() * 8}s`,
+                            animationDuration: `${4 + Math.random() * 6}s`,
+                            width: `${2 + Math.random() * 5}px`,
+                            height: `${2 + Math.random() * 5}px`,
+                            opacity: 0.1 + Math.random() * 0.4
                         }}
                     />
                 ))}
             </div>
 
-            {/* Текстовый блок */}
-            <div className={styles.heroLeft}>
-                <div className={styles.eyebrow}>
-                    <span className={styles.eyebrowDot}></span>
-                    IT Universe · разработка под ключ
+            {/* Контейнер с двумя колонками: текст + картинка */}
+            <div className={styles.heroContainer}>
+                {/* Левая колонка — текст */}
+                <div className={styles.heroLeft}>
+                    <div className={styles.eyebrow}>
+                        <span className={styles.eyebrowDot}></span>
+                        Monotree
+                    </div>
+
+                    <h1 className={styles.heroTitle}>
+                        Put people first
+                    </h1>
+
+                    <p className={styles.heroSubtitle}>
+                        Fast, user-friendly and engaging - turn HR into people and culture
+                        and streamline your daily operations with your own branded app.
+                    </p>
+
+                    <div className={styles.heroActions}>
+                        <input
+                            type="email"
+                            placeholder="Enter work email"
+                            className={styles.emailInput}
+                        />
+                        <button className={styles.btnPrimary} onClick={onBookDemo}>
+                            <span>Book a demo</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    {/* Статистика — убрал 4.5 со звёздами */}
+                    <div className={styles.stats}>
+                        <div className={styles.statItem}>
+                            <div className={styles.statValue}>75.2%</div>
+                            <div className={styles.statLabel}>Average daily activity</div>
+                        </div>
+                        <div className={styles.statDivider}></div>
+                        <div className={styles.statItem}>
+                            <div className={styles.statValue}>~20k</div>
+                            <div className={styles.statLabel}>Average daily users</div>
+                        </div>
+                    </div>
                 </div>
 
-                <h1 className={styles.heroTitle}>
-                    Цифровые продукты,<br />
-                    которые продают
-                </h1>
-
-                <p className={styles.heroSubtitle}>
-                    Лендинги, веб-платформы и мобильные приложения под ключ — с дизайном,
-                    логикой и запуском без лишней воды.
-                </p>
-
-                <div className={styles.heroActions}>
-                    <button className={styles.btnPrimary} onClick={onRequestClick}>
-                        <span>Заказать разработку</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </button>
-
-                    <button className={styles.btnSecondary} onClick={onConsultationClick}>
-                        <span>Бесплатная консультация</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
-                        </svg>
-                    </button>
+                {/* Правая колонка — картинка */}
+                <div className={styles.heroRight}>
+                    <img src={heroImage} alt="Monotree app preview" className={styles.heroImage} />
                 </div>
+            </div>
+
+            {/* Cookie bar */}
+            <div className={styles.cookieBar}>
+                <span>Cookie Time</span>
+                <span>We use cookies to enhance your experience. Learn more in our Cookie Policy.</span>
+                <button className={styles.cookieBtn}>Book a demo</button>
+                <select className={styles.langSelect}>
+                    <option>English</option>
+                </select>
             </div>
         </section>
     );

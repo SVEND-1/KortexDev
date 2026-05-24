@@ -34,10 +34,10 @@
   padding-bottom: 24px;
   border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 20px;
-  flex-wrap: wrap;
 }
 
 .sectionTag {
@@ -49,7 +49,7 @@
   color: var(--gold);
   border: 1px solid var(--border-gold);
   padding: 6px 16px;
-  margin-bottom: 24px;
+  margin-bottom: 0;
 }
 
 .sectionTitle {
@@ -60,6 +60,7 @@
   letter-spacing: -0.01em;
   line-height: 1;
   color: var(--text);
+  text-align: center;
 }
 
 .accent {
@@ -152,17 +153,18 @@
   border-radius: 24px;
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 .serviceHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin-bottom: 22px;
-  padding-bottom: 18px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-align: center;
 }
 
 .serviceTitle {
@@ -184,10 +186,12 @@
   color: rgba(255,255,255,0.55);
   margin-top: 8px;
   max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .servicePrice {
-  text-align: right;
+  text-align: center;
   flex-shrink: 0;
 }
 
@@ -199,7 +203,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  display: block;
+  display: inline-block;
 }
 
 .priceLabel {
@@ -208,6 +212,8 @@
   letter-spacing: .08em;
   text-transform: uppercase;
   color: rgba(255,255,255,0.28);
+  display: block;
+  margin-top: 4px;
 }
 
 .serviceFeatures {
@@ -223,6 +229,7 @@
   border-radius: 16px;
   padding: 18px;
   transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  text-align: center;
 }
 
 .featureItem:hover {
@@ -252,6 +259,7 @@
   border-radius: 20px;
   padding: 18px 22px;
   margin-bottom: 18px;
+  text-align: center;
 }
 
 .serviceExamples h4 {
@@ -262,9 +270,10 @@
   margin-bottom: 14px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  border-left: 3px solid #E9B70B;
-  padding-left: 16px;
+  border-left: none;
+  padding-left: 0;
 }
 
 .serviceExamples h4::before {
@@ -280,7 +289,9 @@
 
 .exampleItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 12px;
   padding: 14px 16px;
   background: rgba(255,255,255,0.03);
@@ -302,7 +313,6 @@
   color: rgba(255,255,255,0.55);
   display: block;
   line-height: 1.45;
-  max-width: 220px;
 }
 
 .serviceBtn {
@@ -336,7 +346,7 @@
   border: 1px solid rgba(255,255,255,0.08);
   background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
   color: #fff;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   opacity: 0.82;
   transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -356,13 +366,15 @@
 .sideCardTop {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   margin-bottom: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .previewBadge {
-  align-self: flex-start;
+  align-self: center;
   display: inline-flex;
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -391,6 +403,7 @@
   text-transform: uppercase;
   color: #fff;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .sideSubtitle {
@@ -398,6 +411,7 @@
   line-height: 1.45;
   color: rgba(255,255,255,0.78);
   margin-bottom: 14px;
+  text-align: center;
 }
 
 .sideCardsColumn {
@@ -414,6 +428,7 @@
   border: 1px solid rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -430,6 +445,7 @@
   font-size: 12px;
   line-height: 1.35;
   color: rgba(255,255,255,0.82);
+  text-align: center;
 }
 
 .sideLeft {

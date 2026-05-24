@@ -1,3 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --nav-h: 80px;
+  --px: 24px;
+}
+
 .hero {
   width: 100%;
   min-height: 100vh;
@@ -11,7 +18,6 @@
   justify-content: center;
 }
 
-/* Анимированный фон с частицами */
 .heroParticles {
   position: absolute;
   inset: 0;
@@ -46,22 +52,47 @@
   }
 }
 
-/* Левая колонка — на всю ширину и по центру */
-.heroLeft {
-  max-width: 900px;
+/* Контейнер с двумя колонками — сдвигаем всё влево */
+.heroContainer {
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
   padding: clamp(48px, 8vw, 96px) var(--px);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
+  justify-content: space-between;
+  gap: 60px;
   position: relative;
   z-index: 2;
+}
+
+/* Левая колонка — текст, привязан к левому краю */
+.heroLeft {
+  flex: 1;
+  max-width: 600px;
+  text-align: left;
   opacity: 0;
   transform: translateY(30px);
   animation: slideUp 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
   animation-delay: 0.2s;
+}
+
+/* Правая колонка — картинка */
+.heroRight {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 0.4s;
+}
+
+.heroImage {
+  max-width: 100%;
+  height: auto;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .eyebrow {
@@ -88,24 +119,21 @@
 
 .heroTitle {
   font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(56px, 9vw, 140px);
-  line-height: .88;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: .92;
   letter-spacing: .02em;
   text-transform: uppercase;
   color: #fff;
   margin-bottom: 28px;
-  max-width: 900px;
 }
 
 .heroSubtitle {
-  max-width: 600px;
+  max-width: 550px;
   font-size: clamp(15px, 1.5vw, 18px);
   line-height: 1.55;
   color: rgba(255,255,255,0.55);
   font-weight: 300;
   margin-bottom: 44px;
-  margin-left: auto;
-  margin-right: auto;
   opacity: 0;
   animation: fadeIn 0.8s ease forwards;
   animation-delay: 0.4s;
@@ -115,15 +143,36 @@
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
-  justify-content: center;
+  margin-bottom: 80px;
   opacity: 0;
   transform: translateY(30px);
   animation: slideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
   animation-delay: 0.5s;
 }
 
-/* Кнопки героя */
-.btnPrimary, .btnSecondary {
+.emailInput {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 0;
+  padding: 14px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #fff;
+  min-width: 260px;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255,255,255,0.35);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #E9B70B;
+    background: rgba(255,255,255,0.08);
+  }
+}
+
+.btnPrimary {
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -137,55 +186,135 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-}
-
-.btnPrimary {
   background: #E9B70B;
   border: 1px solid #E9B70B;
   color: #000;
+
+  &:hover {
+    background: #fff;
+    border-color: #fff;
+    transform: translateY(-2px);
+  }
+
+  svg {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover svg {
+    transform: translateX(5px);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
 }
 
-.btnPrimary:hover {
-  background: #fff;
-  border-color: #fff;
-  transform: translateY(-2px);
+.stats {
+  display: flex;
+  gap: 48px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+  animation-delay: 0.7s;
 }
 
-.btnSecondary {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.55);
+.statItem {
+  text-align: left;
 }
 
-.btnSecondary:hover {
-  border-color: rgba(255,255,255,0.4);
+.statValue {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
   color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -.02em;
 }
 
-.btnPrimary svg, .btnSecondary svg {
-  transition: transform 0.3s ease;
+.statLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  text-transform: uppercase;
+  letter-spacing: .05em;
 }
 
-.btnPrimary:hover svg, .btnSecondary:hover svg {
-  transform: translateX(5px);
+.statDivider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
 }
 
-.btnPrimary::before, .btnSecondary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
+.cookieBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  z-index: 10;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+
+  span:first-child {
+    color: #E9B70B;
+    font-weight: 600;
+  }
 }
 
-.btnPrimary:hover::before, .btnSecondary:hover::before {
-  left: 100%;
+.cookieBtn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #E9B70B;
+    color: #E9B70B;
+  }
 }
 
-/* Анимации */
+.langSelect {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
 @keyframes slideUp {
   to {
     opacity: 1;
@@ -209,35 +338,72 @@
   50% { opacity: 0.3; }
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .btnPrimary, .btnSecondary {
-    padding: 12px 24px;
-    font-size: 11px;
+/* Responsive — на мобилках картинка уходит вниз */
+@media (max-width: 900px) {
+  .heroContainer {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .heroLeft {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .heroRight {
+    justify-content: center;
   }
 
   .heroActions {
-    flex-direction: column;
-    width: 100%;
+    justify-content: center;
   }
 
-  .btnPrimary, .btnSecondary {
+  .stats {
+    justify-content: center;
+  }
+
+  .statItem {
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroActions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .emailInput, .btnPrimary {
     width: 100%;
     justify-content: center;
   }
 
   .heroLeft {
-    padding: 60px 24px;
+    padding: 0;
   }
 
-  .heroSubtitle {
-    padding: 0 16px;
+  .stats {
+    gap: 24px;
+  }
+
+  .statDivider {
+    display: none;
+  }
+
+  .cookieBar {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
   }
 }
 
 @media (max-width: 480px) {
   .heroTitle {
-    font-size: 48px !important;
+    font-size: 42px !important;
   }
 
   .eyebrow {
