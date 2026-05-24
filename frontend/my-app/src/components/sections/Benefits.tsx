@@ -15,7 +15,6 @@ const Benefits: React.FC<BenefitsProps> = ({ benefits }) => {
     const [animatedCards, setAnimatedCards] = useState<Set<number>>(new Set());
     const [animationType, setAnimationType] = useState<'float' | 'wave' | 'spring' | 'pop' | 'rotate'>('float');
 
-    // Случайный выбор анимации при загрузке
     useEffect(() => {
         const types = ['float', 'wave', 'spring', 'pop', 'rotate'] as const;
         const randomType = types[Math.floor(Math.random() * types.length)];

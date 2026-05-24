@@ -20,11 +20,10 @@ const Contact: React.FC<ContactProps> = ({ onRequestClick }) => {
                 <button className={`${styles.btn} ${styles.btnP} ${styles.hoverScaleLg}`} onClick={onRequestClick}>
                     Оставить заявку →
                 </button>
-                <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`}>hello@ituniverse.dev</button>
+                <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`}>hello@kortex.dev</button>
             </div>
             <div className={`${styles.contactSocials} ${styles.revealFlip}`}>
                 <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>Telegram</a>
-                <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>WhatsApp</a>
                 <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>VK</a>
             </div>
         </section>

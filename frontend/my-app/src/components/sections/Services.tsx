@@ -41,7 +41,7 @@ const Services: React.FC<ServicesProps> = ({
             title: 'Лендинг',
             subtitle: 'Быстрый запуск, заявки и проверка гипотез',
             badge: 'Старт',
-            price: 'от 120 000 ₽',
+            price: 'от 50 000 ₽',
             cardText: [
                 '1 страница',
                 'Форма заявки',
@@ -53,7 +53,7 @@ const Services: React.FC<ServicesProps> = ({
             title: 'Веб-платформа',
             subtitle: 'Сложная логика, личные кабинеты и автоматизация',
             badge: 'Система',
-            price: 'от 350 000 ₽',
+            price: 'от 300 000 ₽',
             cardText: [
                 'Личный кабинет',
                 'Админ-панель',
@@ -65,7 +65,7 @@ const Services: React.FC<ServicesProps> = ({
             title: 'Мобильное приложение',
             subtitle: 'iOS и Android, пуши, авторизация и кабинет',
             badge: 'App',
-            price: 'от 420 000 ₽',
+            price: 'от 200 000 ₽',
             cardText: [
                 'iOS / Android',
                 'Push-уведомления',

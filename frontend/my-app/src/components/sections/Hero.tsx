@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../../style/Hero.module.scss';
-import heroImage from '../../assets/hero.webp'; // ← импорт картинки
+import heroImage from '../../assets/hero.webp';
 
 interface HeroProps {
     onBookDemo: () => void;
@@ -34,53 +34,52 @@ const Hero: React.FC<HeroProps> = ({ onBookDemo }) => {
                 <div className={styles.heroLeft}>
                     <div className={styles.eyebrow}>
                         <span className={styles.eyebrowDot}></span>
-                        Monotree
+                        KortexDev
                     </div>
 
                     <h1 className={styles.heroTitle}>
-                        Put people first
+                        Разработка сайтов <br />
+                        <span style={{ color: '#ffffff' }}>под ключ</span>
                     </h1>
 
                     <p className={styles.heroSubtitle}>
-                        Fast, user-friendly and engaging - turn HR into people and culture
-                        and streamline your daily operations with your own branded app.
+                        Создаём лендинги, веб-платформы и мобильные приложения, которые приносят реальные продажи.
+                        Современный дизайн, админ-панель и онлайн-оплата — всё в одном месте.
                     </p>
 
                     <div className={styles.heroActions}>
-                        <input
-                            type="email"
-                            placeholder="Enter work email"
-                            className={styles.emailInput}
-                        />
                         <button className={styles.btnPrimary} onClick={onBookDemo}>
-                            <span>Book a demo</span>
+                            <span>Заказать проект</span>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <path d="M5 12h14M12 5l7 7-7 7"/>
                             </svg>
                         </button>
                     </div>
 
-                    {/* Статистика — убрал 4.5 со звёздами */}
-                    <div className={styles.stats}>
-                        <div className={styles.statItem}>
-                            <div className={styles.statValue}>75.2%</div>
-                            <div className={styles.statLabel}>Average daily activity</div>
-                        </div>
-                        <div className={styles.statDivider}></div>
-                        <div className={styles.statItem}>
-                            <div className={styles.statValue}>~20k</div>
-                            <div className={styles.statLabel}>Average daily users</div>
-                        </div>
-                    </div>
+                    {/* Статистика */}
+                    {/*<div className={styles.stats}>*/}
+                    {/*    <div className={styles.statItem}>*/}
+                    {/*        <div className={styles.statValue}>75+</div>*/}
+                    {/*        <div className={styles.statLabel}>Реализованных проектов</div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={styles.statDivider}></div>*/}
+                    {/*    <div className={styles.statItem}>*/}
+                    {/*        <div className={styles.statValue}>50+</div>*/}
+                    {/*        <div className={styles.statLabel}>Довольных клиентов</div>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={styles.statDivider}></div>*/}
+                    {/*    <div className={styles.statItem}>*/}
+                    {/*        <div className={styles.statValue}>4.9</div>*/}
+                    {/*        <div className={styles.statLabel}>Средний рейтинг</div>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
 
                 {/* Правая колонка — картинка */}
                 <div className={styles.heroRight}>
-                    <img src={heroImage} alt="Monotree app preview" className={styles.heroImage} />
+                    <img src={heroImage} alt="KortexDev preview" className={styles.heroImage} />
                 </div>
             </div>
-
-
         </section>
     );
 };

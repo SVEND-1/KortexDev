@@ -29,11 +29,13 @@ import Toast from '../components/ui/Toast';
 import { useScrollProgress } from '../components/hooks/useScrollProgress';
 import { useScrollReveal } from '../components/hooks/useScrollReveal';
 import { useTiltEffect } from '../components/hooks/useTiltEffect';
+import { useTheme } from '../components/hooks/useTheme'; // <-- ДОБАВИТЬ ЭТОТ ИМПОРТ
 
 import styles from '../style/ITUniverse.module.scss';
 
 const ITUniverse: React.FC = () => {
     const scrollProgress = useScrollProgress();
+    const { theme, toggleTheme } = useTheme(); // <-- ДОБАВИТЬ ЭТУ СТРОКУ
 
     const [projects, setProjects] = useState<Project[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -47,28 +49,17 @@ const ITUniverse: React.FC = () => {
     const [navScrolled, setNavScrolled] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: number]: number }>({});
 
-    // Массив преимуществ для компонента Benefits (без иконок)
     const benefitsData = [
         { title: 'Увеличение прибыли', description: 'Продажи 24/7 без выходных. Ваш бизнес работает даже когда вы спите, принося стабильный доход.' },
         { title: 'Снижение расходов', description: 'Меньше ручного труда — меньше ошибок и затрат. Автоматизация сокращает операционные расходы на 30-50%.' },
         { title: 'Быстрый ROI', description: 'Инвестиции в сайт окупаются за 3-6 месяцев за счёт роста продаж и оптимизации процессов.' },
         { title: 'Сбор контактов', description: 'База клиентов растёт автоматически. Захват email, телефонов и соцсетей посетителей.' },
-        { title: 'Email и SMS рассылки', description: 'Информируйте клиентов об акциях, новинках и персональных предложениях. Повторные продажи.' },
         { title: 'SEO-продвижение', description: 'Привлечение клиентов из поиска Яндекс и Google. Рост органического трафика без рекламного бюджета.' },
-        { title: 'Ретаргетинг', description: 'Возвращайте посетителей, которые не купили. Показывайте рекламу тем, кто уже интересовался вами.' },
         { title: 'Удобство для клиентов', description: 'Онлайн запись 24/7, заказ в один клик, оплата картой — клиенты выбирают тех, кто заботится о их времени.' },
-        { title: 'Прозрачность', description: 'Статус заказа, история покупок, отслеживание доставки — доверие клиентов растёт с каждым шагом.' },
-        { title: 'Бонусы и лояльность', description: 'Персональные рекомендации, программа лояльности, скидки за отзывы — клиенты возвращаются снова.' },
         { title: 'Отзывы и рейтинги', description: 'Социальное доказательство работает лучше любой рекламы. Собирайте и показывайте отзывы.' },
         { title: 'Аналитика продаж', description: 'Отслеживайте, откуда приходят клиенты, какие услуги популярны, где теряете прибыль.' },
-        { title: 'CRM интеграция', description: 'Все заказы и клиенты автоматически попадают в вашу CRM. Ничего не теряется, всё под контролем.' },
-        { title: 'Отчёты в 1 клик', description: 'Продажи, прибыль, популярные товары, эффективность рекламы — любые отчёты формируются мгновенно.' },
-        { title: 'Контроль персонала', description: 'Видите кто взял заказ, сколько времени заняла обработка, уровень удовлетворённости клиентов.' },
-        { title: 'Автоматизация процессов', description: 'Автоматическое выставление счетов, отправка чеков, уведомления клиентам — меньше рутины.' },
-        { title: 'Масштабируемость', description: 'Легко добавляйте новые фичи: интернет-магазин, онлайн запись, интеграции. Сайт растёт вместе с вашим бизнесом.' },
-        { title: 'Интеграция с 1С и кассами', description: 'Автоматический обмен данными с 1С, эквайринг, маркировка, ЕГАИС — всё работает "из коробки".' }
+        { title: 'Масштабируемость', description: 'Легко добавляйте новые фичи: интернет-магазин, онлайн запись, интеграции. Сайт растёт вместе с вашим бизнесом.' }
     ];
-
     useScrollReveal([projects, reviews]);
     useTiltEffect([projects]);
 
@@ -164,18 +155,21 @@ const ITUniverse: React.FC = () => {
                 scrolled={navScrolled}
                 onRequestClick={() => setIsRequestModalOpen(true)}
                 onMenuToggle={toggleMobileMenu}
+                theme={theme}
+                onThemeToggle={toggleTheme}
             />
 
             <MobileMenu
                 isOpen={mobileMenuOpen}
                 onClose={closeMobileMenu}
                 onRequestClick={() => setIsRequestModalOpen(true)}
+                theme={theme}
+                onThemeToggle={toggleTheme}
             />
 
             <Hero
                 onBookDemo={() => setIsRequestModalOpen(true)}
             />
-
 
             <div className={styles.sectionSep}></div>
 
