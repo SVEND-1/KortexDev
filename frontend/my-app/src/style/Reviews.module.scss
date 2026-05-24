@@ -321,20 +321,21 @@
     text-align: center;
   }
 
-  .reviewCard {
-    width: 300px;
-  }
-
+  /* Сетка для мобильных - 2 колонки */
   .reviewsGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 0 16px;
   }
-}
 
-@media (max-width: 480px) {
+  .reviewsMarqueeWrap {
+    display: none;
+  }
+
   .reviewCard {
-    width: 280px;
+    width: 100%;
+    min-width: auto;
     padding: 20px;
-    border-radius: 20px;
   }
 
   .reviewAvatar {
@@ -344,7 +345,7 @@
   }
 
   .reviewName {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .reviewText {
@@ -353,6 +354,96 @@
   }
 
   .reviewText::before {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .badge {
+    font-size: 9px;
+    padding: 5px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .reviewsGrid {
+    gap: 12px;
+  }
+
+  .reviewCard {
+    padding: 16px;
+  }
+
+  .reviewAvatar {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .reviewName {
+    font-size: 14px;
+  }
+
+  .reviewDate {
+    font-size: 9px;
+  }
+
+  .reviewText {
+    font-size: 12px;
+  }
+
+  .reviewText::before {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .badge {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reviewsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .reviewCard {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .reviewAvatar {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .reviewName {
+    font-size: 12px;
+  }
+
+  .reviewDate {
+    font-size: 8px;
+  }
+
+  .reviewText {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .reviewText::before {
+    font-size: 20px;
+    margin-bottom: 2px;
+  }
+
+  .badge {
+    font-size: 7px;
+    padding: 3px 5px;
+  }
+
+  .cardTop {
+    gap: 8px;
+    margin-bottom: 10px;
   }
 }
