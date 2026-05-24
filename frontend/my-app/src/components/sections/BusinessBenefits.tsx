@@ -1,3 +1,4 @@
+// BusinessBenefits.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../../style/BusinessBenefits.module.scss';
 import { Chart, registerables } from 'chart.js';
@@ -29,15 +30,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
     const sectionRef = useRef<HTMLElement | null>(null);
-    const [animatedValues, setAnimatedValues] = useState({
-        revenue: 0,
-        conversion: 0,
-        traffic: 0,
-        clients: 0,
-        averageCheck: 0,
-        roi: 0
-    });
-    const [hasAnimated, setHasAnimated] = useState(false);
     const [visibleItems, setVisibleItems] = useState<number[]>([]);
 
     const metricsData: Record<Exclude<MetricType, 'all'>, MetricData> = {
@@ -50,7 +42,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             unit: 'тыс. ₽',
             maxValue: 650,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Рост выручки в 4.5 раза за первый год после запуска сайта'
         },
         conversion: {
@@ -63,7 +55,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             maxValue: 8,
             minValue: 0,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Конверсия увеличивается в 3-5 раз благодаря удобству и автоматизации'
         },
         roi: {
@@ -76,7 +68,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             maxValue: 1200,
             minValue: -600,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Инвестиции окупаются через 4-5 месяцев, ROI за год более 200%'
         },
         traffic: {
@@ -88,7 +80,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             unit: 'посетителей',
             maxValue: 2600,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Рост трафика в 45 раз благодаря SEO и рекламе'
         },
         clients: {
@@ -100,7 +92,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             unit: 'клиентов',
             maxValue: 380,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Количество новых клиентов увеличивается в 30 раз'
         },
         averageCheck: {
@@ -112,7 +104,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
             unit: '₽',
             maxValue: 7500,
             colorBefore: '#6b7280',
-            colorAfter: '#E9B70B',
+            colorAfter: '#ffffff',
             description: 'Средний чек растёт благодаря up-sell и кросс-продажам'
         }
     };
@@ -167,49 +159,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.isIntersecting && !hasAnimated) {
-                        setHasAnimated(true);
-                        const targets = {
-                            revenue: 450,
-                            conversion: 350,
-                            traffic: 4500,
-                            clients: 2900,
-                            averageCheck: 180,
-                            roi: 200
-                        };
-                        const duration = 2000;
-                        const stepTime = 20;
-                        const steps = duration / stepTime;
-                        let currentStep = 0;
-
-                        const interval = setInterval(() => {
-                            currentStep++;
-                            const progress = Math.min(1, currentStep / steps);
-                            setAnimatedValues({
-                                revenue: Math.floor(targets.revenue * progress),
-                                conversion: Math.floor(targets.conversion * progress),
-                                traffic: Math.floor(targets.traffic * progress),
-                                clients: Math.floor(targets.clients * progress),
-                                averageCheck: Math.floor(targets.averageCheck * progress),
-                                roi: Math.floor(targets.roi * progress)
-                            });
-                            if (progress === 1) clearInterval(interval);
-                        }, stepTime);
-                    }
-                });
-            },
-            { threshold: 0.3 }
-        );
-
-        if (sectionRef.current) observer.observe(sectionRef.current);
-
-        return () => observer.disconnect();
-    }, [hasAnimated]);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add(styles.visible);
                     }
@@ -253,7 +202,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             backgroundColor: '#0a0a0f',
                             titleColor: '#ffffff',
                             bodyColor: '#d1d5db',
-                            borderColor: '#E9B70B',
+                            borderColor: '#ffffff',
                             borderWidth: 1,
                             padding: 10
                         },
@@ -297,8 +246,8 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                 {
                                     label: 'Выручка (с сайтом)',
                                     data: metricsData.revenue.after,
-                                    borderColor: '#E9B70B',
-                                    backgroundColor: 'rgba(233, 183, 11, 0.08)',
+                                    borderColor: '#ffffff',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
                                     borderWidth: 3,
                                     pointRadius: 2,
                                     tension: 0.35,
@@ -406,7 +355,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                                 label: currentData.afterLabel,
                                 data: currentData.after,
                                 borderColor: currentData.colorAfter,
-                                backgroundColor: 'rgba(233, 183, 11, 0.08)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.08)',
                                 borderWidth: 3,
                                 pointRadius: 2,
                                 pointBackgroundColor: currentData.colorAfter,
@@ -463,15 +412,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
         };
     }, [activeMetric]);
 
-    const metricsList = [
-        { name: 'Выручка', key: 'revenue', value: `+${animatedValues.revenue}%`, target: 450 },
-        { name: 'Конверсия', key: 'conversion', value: `+${animatedValues.conversion}%`, target: 350 },
-        { name: 'Трафик', key: 'traffic', value: `+${animatedValues.traffic}%`, target: 4500 },
-        { name: 'Новые клиенты', key: 'clients', value: `+${animatedValues.clients}%`, target: 2900 },
-        { name: 'Средний чек', key: 'averageCheck', value: `+${animatedValues.averageCheck}%`, target: 180 },
-        { name: 'ROI', key: 'roi', value: `+${animatedValues.roi}%`, target: 200 }
-    ];
-
     return (
         <section id="business-benefits" className={styles.businessBenefits} ref={sectionRef}>
             <div className={`${styles.header} ${styles.reveal}`}>
@@ -482,27 +422,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                 <p className={styles.subtitle}>
                     Цифровые инструменты, которые реально увеличивают прибыль и оптимизируют процессы
                 </p>
-            </div>
-
-            <div className={`${styles.metricsList} ${styles.reveal}`}>
-                {metricsList.map((metric, idx) => (
-                    <div key={idx} className={styles.metricsListItem}>
-                        <span className={styles.metricsName}>{metric.name}</span>
-                        <div className={styles.metricsValueWrapper}>
-                            <span className={styles.metricsValue} style={{ color: '#E9B70B' }}>
-                                {metric.value}
-                            </span>
-                            <div className={styles.metricsProgress}>
-                                <div
-                                    className={styles.metricsProgressFill}
-                                    style={{
-                                        width: `${(animatedValues[metric.key as keyof typeof animatedValues] / metric.target) * 100}%`
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                ))}
             </div>
 
             <div className={`${styles.chartSection} ${styles.reveal}`}>
@@ -548,7 +467,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             </div>
                             <div className={styles.chartStat}>
                                 <span className={styles.chartStatLabel}>Фокус</span>
-                                <strong className={styles.chartStatValue} style={{ color: '#E9B70B' }}>
+                                <strong className={styles.chartStatValue}>
                                     Общий эффект
                                 </strong>
                             </div>
@@ -579,7 +498,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                             </div>
                             <div className={styles.chartStat}>
                                 <span className={styles.chartStatLabel}>Рост</span>
-                                <strong className={styles.chartStatValue} style={{ color: '#E9B70B' }}>
+                                <strong className={styles.chartStatValue}>
                                     {activeMetric === 'revenue' ? '+480%' :
                                         activeMetric === 'conversion' ? '+416%' :
                                             activeMetric === 'traffic' ? '+7900%' :

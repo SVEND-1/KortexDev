@@ -80,15 +80,7 @@ const Hero: React.FC<HeroProps> = ({ onBookDemo }) => {
                 </div>
             </div>
 
-            {/* Cookie bar */}
-            <div className={styles.cookieBar}>
-                <span>Cookie Time</span>
-                <span>We use cookies to enhance your experience. Learn more in our Cookie Policy.</span>
-                <button className={styles.cookieBtn}>Book a demo</button>
-                <select className={styles.langSelect}>
-                    <option>English</option>
-                </select>
-            </div>
+
         </section>
     );
 };

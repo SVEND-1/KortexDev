@@ -24,7 +24,6 @@ import FinalOffer from '../components/sections/FinalOffer';
 import CustomCursor from '../components/ui/CustomCursor';
 import ScrollProgressBar from '../components/ui/ScrollProgressBar';
 import Toast from '../components/ui/Toast';
-import OfferBanner from '../components/ui/OfferBanner';
 
 // Hooks
 import { useScrollProgress } from '../components/hooks/useScrollProgress';
@@ -174,11 +173,9 @@ const ITUniverse: React.FC = () => {
             />
 
             <Hero
-                onRequestClick={() => setIsRequestModalOpen(true)}
-                onConsultationClick={scrollToContact}
+                onBookDemo={() => setIsRequestModalOpen(true)}
             />
 
-            <OfferBanner onRequestClick={() => setIsRequestModalOpen(true)} />
 
             <div className={styles.sectionSep}></div>
 

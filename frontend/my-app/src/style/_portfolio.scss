@@ -1,3 +1,5 @@
+// _portfolio.scss
+
 /* Portfolio Section */
 .portfolio {
   padding: var(--section-py) var(--section-px);
@@ -58,7 +60,7 @@
 }
 
 .projectCard:hover {
-  border-color: var(--border-gold);
+  border-color: var(--accent-border);
   transform: translateY(-12px);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
 }
@@ -124,8 +126,8 @@
   top: 50%;
   transform: translateY(-50%);
   background: rgba(0, 0, 0, 0.85);
-  border: 2px solid var(--border-gold);
-  color: var(--gold);
+  border: 2px solid var(--accent-border);
+  color: var(--accent);
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -147,10 +149,10 @@
 
 .projectCarouselPrev:hover,
 .projectCarouselNext:hover {
-  background: var(--gold);
-  color: #000;
+  background: var(--accent);
+  color: var(--bg-secondary);
   transform: translateY(-50%) scale(1.15);
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 .projectCarouselPrev {
@@ -170,11 +172,11 @@
   padding: 8px 18px;
   border-radius: 40px;
   font-size: 14px;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--gold);
+  font-family: var(--font-mono);
+  color: var(--accent);
   z-index: 5;
   font-weight: 600;
-  border: 1px solid var(--border-gold);
+  border: 1px solid var(--accent-border);
 }
 
 .thumbLine {
@@ -183,7 +185,7 @@
   left: 0;
   width: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--gold), var(--purple));
+  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
   transition: width 0.5s ease;
   z-index: 5;
 }
@@ -207,7 +209,7 @@
 }
 
 .tag {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -217,15 +219,15 @@
 }
 
 .landingBadge {
-  background: rgba(233, 183, 11, 0.15);
-  color: var(--gold);
-  border: 1px solid var(--border-gold);
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
 }
 
 .platformBadge {
   background: rgba(109, 92, 232, 0.15);
-  color: var(--purple);
-  border: 1px solid var(--border-purple);
+  color: var(--accent-secondary);
+  border: 1px solid rgba(109, 92, 232, 0.3);
 }
 
 .mobileBadge {
@@ -237,20 +239,20 @@
 .imageCount {
   font-size: 13px;
   color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   padding: 6px 14px;
   background: rgba(255,255,255,0.05);
   border-radius: 6px;
 }
 
 .projectTitle {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: var(--font-display);
   font-size: 36px;
   font-weight: 800;
   margin-bottom: 16px;
   line-height: 1.15;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .projectDesc {

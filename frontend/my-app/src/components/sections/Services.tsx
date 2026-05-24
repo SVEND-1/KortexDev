@@ -1,3 +1,4 @@
+// Services.tsx (без изменений в JSX, только если нужно поменять что-то в данных)
 import React from 'react';
 import type { ServiceCard } from '../../types';
 import styles from '../../style/Services.module.scss';

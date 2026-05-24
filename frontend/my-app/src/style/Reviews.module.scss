@@ -1,19 +1,10 @@
-.reviews {
-  position: relative;
-  overflow: hidden;
-  padding: var(--py) 0;
-  background:
-          radial-gradient(circle at top, rgba(233, 183, 11, 0.08), transparent 28%),
-          linear-gradient(180deg, #050505 0%, #000 100%);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
+// Reviews.module.scss
 
 .bgGlow {
   position: absolute;
   inset: 0;
   background:
-          radial-gradient(circle at 20% 20%, rgba(233, 183, 11, 0.08), transparent 25%),
+          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 25%),
           radial-gradient(circle at 80% 70%, rgba(109, 92, 232, 0.08), transparent 22%);
   filter: blur(40px);
   pointer-events: none;
@@ -44,9 +35,9 @@
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: #e9b70b;
-  border: 1px solid rgba(233, 183, 11, 0.22);
-  background: rgba(233, 183, 11, 0.06);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
   padding: 7px 14px;
   border-radius: 999px;
   margin-bottom: 18px;
@@ -64,7 +55,7 @@
 }
 
 .accent {
-  color: #e9b70b;
+  color: #ffffff;
 }
 
 .sectionText {
@@ -81,9 +72,9 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, rgba(233, 183, 11, 0.12), rgba(109, 92, 232, 0.08));
-  border: 1px solid rgba(233, 183, 11, 0.25);
-  color: #e9b70b;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(109, 92, 232, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
   padding: 13px 24px;
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
@@ -93,8 +84,8 @@
 
 .reviewBtn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, rgba(233, 183, 11, 0.18), rgba(109, 92, 232, 0.12));
-  box-shadow: 0 14px 34px rgba(233, 183, 11, 0.14);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(109, 92, 232, 0.12));
+  box-shadow: 0 14px 34px rgba(255, 255, 255, 0.14);
 }
 
 .reviewsGrid {
@@ -175,16 +166,16 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 0%, rgba(233, 183, 11, 0.08), transparent 35%);
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.08), transparent 35%);
   pointer-events: none;
 }
 
 .reviewCard:hover {
   transform: translateY(-6px);
-  border-color: rgba(233, 183, 11, 0.28);
+  border-color: rgba(255, 255, 255, 0.28);
   box-shadow:
           0 18px 40px rgba(0, 0, 0, 0.34),
-          0 0 0 1px rgba(233, 183, 11, 0.06);
+          0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 @keyframes cardReveal {
@@ -217,8 +208,8 @@
   font-size: 18px;
   font-weight: 700;
   color: #000;
-  background: linear-gradient(135deg, #e9b70b, #f6d45f);
-  box-shadow: 0 8px 24px rgba(233, 183, 11, 0.22);
+  background: linear-gradient(135deg, #ffffff, #cccccc);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.22);
 }
 
 .cardMeta {
@@ -256,7 +247,7 @@
   font-family: Georgia, serif;
   font-size: 38px;
   line-height: 1;
-  color: #e9b70b;
+  color: #ffffff;
   opacity: 0.55;
 }
 
@@ -299,7 +290,7 @@
   padding: 80px 24px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.44);
-  border: 1px dashed rgba(233, 183, 11, 0.26);
+  border: 1px dashed rgba(255, 255, 255, 0.26);
   background: rgba(255, 255, 255, 0.02);
 }
 

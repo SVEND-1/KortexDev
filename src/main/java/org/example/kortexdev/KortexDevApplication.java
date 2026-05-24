@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class KortexDevApplication {
 
     public static void main(String[] args) {
-        SpringAponplication.run(KortexDevApplication.class, args);
+        SpringApplication.run(KortexDevApplication.class, args);
     }
 
 }
