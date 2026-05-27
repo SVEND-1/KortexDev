@@ -23,8 +23,22 @@ const Contact: React.FC<ContactProps> = ({ onRequestClick }) => {
                 <button className={`${styles.btn} ${styles.btnG} ${styles.hoverScale}`}>hello@kortex.dev</button>
             </div>
             <div className={`${styles.contactSocials} ${styles.revealFlip}`}>
-                <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>Telegram</a>
-                <a href="#" className={`${styles.socialLink} ${styles.hoverScale}`}>VK</a>
+                <a 
+                    href="https://t.me/weqrete" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`${styles.socialLink} ${styles.hoverScale}`}
+                >
+                    Telegram
+                </a>
+                <a 
+                    href="https://vk.com/id454632764" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`${styles.socialLink} ${styles.hoverScale}`}
+                >
+                    VK
+                </a>
             </div>
         </section>
     );

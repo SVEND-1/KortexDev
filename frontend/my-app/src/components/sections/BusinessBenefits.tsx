@@ -1,4 +1,3 @@
-// BusinessBenefits.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../../style/BusinessBenefits.module.scss';
 import { Chart, registerables } from 'chart.js';
@@ -30,7 +29,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
     const chartRef = useRef<HTMLCanvasElement | null>(null);
     const chartInstanceRef = useRef<Chart | null>(null);
     const sectionRef = useRef<HTMLElement | null>(null);
-    const [visibleItems, setVisibleItems] = useState<number[]>([]);
 
     const metricsData: Record<Exclude<MetricType, 'all'>, MetricData> = {
         revenue: {
@@ -110,41 +108,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
     };
 
     const allMetricsDescription = 'Общий взгляд на все ключевые бизнес-метрики в одном графике';
-
-    const benefitsList = [
-        'Снижение операционных расходов',
-        'Бизнес работает 24/7 без выходных',
-        'Автоматический сбор контактов клиентов',
-        'Email и SMS рассылки для повторных продаж',
-        'SEO-продвижение — бесплатный трафик',
-        'Удобство для клиентов — онлайн запись 24/7',
-        'Прозрачность — статус заказа онлайн',
-        'Отзывы и рейтинги — социальное доказательство',
-        'Аналитика продаж в реальном времени',
-        'Масштабируемость — добавляйте новые функции без ограничений'
-    ];
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const index = parseInt((entry.target as HTMLElement).dataset.index || '0');
-                        setVisibleItems(prev => [...prev, index]);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
-        );
-
-        const items = document.querySelectorAll(`.${styles.benefitsListItem}`);
-        items.forEach((item, idx) => {
-            (item as HTMLElement).dataset.index = idx.toString();
-            observer.observe(item);
-        });
-
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -448,20 +411,7 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                 <div className={styles.chartStats}>
                     {activeMetric === 'all' ? (
                         <>
-                            <div className={styles.chartStat}>
-                                <span className={styles.chartStatLabel}>Метрик в сравнении</span>
-                                <strong className={styles.chartStatValue}>6</strong>
-                            </div>
-                            <div className={styles.chartStat}>
-                                <span className={styles.chartStatLabel}>Режим</span>
-                                <strong className={styles.chartStatValue}>Все в одном</strong>
-                            </div>
-                            <div className={styles.chartStat}>
-                                <span className={styles.chartStatLabel}>Фокус</span>
-                                <strong className={styles.chartStatValue}>
-                                    Общий эффект
-                                </strong>
-                            </div>
+                            
                         </>
                     ) : (
                         <>
@@ -502,36 +452,6 @@ const BusinessBenefits: React.FC<BusinessBenefitsProps> = () => {
                     )}
                 </div>
 
-                <div className={styles.chartInsight}>
-                    <div className={styles.insightCard}>
-                        <strong>Ключевое открытие</strong>
-                        <p>Запуск сайта увеличивает выручку в 4.5 раза за первый год</p>
-                    </div>
-                    <div className={styles.insightCard}>
-                        <strong>Точка безубыточности</strong>
-                        <p>В среднем через 4-5 месяцев после запуска</p>
-                    </div>
-                    <div className={styles.insightCard}>
-                        <strong>ROI превышает 200%</strong>
-                        <p>При правильной настройке и продвижении</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className={`${styles.benefitsListSection} ${styles.reveal}`}>
-                <h3 className={styles.benefitsListTitle}>Что вы получаете</h3>
-                <div className={styles.benefitsListGrid}>
-                    {benefitsList.map((benefit, idx) => (
-                        <div
-                            key={idx}
-                            className={`${styles.benefitsListItem} ${visibleItems.includes(idx) ? styles.animated : ''}`}
-                            style={{ animationDelay: `${idx * 0.03}s` }}
-                        >
-                            <span className={styles.benefitsListBullet} />
-                            <span className={styles.benefitsListText}>{benefit}</span>
-                        </div>
-                    ))}
-                </div>
             </div>
         </section>
     );

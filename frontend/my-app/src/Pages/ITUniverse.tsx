@@ -29,13 +29,13 @@ import Toast from '../components/ui/Toast';
 import { useScrollProgress } from '../components/hooks/useScrollProgress';
 import { useScrollReveal } from '../components/hooks/useScrollReveal';
 import { useTiltEffect } from '../components/hooks/useTiltEffect';
-import { useTheme } from '../components/hooks/useTheme'; // <-- ДОБАВИТЬ ЭТОТ ИМПОРТ
+import { useTheme } from '../components/hooks/useTheme'; 
 
 import styles from '../style/ITUniverse.module.scss';
 
 const ITUniverse: React.FC = () => {
     const scrollProgress = useScrollProgress();
-    const { theme, toggleTheme } = useTheme(); // <-- ДОБАВИТЬ ЭТУ СТРОКУ
+    const { theme, toggleTheme } = useTheme(); 
 
     const [projects, setProjects] = useState<Project[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -158,7 +158,7 @@ const ITUniverse: React.FC = () => {
                 theme={theme}
                 onThemeToggle={toggleTheme}
             />
-
+            
             <MobileMenu
                 isOpen={mobileMenuOpen}
                 onClose={closeMobileMenu}

@@ -13,8 +13,8 @@ const Navbar: React.FC<NavbarProps> = ({
                                            scrolled,
                                            onRequestClick,
                                            onMenuToggle,
-                                           // theme,
-                                           // onThemeToggle
+                                        //    theme,
+                                        //     onThemeToggle
                                        }) => {
     return (
         <nav className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
@@ -27,13 +27,13 @@ const Navbar: React.FC<NavbarProps> = ({
                 <a href="#contact" className={styles.hoverScale}>Контакты</a>
             </div>
             <div className={styles.navRight}>
-                {/*<button*/}
-                {/*    className={styles.themeToggle}*/}
-                {/*    onClick={onThemeToggle}*/}
-                {/*    aria-label="Переключить тему"*/}
-                {/*>*/}
-                {/*    {theme === 'dark' ? '☀️' : '🌙'}*/}
-                {/*</button>*/}
+                {/* <button
+                   className={styles.themeToggle}
+                    onClick={onThemeToggle}
+                   aria-label="Переключить тему"
+                >
+                    {theme === 'dark' ? '☀️' : '🌙'}
+                </button> */}
                 <button className={`${styles.navCta} ${styles.glowPulse}`} onClick={onRequestClick}>
                     Заказать проект
                 </button>

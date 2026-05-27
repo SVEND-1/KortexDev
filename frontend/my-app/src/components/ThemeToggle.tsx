@@ -1,4 +1,3 @@
-// src/components/ThemeToggle.tsx
 import React, { useEffect, useState } from 'react';
 
 const ThemeToggle: React.FC = () => {

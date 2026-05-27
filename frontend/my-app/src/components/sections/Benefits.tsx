@@ -21,7 +21,6 @@ const Benefits: React.FC<BenefitsProps> = ({ benefits }) => {
         setAnimationType(randomType);
     }, []);
 
-    // Функция для получения класса анимации
     const getAnimationClass = (index: number) => {
         if (!animatedCards.has(index)) return '';
 
@@ -129,8 +128,8 @@ const Benefits: React.FC<BenefitsProps> = ({ benefits }) => {
         <section id="benefits" className={styles.benefits} ref={sectionRef}>
             <div className={`${styles.benefitsHeader} ${styles.revealBlur}`}>
                 <span className={styles.sectionTag}>Почему это выгодно</span>
-                <h2 className={styles.sectionTitle}>
-                    Чем полезен <span className={styles.accent}>сайт для бизнеса</span>
+                <h2 className={styles.sectionTitle}  >
+                    Чем полезен сайт для бизнеса
                 </h2>
             </div>
 

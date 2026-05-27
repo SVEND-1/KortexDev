@@ -1,4 +1,5 @@
-// Services.tsx (без изменений в JSX, только если нужно поменять что-то в данных)
+// Services.tsx - обновленная версия
+
 import React from 'react';
 import type { ServiceCard } from '../../types';
 import styles from '../../style/Services.module.scss';
@@ -30,6 +31,7 @@ const Services: React.FC<ServicesProps> = ({
     const prevService = serviceOrder[(currentIndex - 1 + serviceOrder.length) % serviceOrder.length];
     const nextService = serviceOrder[(currentIndex + 1) % serviceOrder.length];
 
+    // ОБНОВЛЕННЫЙ previewMap с новыми данными
     const previewMap: Record<ServiceType, {
         title: string;
         subtitle: string;
@@ -41,11 +43,11 @@ const Services: React.FC<ServicesProps> = ({
             title: 'Лендинг',
             subtitle: 'Быстрый запуск, заявки и проверка гипотез',
             badge: 'Старт',
-            price: 'от 50 000 ₽',
+            price: 'от 12 499 ₽',
             cardText: [
-                '1 страница',
-                'Форма заявки',
-                'Быстрый запуск',
+                'Информационные страницы',
+                'Админ панель',
+                'Ссылки на обратную связь',
                 'Подходит для рекламы'
             ]
         },
@@ -53,24 +55,24 @@ const Services: React.FC<ServicesProps> = ({
             title: 'Веб-платформа',
             subtitle: 'Сложная логика, личные кабинеты и автоматизация',
             badge: 'Система',
-            price: 'от 300 000 ₽',
+            price: 'Цена договрная',
             cardText: [
-                'Личный кабинет',
-                'Админ-панель',
-                'Интеграции',
-                'CRM-логика'
+                'Функционал под ключ',
+                'Роли и права',
+                'Регистрация',
+                'Рассылки'
             ]
         },
         MOBILE: {
             title: 'Мобильное приложение',
-            subtitle: 'iOS и Android, пуши, авторизация и кабинет',
+            subtitle: 'Скоро',
             badge: 'App',
-            price: 'от 200 000 ₽',
+            price: 'Скоро',
             cardText: [
-                'iOS / Android',
-                'Push-уведомления',
-                'Авторизация',
-                'Постоянный контакт'
+                'Скоро',
+                'Следите за обновлениями',
+                '',
+                ''
             ]
         }
     };
@@ -95,10 +97,12 @@ const Services: React.FC<ServicesProps> = ({
 
                 <div className={styles.sideCardsColumn}>
                     {data.cardText.map((item, idx) => (
-                        <div key={idx} className={styles.sideMiniCard}>
-                            <span className={styles.sideMiniDot}></span>
-                            <span className={styles.sideMiniText}>{item}</span>
-                        </div>
+                        item && ( // Показываем только непустые строки
+                            <div key={idx} className={styles.sideMiniCard}>
+                                <span className={styles.sideMiniDot}></span>
+                                <span className={styles.sideMiniText}>{item}</span>
+                            </div>
+                        )
                     ))}
                 </div>
             </button>

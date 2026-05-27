@@ -1,3 +1,15 @@
+// Benefits.module.scss
+
+.benefits {
+  padding: var(--section-py) var(--section-px);
+  position: relative;
+  z-index: 10;
+  background: #000000;
+}
+
+[data-theme="light"] .benefits {
+  background: #ffffff;
+}
 
 @keyframes breathe {
   0%, 100% { opacity: 0.3; transform: scale(1); }

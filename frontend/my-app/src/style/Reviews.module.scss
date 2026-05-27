@@ -1,5 +1,16 @@
 // Reviews.module.scss
 
+.reviews {
+  padding: var(--section-py) var(--section-px);
+  position: relative;
+  z-index: 10;
+  background: #000000;
+}
+
+[data-theme="light"] .reviews {
+  background: #ffffff;
+}
+
 .bgGlow {
   position: absolute;
   inset: 0;
@@ -22,7 +33,7 @@
   justify-content: space-between;
   gap: 24px;
   flex-wrap: wrap;
-  padding: 0 var(--px) 32px;
+  padding: 0 0 32px 0;
   margin-bottom: 36px;
   border-bottom: 1px solid var(--border);
 }
@@ -92,7 +103,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 22px;
-  padding: 0 var(--px);
+  padding: 0;
 }
 
 .reviewsMarqueeWrap {
@@ -127,7 +138,7 @@
   gap: 22px;
   width: max-content;
   animation: marqueeScroll 42s linear infinite;
-  padding: 0 var(--px);
+  padding: 0;
 }
 
 .reviewsMarquee:hover {
@@ -274,7 +285,7 @@
 
 .loader,
 .emptyState {
-  margin: 0 var(--px);
+  margin: 0;
   border-radius: 24px;
   text-align: center;
   font-family: 'JetBrains Mono', monospace;
@@ -321,11 +332,10 @@
     text-align: center;
   }
 
-  /* Сетка для мобильных - 2 колонки */
   .reviewsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
-    padding: 0 16px;
+    padding: 0;
   }
 
   .reviewsMarqueeWrap {
@@ -405,7 +415,7 @@
   .reviewsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    padding: 0 12px;
+    padding: 0;
   }
 
   .reviewCard {
