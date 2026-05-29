@@ -1,0 +1,240 @@
+// Final.module.scss
+
+/* ═══════════════════════════════════════════════════════════════
+   FINAL OFFER СЕКЦИЯ - отдельный файл
+   ═══════════════════════════════════════════════════════════════ */
+
+.finalOfferWrapper {
+  margin-top: 80px;
+  margin-bottom: 80px;
+  padding: 0 var(--px, 24px);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.finalOffer {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+  position: relative;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: none !important;
+}
+
+/* Убираем белую полоску сверху */
+.finalOffer::before {
+  display: none !important;
+  content: none !important;
+}
+
+.finalOfferContent h3 {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+  color: var(--text, #ffffff);
+}
+
+.finalOfferContent p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-muted, rgba(255, 255, 255, 0.55));
+  margin-bottom: 48px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.finalOfferButtons {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Кнопка первичная */
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 14px 36px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  background: #ffffff;
+  color: #0a0a0f;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-3px);
+  filter: brightness(0.95);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
+}
+
+/* Кнопка вторичная */
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 14px 36px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+  border: 1px solid var(--border-accent, rgba(255, 255, 255, 0.3));
+  color: var(--accent, #ffffff);
+}
+
+.btnOutline:hover {
+  background: var(--accent, #ffffff);
+  color: var(--bg, #0a0a0f);
+  border-color: var(--accent, #ffffff);
+  transform: translateY(-3px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   СВЕТЛАЯ ТЕМА - ВСЁ ЧЁРНОЕ
+   ═══════════════════════════════════════════════════════════════ */
+[data-theme="light"] .finalOfferContent h3 {
+  color: #000000;
+}
+
+[data-theme="light"] .finalOfferContent p {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="light"] .btnPrimary {
+  background: #000000;
+  color: #ffffff;
+}
+
+[data-theme="light"] .btnPrimary:hover {
+  background: #222222;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .btnOutline {
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #000000;
+}
+
+[data-theme="light"] .btnOutline:hover {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+}
+
+/* Анимации */
+.hoverScale {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hoverScale:hover {
+  transform: scale(1.05);
+}
+
+.hoverScaleLg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hoverScaleLg:hover {
+  transform: scale(1.08);
+}
+
+.glowPulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
+}
+
+[data-theme="light"] .glowPulse {
+  animation: glowPulseLight 2s ease-in-out infinite;
+}
+
+@keyframes glowPulseLight {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
+}
+
+.revealBlur {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(8px);
+  transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.revealBlur.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .finalOfferWrapper {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    min-height: 40vh;
+  }
+
+  .finalOfferContent p {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+
+  .finalOfferButtons {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .btnPrimary,
+  .btnOutline {
+    width: 100%;
+    padding: 12px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .finalOfferWrapper {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    min-height: 35vh;
+  }
+
+  .finalOfferContent h3 {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .finalOfferContent p {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .btnPrimary,
+  .btnOutline {
+    font-size: 11px;
+    padding: 10px 20px;
+  }
+}

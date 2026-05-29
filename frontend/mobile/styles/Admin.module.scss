@@ -1,0 +1,265 @@
+.loginContainer {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.loginBox {
+  background: #000;
+  border: 1px solid rgba(255,255,255,.12);
+  padding: 52px 44px;
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+
+  /* Золотая линия сверху */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: #e9b709;
+  }
+}
+
+.loginHeader {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 10px;
+  span { color: #e9b709; }
+}
+
+.loginHeader h1 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+  }
+
+  input {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 11px 14px;
+    font-size: 14px;
+    color: #fff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+    &::placeholder { color: rgba(255,255,255,.2); }
+    &:focus { border-color: #e9b709; }
+  }
+}
+
+.loginError {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #ff4444;
+  border-left: 2px solid #ff4444;
+  padding-left: 10px;
+}
+
+/* ── Admin Panel ── */
+.adminContainer {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.adminHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px clamp(20px,5vw,80px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  background: #000;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+    span { color: #e9b709; }
+  }
+}
+
+.adminContent {
+  padding: 40px clamp(20px,5vw,80px);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Табы */
+.adminTabs {
+  display: flex;
+  gap: 0;
+  border: 1px solid rgba(255,255,255,.07);
+  margin-bottom: 36px;
+  max-width: fit-content;
+}
+
+.adminTab {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(255,255,255,.07);
+  padding: 10px 22px;
+  color: rgba(255,255,255,.35);
+  cursor: pointer;
+  transition: all .2s;
+
+  &:last-child { border-right: none; }
+  &:hover { color: rgba(255,255,255,.7); background: rgba(255,255,255,.03); }
+
+  &.active {
+    background: #e9b709;
+    color: #000;
+    font-weight: 600;
+    border-right-color: #e9b709;
+  }
+}
+
+.adminSection {
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(24px,3vw,36px);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+}
+
+/* Форма добавления */
+.addProjectForm {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.07);
+  background: #080808;
+
+  input[type="text"],
+  input[type="file"] {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,.1);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #fff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    flex: 1;
+    min-width: 200px;
+    outline: none;
+    transition: border-color .2s;
+    &:focus { border-color: #e9b709; }
+    &::placeholder { color: rgba(255,255,255,.2); }
+  }
+}
+
+/* Таблица */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.3);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+
+  td {
+    padding: 12px 14px;
+    color: rgba(255,255,255,.65);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    vertical-align: middle;
+  }
+
+  tr:hover td { background: rgba(255,255,255,.02); }
+}
+
+/* Кнопки */
+.btnDelete {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255,68,68,.35);
+  color: rgba(255,68,68,.65);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all .2s;
+  &:hover { background: rgba(255,68,68,.08); border-color: #ff4444; color: #ff4444; }
+}
+
+.logoutBtn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.18);
+  color: rgba(255,255,255,.45);
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all .2s;
+  &:hover { border-color: rgba(255,255,255,.4); color: #fff; }
+}
