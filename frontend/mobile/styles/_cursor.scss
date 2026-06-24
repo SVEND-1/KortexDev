@@ -1,0 +1,26 @@
+/* ── КУРСОР ── */
+.cursor {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width .15s var(--ease-spring), height .15s var(--ease-spring);
+  will-change: left, top;
+}
+
+.cursorRing {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(233,183,9,0.4);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: width .5s var(--ease-spring),
+              height .5s var(--ease-spring),
+              border-color .3s;
+  will-change: left, top;
+}

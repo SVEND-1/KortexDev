@@ -1,0 +1,250 @@
+// src/style/globals.scss
+
+/* Импорт шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* Тёмная тема (по умолчанию) */
+:root {
+  // Основные цвета
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #000000;
+  --bg-card: rgba(255, 255, 255, 0.03);
+  --bg-card-hover: rgba(255, 255, 255, 0.07);
+
+  // Текст
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.55);
+  --text-muted: rgba(255, 255, 255, 0.4);
+
+  // Акценты (белый + фиолетовый градиент)
+  --accent: #ffffff;
+  --accent-secondary: #6D5CE8;
+  --accent-glow: rgba(255, 255, 255, 0.3);
+  --accent-border: rgba(255, 255, 255, 0.2);
+
+  // Границы
+  --border: rgba(255, 255, 255, 0.07);
+  --border-light: rgba(255, 255, 255, 0.1);
+
+  // Градиенты
+  --gradient-primary: linear-gradient(135deg, #ffffff, #6D5CE8);
+  --gradient-card: linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018));
+
+  // Отступы
+  --px: clamp(24px, 5vw, 80px);
+  --py: clamp(60px, 8vw, 120px);
+
+  // Шрифты
+  --font-primary: 'Space Grotesk', 'Rajdhani', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Orbitron', 'Rajdhani', sans-serif;
+}
+
+/* Светлая тема */
+[data-theme="light"] {
+  --bg-primary: #f5f5f7;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(0, 0, 0, 0.03);
+  --bg-card-hover: rgba(0, 0, 0, 0.05);
+
+  --text-primary: #000000;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-tertiary: rgba(0, 0, 0, 0.55);
+  --text-muted: rgba(0, 0, 0, 0.4);
+
+  --accent: #000000;
+  --accent-secondary: #6D5CE8;
+  --accent-glow: rgba(0, 0, 0, 0.15);
+  --accent-border: rgba(0, 0, 0, 0.15);
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-light: rgba(0, 0, 0, 0.12);
+
+  --gradient-primary: linear-gradient(135deg, #000000, #6D5CE8);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  line-height: 1.5;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Общий фон для всех секций */
+section {
+  background: var(--bg-secondary);
+  position: relative;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Стили для заголовков */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Необычный эффект для заголовков */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glow эффект для текста */
+.text-glow {
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* Анимация для фона как в Hero */
+.hero-bg {
+  position: relative;
+  background: var(--bg-secondary);
+  overflow: hidden;
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+          radial-gradient(circle at 20% 20%, rgba(109, 92, 232, 0.08), transparent 40%),
+          radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05), transparent 40%);
+  pointer-events: none;
+  animation: bgPulse 8s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Кнопка переключения темы */
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  cursor: pointer;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+}
+
+/* Остальные общие стили */
+.section-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-primary);
+  border: 1px solid var(--accent-border);
+  background: var(--bg-card);
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 5vw, 68px);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.section-title .accent {
+  color: var(--accent);
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-border);
+  transform: translateY(-4px);
+}
+
+.btn {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 13px 28px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  border: none;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--bg-secondary);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px var(--accent-glow);
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  :root {
+    --px: 20px;
+    --py: 40px;
+  }
+}
