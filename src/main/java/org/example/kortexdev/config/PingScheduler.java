@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 public class PingScheduler {
 
     @Value("${server.url}")
-    private int url;
+    private String url;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
