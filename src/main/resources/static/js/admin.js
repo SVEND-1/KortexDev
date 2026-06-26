@@ -1,5 +1,6 @@
 // ===== ADMIN PANEL =====
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const dashboard = document.getElementById('dashboard');
     const loginPage = document.getElementById('loginPage');
@@ -48,9 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 loginError.style.display = 'none';
 
                 try {
-                    // ===== ЗАПРОС К БЭКЕНДУ =====
                     const response = await fetch(
-                        `https://kortexdev.onrender.com/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                        `${API_BASE_URL}/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
                         {
                             method: 'POST',
                             credentials: 'include',

@@ -27,6 +27,7 @@ public class ProjectEntity {
             name = "project_images",
             joinColumns = @JoinColumn(name = "project_id")
     )
+    @Column(name = "images",columnDefinition = "TEXT")
     private List<String> images = new ArrayList<>();
 
 }

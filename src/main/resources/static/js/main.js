@@ -63,6 +63,8 @@ window.showToast = function(message) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // ===== INIT =====
+    console.log('🚀 KortexDev инициализация...');
+
     initParticles();
     initHeroParticles();
     initCustomCursor();
@@ -75,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initReviews();
     initModals();
     initRevealAnimations();
-    initButtons(); // ← НОВАЯ ФУНКЦИЯ для всех кнопок
+    initButtons();
 
     // ===== PARTICLE SYSTEM =====
     function initParticles() {
@@ -590,8 +592,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function loadProjects() {
             try {
+                console.log('🔄 Загрузка проектов...');
+
                 const projects = await ApiService.getProjects();
-                if (projects.length === 0) {
+                console.log('📦 Получено проектов:', projects.length);
+                console.log('📋 Проекты:', projects);
+
+                if (!projects || projects.length === 0) {
+                    console.warn('⚠️ Проектов нет!');
                     grid.innerHTML = `
                         <div class="empty-state">
                             <p>Пока нет реализованных проектов</p>
@@ -600,6 +608,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     return;
                 }
+
+                console.log('✅ Начинаем рендеринг проектов...');
 
                 const projectTypes = ['landing', 'platform', 'mobile'];
                 const typeLabels = { landing: 'Лендинг', platform: 'Платформа', mobile: 'Мобильное' };
@@ -620,13 +630,18 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="project-card reveal-scale" style="transition-delay: ${idx * 0.05}s">
                             <div class="project-thumb">
                                 ${hasImages && imageUrl ? `
-                                    <img src="${imageUrl}" alt="${project.name}" class="project-image" />
+                                    <img src="${imageUrl}" alt="${project.name}" class="project-image" 
+                                         onerror="this.style.display='none'; this.parentElement.querySelector('.project-placeholder').style.display='flex';" />
                                     <div class="project-image-overlay"></div>
                                     ${images.length > 1 ? `
                                         <button class="project-carousel-prev" data-id="${project.id}" data-dir="prev">‹</button>
                                         <button class="project-carousel-next" data-id="${project.id}" data-dir="next">›</button>
                                         <div class="project-carousel-counter">1 / ${images.length}</div>
                                     ` : ''}
+                                    <div class="project-placeholder" style="display:none; background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
+                                        <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
+                                        <span class="placeholder-text">${project.name}</span>
+                                    </div>
                                 ` : `
                                     <div class="project-placeholder" style="background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
                                         <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
@@ -646,6 +661,25 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     `;
                 }).join('');
+
+                console.log('✅ Рендеринг завершен!');
+
+                // ===== ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ КАРТОЧКИ =====
+                setTimeout(() => {
+                    const cards = grid.querySelectorAll('.project-card');
+                    console.log('📊 Найдено карточек:', cards.length);
+
+                    cards.forEach((card, index) => {
+                        card.classList.add('visible');
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                        card.style.display = 'block';
+                        card.style.visibility = 'visible';
+                    });
+
+                    grid.style.display = 'grid';
+                    grid.style.opacity = '1';
+                }, 200);
 
                 grid.querySelectorAll('.project-carousel-prev, .project-carousel-next').forEach(btn => {
                     btn.addEventListener('click', function(e) {
@@ -669,10 +703,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
             } catch (error) {
-                console.error('Failed to load projects:', error);
+                console.error('❌ Ошибка загрузки проектов:', error);
                 grid.innerHTML = `
                     <div class="empty-state">
-                        <p>Ошибка загрузки проектов</p>
+                        <p>Ошибка загрузки проектов: ${error.message}</p>
                         <button class="btn btn-outline" onclick="location.reload()">Повторить</button>
                     </div>
                 `;
@@ -689,8 +723,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function loadReviews() {
             try {
+                console.log('🔄 Загрузка отзывов...');
+
                 const reviews = await ApiService.getReviews();
-                if (reviews.length === 0) {
+                console.log('📦 Получено отзывов:', reviews.length);
+                console.log('📋 Отзывы:', reviews);
+
+                if (!reviews || reviews.length === 0) {
                     container.innerHTML = `<div class="empty-state">Пока нет отзывов. Будьте первым!</div>`;
                     return;
                 }
@@ -722,9 +761,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
 
+                console.log('✅ Отзывы отрендерены!');
+
             } catch (error) {
-                console.error('Failed to load reviews:', error);
-                container.innerHTML = `<div class="empty-state">Ошибка загрузки отзывов</div>`;
+                console.error('❌ Ошибка загрузки отзывов:', error);
+                container.innerHTML = `<div class="empty-state">Ошибка загрузки отзывов: ${error.message}</div>`;
             }
         }
 
@@ -950,4 +991,6 @@ document.addEventListener('DOMContentLoaded', function() {
             observer.observe(el);
         });
     }
+
+    console.log('✅ KortexDev инициализация завершена!');
 });

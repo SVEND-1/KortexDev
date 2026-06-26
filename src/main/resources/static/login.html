@@ -283,7 +283,7 @@
         const loginBtn = document.getElementById('loginBtn');
         const errorMessage = document.getElementById('errorMessage');
 
-        const API_BASE_URL = window.API_BASE_URL || 'https://kortexdev.onrender.com';
+        const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8080';
         const LOGIN_URL = `${API_BASE_URL}/api/admin/login`;
 
         console.log('API URL:', LOGIN_URL); // Для отладки
@@ -381,5 +381,6 @@
         });
     });
 </script>
+<script src="config.js"></script>
 </body>
 </html>
