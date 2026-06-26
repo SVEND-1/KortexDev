@@ -310,40 +310,41 @@
                     `https://kortexdev.onrender.com/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
                     {
                         method: 'POST',
-                        credentials: 'include',
+                        credentials: 'include', // Важно для отправки/получения cookies (JSESSIONID)
                         headers: {
                             'Content-Type': 'application/json',
                         },
                     }
                 );
 
-                if (!response.ok) {
-                    let errorMsg = 'Неверный логин или пароль';
-                    try {
-                        const errorData = await response.json();
-                        errorMsg = errorData.error || errorData.message || errorMsg;
-                    } catch {
-                        if (response.status === 401) {
-                            errorMsg = 'Неверный логин или пароль';
-                        } else if (response.status === 404) {
-                            errorMsg = 'Сервер не найден. Проверьте подключение.';
-                        } else {
-                            errorMsg = `Ошибка: ${response.status}`;
-                        }
-                    }
-                    throw new Error(errorMsg);
-                }
-
-                const data = await response.json();
-
-                if (data.success) {
+                if (response.status === 200) {
                     try {
                         localStorage.setItem('adminAuthenticated', 'true');
                     } catch(e) {}
                     window.location.href = 'admin.html';
-                } else {
-                    throw new Error(data.message || 'Ошибка авторизации');
+                    return;
                 }
+
+                let errorMsg = 'Неверный логин или пароль';
+
+                if (response.status === 401) {
+                    errorMsg = 'Неверный логин или пароль';
+                } else if (response.status === 404) {
+                    errorMsg = 'Сервер не найден. Проверьте подключение.';
+                } else if (response.status === 403) {
+                    errorMsg = 'Доступ запрещен. У вас нет прав администратора.';
+                } else if (response.status === 500) {
+                    errorMsg = 'Ошибка на сервере. Попробуйте позже.';
+                } else {
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorData.message || errorMsg;
+                    } catch {
+                        errorMsg = `Ошибка: ${response.status}`;
+                    }
+                }
+
+                throw new Error(errorMsg);
 
             } catch (error) {
                 console.error('Login error:', error);
@@ -366,6 +367,12 @@
         });
         passwordInput.addEventListener('input', function() {
             errorMessage.classList.remove('show');
+        });
+
+        passwordInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                form.dispatchEvent(new Event('submit'));
+            }
         });
     });
 </script>
