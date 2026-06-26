@@ -49,7 +49,8 @@ public class SecurityConfig {
                         auth
                                 .requestMatchers(
                                         "/api/admin/login",
-                                        "/api/admin/logout"
+                                        "/api/admin/logout",
+                                        "/ping"
                                 ).permitAll()
                                 .requestMatchers("/uploads/**", "/uploads/project/**")
                                 .permitAll()
