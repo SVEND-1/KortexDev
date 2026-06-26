@@ -283,6 +283,11 @@
         const loginBtn = document.getElementById('loginBtn');
         const errorMessage = document.getElementById('errorMessage');
 
+        const API_BASE_URL = window.API_BASE_URL || 'https://kortexdev.onrender.com';
+        const LOGIN_URL = `${API_BASE_URL}/api/admin/login`;
+
+        console.log('API URL:', LOGIN_URL); // Для отладки
+
         try {
             if (localStorage.getItem('adminAuthenticated') === 'true') {
                 window.location.href = 'admin.html';
@@ -307,10 +312,10 @@
 
             try {
                 const response = await fetch(
-                    `https://kortexdev.onrender.com/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                    `${LOGIN_URL}?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
                     {
                         method: 'POST',
-                        credentials: 'include', // Важно для отправки/получения cookies (JSESSIONID)
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json',
                         },
