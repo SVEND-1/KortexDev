@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 try {
                     // ===== ЗАПРОС К БЭКЕНДУ =====
                     const response = await fetch(
-                        `https://kortexdev.onrender.com/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                        `/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
                         {
                             method: 'POST',
                             credentials: 'include',

@@ -1,6 +1,6 @@
 // ===== API SERVICE =====
-const API_BASE = 'https://kortexdev.onrender.com/api';
-const ADMIN_API_BASE = 'https://kortexdev.onrender.com/api/admin';
+const API_BASE = '/api';
+const ADMIN_API_BASE = '/api/admin';
 
 const STORAGE_KEYS = {
     PROJECTS: 'kortex_projects',

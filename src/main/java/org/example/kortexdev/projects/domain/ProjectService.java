@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +26,7 @@ import java.util.UUID;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private static final Path UPLOAD_DIR = Paths.get("uploads/project");
 
     public List<Project> findAll(Integer limit) {
         return projectMapper.convertEntityToDto(projectRepository.findAllWithLimit(limit));
@@ -80,25 +80,38 @@ public class ProjectService {
 
     private String saveImage(MultipartFile imageFile) {
         try {
-            byte[] bytes = imageFile.getBytes();
-            String base64 = Base64.getEncoder().encodeToString(bytes);
-            return "data:image/webp;base64," + base64;
+            if (!Files.exists(UPLOAD_DIR)) {
+                Files.createDirectories(UPLOAD_DIR);
+            }
+
+            String extension = "";
+            String originalFilename = imageFile.getOriginalFilename();
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+
+            String fileName = UUID.randomUUID() + extension;
+            Path targetPath = UPLOAD_DIR.resolve(fileName);
+
+            Files.copy(imageFile.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            return UPLOAD_DIR.resolve(fileName).toString().replace("\\", "/");
         } catch (IOException e) {
             log.error("Не удалось сохранить картинку, ex={}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    private void deleteImage(String imageName) {
+    private void deleteImage(String imagePath) {
         try {
-            if (imageName != null && !imageName.trim().isEmpty()) {
-                Path imagePath = Paths.get("uploads/project/", imageName);
+            if (imagePath != null && !imagePath.trim().isEmpty()) {
+                Path path = Paths.get(imagePath);
 
-                if (Files.exists(imagePath)) {
-                    Files.delete(imagePath);
-                    log.info("Изображение удалено: {}", imageName);
+                if (Files.exists(path)) {
+                    Files.delete(path);
+                    log.info("Изображение удалено: {}", imagePath);
                 } else {
-                    log.warn("Файл не найден: {}", imageName);
+                    log.warn("Файл не найден: {}", imagePath);
                 }
             }
         } catch (IOException e) {
