@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KortexDev — Разработка сайтов и мобильных приложений</title>
+    <meta name="description" content="Разработка лендингов, веб-платформ и мобильных приложений под ключ. Современный дизайн, админ-панель, онлайн оплата." />
+    <meta name="keywords" content="разработка сайтов, лендинг, веб-платформа, мобильное приложение" />
+    <meta property="og:title" content="KortexDev — Разработка сайтов и мобильных приложений" />
+    <meta property="og:description" content="Создаём лендинги, веб-платформы и мобильные приложения под ключ." />
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+<div id="progressBar" class="progress-bar"></div>
+
+<div id="cursor" class="cursor"></div>
+<div id="cursorRing" class="cursor-ring"></div>
+
+<div id="toast" class="toast"></div>
+
+<nav id="navbar" class="navbar">
+    <div class="nav-container">
+        <a href="#" class="nav-logo">Kortex<span>.</span>Dev</a>
+        <div class="nav-links">
+            <a href="#services">Услуги</a>
+            <a href="#benefits">Преимущества</a>
+            <a href="#business-benefits">Аналитика</a>
+            <a href="#portfolio">Проекты</a>
+            <a href="#reviews">Отзывы</a>
+            <a href="#contact">Контакты</a>
+        </div>
+        <div class="nav-right">
+            <button class="nav-cta" id="requestBtn">Заказать проект</button>
+            <button class="mobile-menu-toggle" id="menuToggle" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<div id="mobileMenu" class="mobile-menu">
+    <a href="#services" class="mobile-link">Услуги</a>
+    <a href="#benefits" class="mobile-link">Преимущества</a>
+    <a href="#business-benefits" class="mobile-link">Аналитика</a>
+    <a href="#portfolio" class="mobile-link">Проекты</a>
+    <a href="#reviews" class="mobile-link">Отзывы</a>
+    <a href="#contact" class="mobile-link">Контакты</a>
+    <button class="btn btn-primary mobile-cta" id="mobileRequestBtn">Заказать проект</button>
+</div>
+<div id="mobileOverlay" class="mobile-overlay"></div>
+
+<div class="grid-bg"></div>
+<div class="grid-lines"></div>
+<div class="particles" id="particles"></div>
+
+<section id="hero" class="hero">
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="hero-container">
+        <div class="hero-left">
+            <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                KortexDev
+            </div>
+            <h1 class="hero-title">
+                Разработка сайтов <br />
+                <span style="color: #ffffff;">под ключ</span>
+            </h1>
+            <p class="hero-subtitle">
+                Создаём лендинги, веб-платформы и мобильные приложения, которые приносят реальные продажи.
+                Современный дизайн, админ-панель и онлайн-оплата — всё в одном месте.
+            </p>
+            <div class="hero-actions">
+                <button class="btn-hero" id="heroBtn">
+                    <span>Заказать проект</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="hero-right">
+            <img src="assets/images/hero.webp" alt="KortexDev preview" class="hero-image" />
+        </div>
+    </div>
+</section>
+
+<div class="section-sep"></div>
+
+<section id="services" class="services">
+    <div class="services-inner">
+        <div class="services-header">
+            <span class="section-tag">Наши услуги</span>
+            <h2 class="section-title">Что мы <span class="accent">предлагаем</span></h2>
+        </div>
+
+        <div class="service-toggle" id="serviceToggle">
+            <button class="service-toggle-btn active" data-service="landing">Лендинг</button>
+            <button class="service-toggle-btn" data-service="platform">Веб-платформа</button>
+            <button class="service-toggle-btn" data-service="mobile">Мобильное приложение</button>
+        </div>
+
+        <div class="service-carousel">
+            <button class="side-card side-left" id="prevService">
+                <div class="side-card-top">
+                    <span class="preview-badge">Старт</span>
+                    <span class="side-price">от 12 499 ₽</span>
+                </div>
+                <h3 class="side-title">Лендинг</h3>
+                <p class="side-subtitle">Быстрый запуск, заявки и проверка гипотез</p>
+                <div class="side-cards-column">
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Информационные страницы</span>
+                    </div>
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Админ панель</span>
+                    </div>
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Ссылки на обратную связь</span>
+                    </div>
+                </div>
+            </button>
+
+            <div class="service-card-wrap">
+                <div class="service-card" id="serviceCard">
+                    <div class="service-header">
+                        <div>
+                            <h3 class="service-title" id="serviceTitle">ЛЕНДИНГ</h3>
+                            <p class="service-subtitle" id="serviceSubtitle">Быстрый запуск, заявки и проверка гипотез</p>
+                        </div>
+                        <div class="service-price">
+                            <span class="price-value" id="servicePrice">от 12 499 ₽</span>
+                            <span class="price-label">Стоимость разработки</span>
+                        </div>
+                    </div>
+                    <div class="service-features" id="serviceFeatures"></div>
+                    <div class="service-examples">
+                        <h4>Примеры для бизнеса</h4>
+                        <div class="examples-grid" id="serviceExamples"></div>
+                    </div>
+                    <button class="service-btn" id="serviceRequestBtn">Рассчитать стоимость →</button>
+                </div>
+            </div>
+
+            <button class="side-card side-right" id="nextService">
+                <div class="side-card-top">
+                    <span class="preview-badge">Система</span>
+                    <span class="side-price">Цена договорная</span>
+                </div>
+                <h3 class="side-title">Веб-платформа</h3>
+                <p class="side-subtitle">Сложная логика, личные кабинеты и автоматизация</p>
+                <div class="side-cards-column">
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Функционал под ключ</span>
+                    </div>
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Роли и права</span>
+                    </div>
+                    <div class="side-mini-card">
+                        <span class="side-mini-dot"></span>
+                        <span class="side-mini-text">Регистрация</span>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </div>
+</section>
+
+<div class="section-sep"></div>
+
+<section id="benefits" class="benefits">
+    <div class="benefits-header reveal-blur">
+        <span class="section-tag">Почему это выгодно</span>
+        <h2 class="section-title">Чем полезен сайт для бизнеса</h2>
+    </div>
+    <div class="benefits-grid" id="benefitsGrid"></div>
+</section>
+
+<div class="section-sep"></div>
+
+<section id="business-benefits" class="business-benefits">
+    <div class="header reveal">
+        <span class="tag">Почему это выгодно</span>
+        <h2 class="title">Чем полезен <span class="accent">сайт для бизнеса</span></h2>
+        <p class="subtitle">Цифровые инструменты, которые реально увеличивают прибыль и оптимизируют процессы</p>
+    </div>
+
+    <div class="chart-section reveal">
+        <div class="chart-header">
+            <div class="chart-title-block">
+                <h3 id="chartTitle">Общий обзор всех метрик</h3>
+                <p id="chartDesc">Общий взгляд на все ключевые бизнес-метрики в одном графике</p>
+            </div>
+            <div class="metric-toggles" id="metricToggles"></div>
+        </div>
+        <div class="chart-container">
+            <canvas id="metricsChart"></canvas>
+        </div>
+        <div class="chart-stats" id="chartStats"></div>
+    </div>
+</section>
+
+<div class="section-sep"></div>
+
+<section id="portfolio" class="portfolio">
+    <div class="portfolio-header reveal-right">
+        <div>
+            <span class="section-tag">Наши работы</span>
+            <h2 class="section-title">Выполненные <span class="accent">проекты</span></h2>
+        </div>
+        <button class="portfolio-more" id="portfolioRequestBtn">Хочу такой же →</button>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+        <div class="loader">Загрузка проектов...</div>
+    </div>
+</section>
+
+<div class="section-sep"></div>
+
+<section id="reviews" class="reviews">
+    <div class="bg-glow"></div>
+    <div class="container">
+        <div class="reviews-header">
+            <div>
+                <span class="section-tag">Отзывы клиентов</span>
+                <h2 class="section-title">Что говорят <span class="accent">о нас</span></h2>
+                <p class="section-text">Живые отзывы от людей, которые уже воспользовались услугой.</p>
+            </div>
+            <button class="review-btn" id="reviewBtn">Оставить отзыв</button>
+        </div>
+        <div id="reviewsContainer">
+            <div class="loader">Загрузка отзывов...</div>
+        </div>
+    </div>
+</section>
+
+<div class="final-offer reveal-blur">
+    <div class="final-offer-content">
+        <h3 class="text-gradient-shift">Готовы начать?</h3>
+        <p>Создадим цифровой продукт, который будет приносить вам клиентов каждый день</p>
+        <div class="final-offer-buttons">
+            <button class="btn btn-primary glow-pulse" id="finalOfferBtn">Заказать разработку</button>
+            <button class="btn btn-outline" id="contactBtn">Связаться с нами</button>
+        </div>
+    </div>
+</div>
+
+<section id="contact" class="contact">
+    <span class="section-tag reveal-right">Контакты</span>
+    <h2 class="contact-title reveal-left">
+        <span style="color: var(--text)">Давайте</span><br />
+        <span class="gradient-text">обсудим проект</span>
+    </h2>
+    <p class="contact-sub reveal-scale">Оставьте заявку — мы свяжемся с вами в течение 15 минут</p>
+    <div class="contact-row reveal-blur">
+        <button class="btn btn-primary" id="contactRequestBtn">Оставить заявку →</button>
+        <button class="btn btn-outline" id="emailBtn">s5090@inbox.ru</button>
+    </div>
+    <div class="contact-socials reveal-flip">
+        <a href="https://t.me/KortexDev" target="_blank" rel="noopener noreferrer" class="social-link">Telegram</a>
+        <a href="https://vk.com/svendd" target="_blank" rel="noopener noreferrer" class="social-link">VK</a>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-logo">KortexDev</div>
+    <div class="footer-text">© 2026 KortexDev — Разработка сайтов и мобильных приложений под ключ</div>
+</footer>
+
+
+<div id="requestModal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+        <button class="modal-close" id="closeRequestModal">✕</button>
+        <h2 class="modal-title">Оставить заявку</h2>
+        <form id="requestForm" class="modal-form">
+            <input type="text" placeholder="Ваше имя" id="reqName" required class="modal-input" />
+            <input type="text" placeholder="Юзернейм (без @)" id="reqUsername" required class="modal-input" />
+            <div class="modal-radio-group">
+                <label class="modal-radio">
+                    <input type="radio" name="requestType" value="TG" checked />
+                    Telegram
+                </label>
+                <label class="modal-radio">
+                    <input type="radio" name="requestType" value="VK" />
+                    ВКонтакте
+                </label>
+            </div>
+            <div id="reqError" class="modal-error" style="display: none;"></div>
+            <button type="submit" class="btn btn-primary" id="reqSubmit">Отправить заявку →</button>
+        </form>
+    </div>
+</div>
+
+<div id="reviewModal" class="modal-overlay" style="display: none;">
+    <div class="modal">
+        <button class="modal-close" id="closeReviewModal">✕</button>
+        <h2 class="modal-title">Оставить отзыв</h2>
+        <form id="reviewForm" class="modal-form">
+            <input type="text" placeholder="Ваше имя" id="revName" required class="modal-input" />
+            <textarea placeholder="Расскажите о вашем опыте работы с нами..." id="revText" required class="modal-textarea" rows="5"></textarea>
+            <div id="revError" class="modal-error" style="display: none;"></div>
+            <button type="submit" class="btn btn-primary" id="revSubmit">Отправить отзыв →</button>
+        </form>
+    </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

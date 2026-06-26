@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админ-панель | KortexDev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .login-page {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            z-index: 9999;
+            font-family: 'Inter', sans-serif;
+        }
+        .login-page .login-box {
+            position: relative;
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .login-page .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #e9b709, #ffd700, #e9b709, transparent);
+            border-radius: 24px 24px 0 0;
+            animation: shimmerLine 3s infinite;
+        }
+        @keyframes shimmerLine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .login-page .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .login-page .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e9b709 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .login-page .login-header h1 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+        }
+        .login-page .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        .login-page .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .login-page .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .login-page .input-group input {
+            padding: 0.875rem 1rem;
+            background: #000000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        .login-page .input-group input:focus {
+            outline: none;
+            border-color: #e9b709;
+            box-shadow: 0 0 0 3px rgba(233, 183, 9, 0.1);
+        }
+        .login-page .error {
+            padding: 0.75rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            color: #ef4444;
+            font-size: 0.75rem;
+            text-align: center;
+            display: none;
+        }
+        .login-page .login-btn {
+            padding: 0.875rem 1.5rem;
+            background: linear-gradient(135deg, #e9b709 0%, #ffd700 100%);
+            border: none;
+            border-radius: 12px;
+            color: #000000;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .login-page .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 183, 9, 0.3);
+        }
+        .login-page .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        @media (max-width: 768px) {
+            .login-page .login-box {
+                padding: 2rem 1.5rem;
+                max-width: 90%;
+            }
+            .login-page .logo {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .login-page .login-box {
+                padding: 1.5rem 1.25rem;
+                max-width: 100%;
+            }
+            .login-page .logo {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none;">
+        <nav class="admin-nav">
+            <div class="nav-logo">{</ ADMIN >}</div>
+    <div class="nav-tabs">
+        <button class="tab-btn active" data-tab="projects">📁 Проекты (<span id="projectCount">0</span>)</button>
+        <button class="tab-btn" data-tab="requests">📋 Заявки (<span id="requestCount">0</span>)</button>
+        <button class="tab-btn" data-tab="reviews">⭐ Отзывы (<span id="reviewCount">0</span>)</button>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Выйти</button>
+    </nav>
+
+    <div id="message" class="message" style="display:none;"></div>
+
+    <div class="admin-content">
+        <div id="tabProjects" class="tab-content">
+            <div class="tab-header">
+                <h2>Управление проектами</h2>
+                <button class="create-btn" id="createProjectBtn">+ Создать проект</button>
+            </div>
+            <div id="projectsList"><div class="loader">Загрузка...</div></div>
+        </div>
+
+        <div id="tabRequests" class="tab-content" style="display:none;">
+            <div class="tab-header">
+                <h2>Заявки на разработку</h2>
+            </div>
+            <div id="requestsList"><div class="loader">Загрузка...</div></div>
+        </div>
+
+        <div id="tabReviews" class="tab-content" style="display:none;">
+            <div class="tab-header">
+                <h2>Отзывы клиентов</h2>
+            </div>
+            <div id="reviewsList"><div class="loader">Загрузка...</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Страница входа -->
+<div id="loginPage" class="login-page">
+    <div class="login-box">
+        <div class="login-header">
+            <div class="logo">{</ ADMIN >}</div>
+        <h1>Вход в панель управления</h1>
+    </div>
+    <form id="loginForm" class="login-form">
+        <div class="input-group">
+            <label>Логин</label>
+            <input type="text" id="loginUsername" placeholder="Введите логин" required />
+        </div>
+        <div class="input-group">
+            <label>Пароль</label>
+            <input type="password" id="loginPassword" placeholder="Введите пароль" required />
+        </div>
+        <div id="loginError" class="error"></div>
+        <button type="submit" class="login-btn" id="loginBtn">Войти</button>
+    </form>
+</div>
+</div>
+</div>
+
+<!-- Modal для создания проекта -->
+<div id="projectModal" class="modal-overlay" style="display:none;">
+    <div class="modal modal-wide">
+        <button class="modal-close" id="closeProjectModal">×</button>
+        <h3>Новый проект</h3>
+        <div class="modal-body">
+            <div class="modal-form">
+                <div class="form-group">
+                    <label>Название проекта</label>
+                    <input type="text" id="projectName" placeholder="Например: Лендинг для ресторана" />
+                    <small>Добавьте в название тип проекта (Лендинг/Платформа/Мобильное)</small>
+                </div>
+                <div class="form-group">
+                    <label>Изображения</label>
+                    <input type="file" id="projectImages" multiple accept="image/*" />
+                    <small>Можно выбрать несколько файлов (PNG, JPG, JPEG)</small>
+                </div>
+                <div class="modal-buttons">
+                    <button class="cancel-btn" id="cancelProjectBtn">Отмена</button>
+                    <button class="submit-btn" id="submitProjectBtn">Создать</button>
+                </div>
+            </div>
+            <div class="preview-panel">
+                <p class="preview-label">Превью карточки</p>
+                <div class="project-card-preview">
+                    <div class="card-image-area" id="previewImageArea">
+                        <div class="card-image-placeholder">
+                            <span>🖼️</span>
+                            <p>Изображения не выбраны</p>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <span class="card-icon" id="previewIcon">🌐</span>
+                        <span class="card-name" id="previewName">Название проекта</span>
+                    </div>
+                </div>
+                <p class="preview-image-count" id="previewCount">0 изображений</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

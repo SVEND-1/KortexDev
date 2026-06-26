@@ -1,0 +1,67 @@
+/* ===== ANIMATIONS ===== */
+
+/* Fade Up */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade Left */
+@keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Fade Right */
+@keyframes fadeRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Scale Up */
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Blur In */
+@keyframes blurIn {
+    from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* Flip In */
+@keyframes flipIn {
+    from { opacity: 0; transform: translateY(16px) rotateX(10deg); }
+    to { opacity: 1; transform: translateY(0) rotateX(0); }
+}
+
+/* Glow Pulse */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+    50% { box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.15); }
+}
+
+/* Shimmer */
+@keyframes shimmer {
+    0%, 100% { transform: translateX(-100%); opacity: 0; }
+    50% { transform: translateX(100%); opacity: 1; }
+}
+
+/* Marquee Scroll */
+@keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* Toast In */
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Wave Character */
+@keyframes waveChar {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-7px); }
+}
