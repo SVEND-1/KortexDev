@@ -201,18 +201,6 @@
             cursor: not-allowed;
         }
 
-        .demo-hint {
-            margin-top: 16px;
-            padding: 12px;
-            background: rgba(233, 183, 9, 0.1);
-            border: 1px solid rgba(233, 183, 9, 0.3);
-            border-radius: 8px;
-            font-size: 12px;
-            color: #e9b709;
-            text-align: center;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
         @media (max-width: 768px) {
             .login-box {
                 padding: 2rem 1.5rem;
@@ -255,43 +243,36 @@
 <div class="login-box">
     <div class="login-header">
         <div class="logo">{< ADMIN >}</div>
-    <h1>Вход в панель управления</h1>
-</div>
-
-<form id="loginForm" class="login-form">
-    <div class="input-group">
-        <label for="username">Логин</label>
-        <input
-                type="text"
-                id="username"
-                placeholder="Введите логин"
-                value="admin"
-                required
-        />
+        <h1>Вход в панель управления</h1>
     </div>
 
-    <div class="input-group">
-        <label for="password">Пароль</label>
-        <input
-                type="password"
-                id="password"
-                placeholder="Введите пароль"
-                value="123"
-                required
-        />
-    </div>
+    <form id="loginForm" class="login-form">
+        <div class="input-group">
+            <label for="username">Логин</label>
+            <input
+                    type="text"
+                    id="username"
+                    placeholder="Введите логин"
+                    required
+            />
+        </div>
 
-    <div id="errorMessage" class="error-message"></div>
+        <div class="input-group">
+            <label for="password">Пароль</label>
+            <input
+                    type="password"
+                    id="password"
+                    placeholder="Введите пароль"
+                    required
+            />
+        </div>
 
-    <button type="submit" class="login-btn" id="loginBtn">
-        Войти
-    </button>
-</form>
+        <div id="errorMessage" class="error-message"></div>
 
-<div class="demo-hint">
-    🔐 Демо-доступ<br>
-    Логин: <strong>admin</strong> | Пароль: <strong>123</strong>
-</div>
+        <button type="submit" class="login-btn" id="loginBtn">
+            Войти
+        </button>
+    </form>
 </div>
 
 <script>
@@ -309,7 +290,7 @@
             }
         } catch(e) {}
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const username = usernameInput.value.trim();
@@ -320,23 +301,64 @@
                 return;
             }
 
-            if (username === 'admin' && password === '123') {
-                try {
-                    localStorage.setItem('adminAuthenticated', 'true');
-                } catch(e) {}
-                window.location.href = 'admin.html';
-            } else {
-                showError('Неверный логин или пароль. Используйте admin / 123');
-                usernameInput.focus();
-                usernameInput.select();
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Вход...';
+            errorMessage.classList.remove('show');
+
+            try {
+                const response = await fetch(
+                    `https://kortexdev.onrender.com/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+                    {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    let errorMsg = 'Неверный логин или пароль';
+                    try {
+                        const errorData = await response.json();
+                        errorMsg = errorData.error || errorData.message || errorMsg;
+                    } catch {
+                        if (response.status === 401) {
+                            errorMsg = 'Неверный логин или пароль';
+                        } else if (response.status === 404) {
+                            errorMsg = 'Сервер не найден. Проверьте подключение.';
+                        } else {
+                            errorMsg = `Ошибка: ${response.status}`;
+                        }
+                    }
+                    throw new Error(errorMsg);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    try {
+                        localStorage.setItem('adminAuthenticated', 'true');
+                    } catch(e) {}
+                    window.location.href = 'admin.html';
+                } else {
+                    throw new Error(data.message || 'Ошибка авторизации');
+                }
+
+            } catch (error) {
+                console.error('Login error:', error);
+                showError(error.message || 'Ошибка соединения с сервером');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Войти';
             }
         });
 
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.add('show');
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Войти';
+            usernameInput.focus();
+            usernameInput.select();
         }
 
         usernameInput.addEventListener('input', function() {
