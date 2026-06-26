@@ -115,12 +115,11 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         return username -> {
             if (adminUsername.equals(username)) {
-                UserDetails userDetails = User.builder()
+                return User.builder()
                         .username(adminUsername)
                         .password(passwordEncoder.encode(adminPassword))
                         .roles("ADMIN")
                         .build();
-                return userDetails;
             }
             throw new UsernameNotFoundException("User not found with username: " + username);
         };
