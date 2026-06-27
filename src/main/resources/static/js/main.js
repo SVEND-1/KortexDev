@@ -62,7 +62,7 @@ window.showToast = function(message) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // ===== INIT =====
-    console.log('KortexDev инициализация...');
+    console.log('🚀 KortexDev инициализация...');
 
     initParticles();
     initHeroParticles();
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
             landing: {
                 title: 'ЛЕНДИНГ',
                 subtitle: 'Быстрый запуск, заявки и проверка гипотез',
-                price: 'от 12 499 ₽',
+                price: '12 499 ₽',
                 features: [
                     { title: 'Информационные страницы', desc: 'Главная, Услуги, О нас, Контакты, Блог' },
                     { title: 'Админ панель', desc: 'Управление контентом, фотогалереей, отзывами и акциями' },
@@ -587,32 +587,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== PORTFOLIO =====
     function initPortfolio() {
         const grid = document.getElementById('projectsGrid');
+        const loadMoreContainer = document.getElementById('portfolioLoadMore');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
         if (!grid) return;
 
         let allProjects = [];
-        let visibleCount = 3;
-        let isLoading = false;
+        let visibleCount = 4;
 
         async function loadProjects() {
             try {
-                console.log('Загрузка проектов...');
+                console.log('🔄 Загрузка проектов...');
 
                 const projects = await ApiService.getProjects();
                 console.log('Получено проектов:', projects.length);
+                console.log('Проекты:', projects);
 
                 if (!projects || projects.length === 0) {
-                    console.warn('Проектов нет!');
+                    console.warn('⚠Проектов нет!');
                     grid.innerHTML = `
                         <div class="empty-state">
                             <p>Пока нет реализованных проектов</p>
                             <button class="btn btn-outline" onclick="window.openRequestModal()">Станьте первым клиентом</button>
                         </div>
                     `;
+                    if (loadMoreContainer) loadMoreContainer.style.display = 'none';
                     return;
                 }
 
                 allProjects = projects;
-                visibleCount = Math.min(3, allProjects.length);
+                console.log('Начинаем рендеринг проектов...');
+
                 renderProjects();
 
             } catch (error) {
@@ -623,6 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="btn btn-outline" onclick="location.reload()">Повторить</button>
                     </div>
                 `;
+                if (loadMoreContainer) loadMoreContainer.style.display = 'none';
             }
         }
 
@@ -632,20 +637,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const typeBadges = { landing: 'landing-badge', platform: 'platform-badge', mobile: 'mobile-badge' };
             const typeIcons = { landing: '📄', platform: '⚙️', mobile: '📱' };
 
-            let currentIndex = {};
-
-            const visibleProjects = allProjects.slice(0, visibleCount);
+            const projectsToShow = allProjects.slice(0, visibleCount);
             const hasMore = allProjects.length > visibleCount;
 
-            visibleProjects.forEach(project => {
-                currentIndex[project.id] = 0;
-            });
+            let currentIndex = {};
 
-            grid.innerHTML = visibleProjects.map((project, idx) => {
+            grid.innerHTML = projectsToShow.map((project, idx) => {
                 const type = projectTypes[idx % 3];
                 const images = project.images || [];
                 const hasImages = images.length > 0;
                 const imageUrl = hasImages ? images[0] : null;
+
+                currentIndex[project.id] = 0;
 
                 return `
                     <div class="project-card reveal-scale" style="transition-delay: ${idx * 0.05}s">
@@ -659,12 +662,12 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button class="project-carousel-next" data-id="${project.id}" data-dir="next">›</button>
                                     <div class="project-carousel-counter">1 / ${images.length}</div>
                                 ` : ''}
-                                <div class="project-placeholder" style="display:none; background: linear-gradient(135deg, #1a1a2e, #16213e)">
+                                <div class="project-placeholder" style="display:none; background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
                                     <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
                                     <span class="placeholder-text">${project.name}</span>
                                 </div>
                             ` : `
-                                <div class="project-placeholder" style="background: linear-gradient(135deg, #1a1a2e, #16213e)">
+                                <div class="project-placeholder" style="background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
                                     <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
                                     <span class="placeholder-text">${project.name}</span>
                                 </div>
@@ -674,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="project-body">
                             <div class="project-tags">
                                 <span class="tag ${typeBadges[type] || 'landing-badge'}">${typeLabels[type] || 'Проект'}</span>
-                                ${hasImages ? `<span class="image-count">📷 ${images.length}</span>` : ''}
+                                ${hasImages ? `<span class="image-count"> ${images.length} ${images.length === 1 ? 'фото' : 'фотографий'}</span>` : ''}
                             </div>
                             <div class="project-title">${project.name}</div>
                             <p class="project-desc">${project.description || 'Современный цифровой продукт под ключ.'}</p>
@@ -683,47 +686,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }).join('');
 
-            if (hasMore) {
-                const loadMoreHtml = `
-                    <div class="load-more-container">
-                        <button class="load-more-btn" id="loadMoreBtn">
-                            <span class="btn-text">Показать ещё</span>
-                            <span class="spinner"></span>
-                        </button>
-                    </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', loadMoreHtml);
-
-                const loadMoreBtn = document.getElementById('loadMoreBtn');
-                if (loadMoreBtn) {
-                    loadMoreBtn.addEventListener('click', function() {
-                        if (isLoading) return;
-
-                        isLoading = true;
-                        this.classList.add('loading');
-                        this.disabled = true;
-
-                        const remaining = allProjects.length - visibleCount;
-                        const addCount = Math.min(3, remaining);
-                        visibleCount += addCount;
-
-                        const container = this.closest('.load-more-container');
-                        if (container) container.remove();
-
-                        renderProjects();
-
-                        if (visibleCount >= allProjects.length) {
-                            const btnContainer = document.querySelector('.load-more-container');
-                            if (btnContainer) btnContainer.remove();
-                        }
-
-                        isLoading = false;
-                    });
-                }
+            // Показываем/скрываем кнопку "Ещё"
+            if (loadMoreContainer) {
+                loadMoreContainer.style.display = hasMore ? 'block' : 'none';
             }
 
-            console.log('Рендеринг завершен! Показано:', visibleCount, 'из', allProjects.length);
-
+            // Показываем карточки
             setTimeout(() => {
                 const cards = grid.querySelectorAll('.project-card');
                 cards.forEach((card, index) => {
@@ -737,6 +705,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 grid.style.opacity = '1';
             }, 200);
 
+            // Карусель
             grid.querySelectorAll('.project-carousel-prev, .project-carousel-next').forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -744,9 +713,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     const dir = this.dataset.dir;
                     const project = allProjects.find(p => p.id === id);
                     if (!project || !project.images) return;
-
-                    const currentProject = visibleProjects.find(p => p.id === id);
-                    if (!currentProject) return;
 
                     const total = project.images.length;
                     currentIndex[id] = (currentIndex[id] || 0) + (dir === 'next' ? 1 : -1);
@@ -762,6 +728,14 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Обработчик кнопки "Ещё"
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function() {
+                visibleCount += 4;
+                renderProjects();
+            });
+        }
+
         loadProjects();
     }
 
@@ -772,10 +746,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function loadReviews() {
             try {
-                console.log('Загрузка отзывов...');
+                console.log('🔄 Загрузка отзывов...');
 
                 const reviews = await ApiService.getReviews();
                 console.log('Получено отзывов:', reviews.length);
+                console.log('Отзывы:', reviews);
 
                 if (!reviews || reviews.length === 0) {
                     container.innerHTML = `<div class="empty-state">Пока нет отзывов. Будьте первым!</div>`;
