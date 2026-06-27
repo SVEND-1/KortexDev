@@ -1,11 +1,9 @@
-// ===== ADMIN PANEL =====
+
 
 document.addEventListener('DOMContentLoaded', async function() {
     const dashboard = document.getElementById('dashboard');
     const loginPage = document.getElementById('loginPage');
 
-    // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
-    // Стучимся в защищённый GET /api/admin/project — если 200, сессия жива
     async function checkAuth() {
         const isAuth = await ApiService.checkAuth();
         if (isAuth) {
