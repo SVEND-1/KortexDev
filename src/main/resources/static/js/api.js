@@ -2,171 +2,162 @@
 const API_BASE = `${API_BASE_URL}/api`;
 const ADMIN_API_BASE = `${API_BASE_URL}/api/admin`;
 
-const STORAGE_KEYS = {
-    PROJECTS: 'kortex_projects',
-    REQUESTS: 'kortex_requests',
-    REVIEWS: 'kortex_reviews',
-    AUTH: 'adminAuthenticated'
-};
-
-// ===== HELPERS =====
-function getData(key, defaultValue) {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : defaultValue;
-    } catch {
-        return defaultValue;
-    }
-}
-
-function setData(key, data) {
-    localStorage.setItem(key, JSON.stringify(data));
-}
-
-// ===== API SERVICE =====
 const ApiService = {
     // ===== PROJECTS =====
     async getProjects(limit = 8) {
-        try {
-            const response = await fetch(`${API_BASE}/projects?limit=${limit}`);
-            if (response.ok) {
-                const data = await response.json();
-                setData(STORAGE_KEYS.PROJECTS, data);
-                return data;
-            }
-        } catch (error) {
-            console.warn('Бэкенд недоступен, загружаем из localStorage:', error);
-        }
-        const cached = getData(STORAGE_KEYS.PROJECTS, []);
-        return cached.slice(0, limit);
+        const response = await fetch(`${API_BASE}/projects?limit=${limit}`);
+        if (!response.ok) throw new Error(`Failed to load projects: ${response.status}`);
+        return await response.json();
     },
 
     async getAllProjects() {
-        try {
-            const response = await fetch(`${API_BASE}/projects?limit=100`);
-            if (response.ok) {
-                const data = await response.json();
-                setData(STORAGE_KEYS.PROJECTS, data);
-                return data;
-            }
-        } catch (error) {
-            console.warn('Бэкенд недоступен, загружаем из localStorage:', error);
-        }
-        return getData(STORAGE_KEYS.PROJECTS, []);
+        const response = await fetch(`${API_BASE}/projects?limit=100`);
+        if (!response.ok) throw new Error(`Failed to load projects: ${response.status}`);
+        return await response.json();
     },
 
     // ===== REQUESTS =====
-    async getRequests() {
-        try {
-            const response = await fetch(`${ADMIN_API_BASE}/request?limit=100`, {
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setData(STORAGE_KEYS.REQUESTS, data);
-                return data;
-            }
-        } catch (error) {
-            console.warn('Бэкенд недоступен, загружаем из localStorage:', error);
-        }
-        return getData(STORAGE_KEYS.REQUESTS, []);
+    async getRequests(limit = 100) {
+        const response = await fetch(`${ADMIN_API_BASE}/request?limit=${limit}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to load requests: ${response.status}`);
+        return await response.json();
     },
 
     async createRequest(data) {
-        try {
-            const response = await fetch(`${API_BASE}/requests`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const requests = getData(STORAGE_KEYS.REQUESTS, []);
-                requests.push(result);
-                setData(STORAGE_KEYS.REQUESTS, requests);
-                return result;
-            }
-            throw new Error('Failed to create request');
-        } catch (error) {
-            console.error('Error creating request:', error);
-            throw error;
-        }
+        const response = await fetch(`${API_BASE}/requests`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error(`Failed to create request: ${response.status}`);
+        return await response.json();
     },
 
     // ===== REVIEWS =====
     async getReviews(limit = 10) {
-        try {
-            const response = await fetch(`${API_BASE}/reviews?limit=${limit}`);
-            if (response.ok) {
-                const data = await response.json();
-                setData(STORAGE_KEYS.REVIEWS, data);
-                return data;
-            }
-        } catch (error) {
-            console.warn('Бэкенд недоступен, загружаем из localStorage:', error);
-        }
-        return getData(STORAGE_KEYS.REVIEWS, []);
+        const response = await fetch(`${API_BASE}/reviews?limit=${limit}`);
+        if (!response.ok) throw new Error(`Failed to load reviews: ${response.status}`);
+        return await response.json();
     },
 
     async createReview(data) {
-        try {
-            const response = await fetch(`${API_BASE}/reviews`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                const reviews = getData(STORAGE_KEYS.REVIEWS, []);
-                reviews.push(result);
-                setData(STORAGE_KEYS.REVIEWS, reviews);
-                return result;
-            }
-            throw new Error('Failed to create review');
-        } catch (error) {
-            console.error('Error creating review:', error);
-            throw error;
-        }
+        const response = await fetch(`${API_BASE}/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+        if (!response.ok) throw new Error(`Failed to create review: ${response.status}`);
+        return await response.json();
     },
 
     // ===== AUTH =====
-    isAuthenticated() {
-        return localStorage.getItem(STORAGE_KEYS.AUTH) === 'true';
-    },
-
-    async login(username, password) {
+    // Проверяем сессию через защищённый эндпоинт GET /api/admin/project
+    async checkAuth() {
         try {
-            const response = await fetch(`${ADMIN_API_BASE}/login?username=${username}&password=${password}`, {
-                method: 'POST',
+            const response = await fetch(`${ADMIN_API_BASE}/project?limit=1`, {
                 credentials: 'include',
             });
-
-            if (!response.ok) {
-                let errorMessage = 'Login failed';
-                try {
-                    const error = await response.json();
-                    errorMessage = error.error || error.message || 'Login failed';
-                } catch {}
-                throw new Error(errorMessage);
-            }
-
-            const data = await response.json();
-            if (data.success) {
-                localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
-            }
-            return data;
-        } catch (error) {
-            console.error('Login error:', error);
-            throw error;
+            return response.ok;
+        } catch {
+            return false;
         }
     },
 
-    logout() {
-        localStorage.removeItem(STORAGE_KEYS.AUTH);
-    }
+    async login(username, password) {
+        const response = await fetch(
+            `${ADMIN_API_BASE}/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+
+        if (!response.ok) {
+            let errorMessage = 'Неверный логин или пароль';
+            try {
+                const error = await response.json();
+                errorMessage = error.error || error.message || errorMessage;
+            } catch {}
+            throw new Error(errorMessage);
+        }
+
+        return await response.json();
+    },
+
+    // ===== ADMIN: PROJECTS =====
+    async adminGetProjects(limit = 100) {
+        const response = await fetch(`${ADMIN_API_BASE}/project?limit=${limit}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to load projects: ${response.status}`);
+        return await response.json();
+    },
+
+    async createProject(name, images) {
+        const formData = new FormData();
+        formData.append('name', name);
+        if (images && images.length > 0) {
+            Array.from(images).forEach(file => formData.append('images', file));
+        }
+        const response = await fetch(`${ADMIN_API_BASE}/project`, {
+            method: 'POST',
+            body: formData,
+            credentials: 'include',
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Failed to create project: ${response.status} - ${errorText}`);
+        }
+        return await response.json();
+    },
+
+    async deleteProject(id) {
+        const response = await fetch(`${ADMIN_API_BASE}/project/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to delete project: ${response.status}`);
+        return true;
+    },
+
+    // ===== ADMIN: REQUESTS =====
+    async adminGetRequests(limit = 100) {
+        const response = await fetch(`${ADMIN_API_BASE}/request?limit=${limit}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to load requests: ${response.status}`);
+        return await response.json();
+    },
+
+    async deleteRequest(id) {
+        const response = await fetch(`${ADMIN_API_BASE}/request/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to delete request: ${response.status}`);
+        return true;
+    },
+
+    // ===== ADMIN: REVIEWS =====
+    async adminGetReviews(limit = 100) {
+        const response = await fetch(`${ADMIN_API_BASE}/reviews?limit=${limit}`, {
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to load reviews: ${response.status}`);
+        return await response.json();
+    },
+
+    async deleteReview(id) {
+        const response = await fetch(`${ADMIN_API_BASE}/reviews/${id}`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+        if (!response.ok) throw new Error(`Failed to delete review: ${response.status}`);
+        return true;
+    },
 };
 
-// ===== EXPORTS =====
 window.ApiService = ApiService;

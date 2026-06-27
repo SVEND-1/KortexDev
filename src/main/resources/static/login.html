@@ -277,7 +277,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', async function() {
         const form = document.getElementById('loginForm');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
@@ -287,10 +287,12 @@
         const API_BASE_URL = window.API_BASE_URL || 'http://localhost:8080';
         const LOGIN_URL = `${API_BASE_URL}/api/admin/login`;
 
-        console.log('API URL:', LOGIN_URL); // Для отладки
 
+
+        // Проверяем сессию через защищённый эндпоинт
         try {
-            if (localStorage.getItem('adminAuthenticated') === 'true') {
+            const check = await fetch(`${API_BASE_URL}/api/admin/project?limit=1`, { credentials: 'include' });
+            if (check.ok) {
                 window.location.href = 'admin.html';
                 return;
             }
@@ -324,9 +326,6 @@
                 );
 
                 if (response.status === 200) {
-                    try {
-                        localStorage.setItem('adminAuthenticated', 'true');
-                    } catch(e) {}
                     window.location.href = 'admin.html';
                     return;
                 }

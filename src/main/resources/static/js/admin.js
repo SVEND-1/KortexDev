@@ -1,102 +1,63 @@
 // ===== ADMIN PANEL =====
 
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const dashboard = document.getElementById('dashboard');
     const loginPage = document.getElementById('loginPage');
 
     // ===== ПРОВЕРКА АВТОРИЗАЦИИ =====
-    function checkAuth() {
-        try {
-            const isAuth = localStorage.getItem('adminAuthenticated') === 'true';
-            if (isAuth) {
-                dashboard.style.display = 'block';
-                loginPage.style.display = 'none';
-                initDashboard();
-            } else {
-                dashboard.style.display = 'none';
-                loginPage.style.display = 'flex';
-                initLogin();
-            }
-        } catch(e) {
+    // Стучимся в защищённый GET /api/admin/project — если 200, сессия жива
+    async function checkAuth() {
+        const isAuth = await ApiService.checkAuth();
+        if (isAuth) {
+            dashboard.style.display = 'block';
+            loginPage.style.display = 'none';
+            initDashboard();
+        } else {
             dashboard.style.display = 'none';
             loginPage.style.display = 'flex';
             initLogin();
         }
     }
 
-    // ===== ЛОГИН ТОЛЬКО ЧЕРЕЗ БЭКЕНД =====
+    // ===== ЛОГИН =====
     function initLogin() {
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
         const loginError = document.getElementById('loginError');
 
-        if (loginForm) {
-            loginForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        if (!loginForm) return;
 
-                const username = document.getElementById('loginUsername').value.trim();
-                const password = document.getElementById('loginPassword').value.trim();
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                if (!username || !password) {
-                    loginError.textContent = 'Заполните все поля';
-                    loginError.style.display = 'block';
-                    return;
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!username || !password) {
+                loginError.textContent = 'Заполните все поля';
+                loginError.style.display = 'block';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Вход...';
+            loginError.style.display = 'none';
+
+            try {
+                const data = await ApiService.login(username, password);
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    throw new Error(data.message || 'Ошибка авторизации');
                 }
-
-                loginBtn.disabled = true;
-                loginBtn.textContent = 'Вход...';
-                loginError.style.display = 'none';
-
-                try {
-                    const response = await fetch(
-                        `${API_BASE_URL}/api/admin/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
-                        {
-                            method: 'POST',
-                            credentials: 'include',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        }
-                    );
-
-                    if (!response.ok) {
-                        let errorMsg = 'Неверный логин или пароль';
-                        try {
-                            const errorData = await response.json();
-                            errorMsg = errorData.error || errorData.message || errorMsg;
-                        } catch {
-                            if (response.status === 401) {
-                                errorMsg = 'Неверный логин или пароль';
-                            } else if (response.status === 404) {
-                                errorMsg = 'Сервер не найден. Проверьте подключение.';
-                            } else {
-                                errorMsg = `Ошибка: ${response.status}`;
-                            }
-                        }
-                        throw new Error(errorMsg);
-                    }
-
-                    const data = await response.json();
-
-                    if (data.success) {
-                        try {
-                            localStorage.setItem('adminAuthenticated', 'true');
-                        } catch(e) {}
-                        window.location.reload();
-                    } else {
-                        throw new Error(data.message || 'Ошибка авторизации');
-                    }
-
-                } catch (error) {
-                    console.error('Login error:', error);
-                    loginError.textContent = error.message || 'Ошибка соединения с сервером';
-                    loginError.style.display = 'block';
-                    loginBtn.disabled = false;
-                    loginBtn.textContent = 'Войти';
-                }
-            });
-        }
+            } catch (error) {
+                loginError.textContent = error.message || 'Ошибка соединения с сервером';
+                loginError.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Войти';
+            }
+        });
     }
 
     // ===== DASHBOARD =====
@@ -111,33 +72,38 @@ document.addEventListener('DOMContentLoaded', function() {
         setupModals();
         setupLogout();
         renderTab('projects');
-        initButtons();
     }
 
     async function loadData() {
         try {
-            projects = await ApiService.getAllProjects() || [];
-            requests = await ApiService.getRequests() || [];
-            reviews = await ApiService.getReviews(100) || [];
+            [projects, requests, reviews] = await Promise.all([
+                ApiService.adminGetProjects(),
+                ApiService.adminGetRequests(),
+                ApiService.adminGetReviews(),
+            ]);
+
+            projects = projects || [];
+            requests = requests || [];
+            reviews  = reviews  || [];
 
             const projectCount = document.getElementById('projectCount');
             const requestCount = document.getElementById('requestCount');
-            const reviewCount = document.getElementById('reviewCount');
+            const reviewCount  = document.getElementById('reviewCount');
 
             if (projectCount) projectCount.textContent = projects.length;
             if (requestCount) requestCount.textContent = requests.length;
-            if (reviewCount) reviewCount.textContent = reviews.length;
+            if (reviewCount)  reviewCount.textContent  = reviews.length;
         } catch (error) {
             console.error('Failed to load data:', error);
             showMessage('error', 'Ошибка загрузки данных');
         }
     }
 
+    // ===== ТАБЫ =====
     function setupTabs() {
-        const tabs = document.querySelectorAll('.tab-btn');
-        tabs.forEach(tab => {
+        document.querySelectorAll('.tab-btn').forEach(tab => {
             tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
                 currentTab = this.dataset.tab;
                 renderTab(currentTab);
@@ -155,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (tab === 'reviews') renderReviews();
     }
 
+    // ===== РЕНДЕР ПРОЕКТОВ =====
     function renderProjects() {
         const container = document.getElementById('projectsList');
         if (!container) return;
@@ -164,10 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="empty-state">
                     <p>Нет проектов</p>
                     <button class="create-btn" id="emptyCreateBtn">Создать первый проект</button>
-                </div>
-            `;
-            const emptyBtn = document.getElementById('emptyCreateBtn');
-            if (emptyBtn) emptyBtn.addEventListener('click', window.openProjectModal);
+                </div>`;
+            document.getElementById('emptyCreateBtn')?.addEventListener('click', window.openProjectModal);
             return;
         }
 
@@ -184,54 +149,39 @@ document.addEventListener('DOMContentLoaded', function() {
                         </tr>
                     </thead>
                     <tbody>
-                        ${projects.map(project => `
+                        ${projects.map(p => `
                             <tr>
-                                <td>${project.id}</td>
-                                <td class="project-icon">${getProjectTypeIcon(project.name)}</td>
-                                <td class="project-name">${project.name}</td>
+                                <td>${p.id}</td>
+                                <td>${getProjectTypeIcon(p.name)}</td>
+                                <td>${p.name}</td>
                                 <td>
-                                    ${project.images && project.images.length > 0 ? `
-                                        <div class="image-preview">
-                                            ${project.images.slice(0, 2).map(img => `
+                                    ${p.images && p.images.length > 0
+            ? `<div class="image-preview">
+                                            ${p.images.slice(0, 2).map(img => `
                                                 <img src="${img}" alt="" class="thumbnail" onerror="this.style.display='none'" />
                                             `).join('')}
-                                            ${project.images.length > 2 ? `<span>+${project.images.length - 2}</span>` : ''}
-                                        </div>
-                                    ` : `<span class="no-image">Нет фото</span>`}
+                                            ${p.images.length > 2 ? `<span>+${p.images.length - 2}</span>` : ''}
+                                           </div>`
+            : '<span class="no-image">Нет изображений</span>'
+        }
                                 </td>
                                 <td>
-                                    <button class="delete-btn" data-id="${project.id}" data-type="project">🗑️ Удалить</button>
+                                    <button class="delete-btn" onclick="window.deleteProject(${p.id})">Удалить</button>
                                 </td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-            </div>
-        `;
-
-        container.querySelectorAll('.delete-btn[data-type="project"]').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const id = parseInt(this.dataset.id);
-                if (confirm('Удалить проект?')) {
-                    try {
-                        await ApiService.deleteProject(id);
-                        showMessage('success', 'Проект удалён');
-                        await loadData();
-                        renderTab('projects');
-                    } catch (error) {
-                        showMessage('error', 'Ошибка удаления');
-                    }
-                }
-            });
-        });
+            </div>`;
     }
 
+    // ===== РЕНДЕР ЗАЯВОК =====
     function renderRequests() {
         const container = document.getElementById('requestsList');
         if (!container) return;
 
         if (requests.length === 0) {
-            container.innerHTML = `<div class="empty-state">Нет заявок</div>`;
+            container.innerHTML = '<div class="empty-state"><p>Нет заявок</p></div>';
             return;
         }
 
@@ -239,60 +189,30 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="table-wrapper">
                 <table class="data-table">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Имя</th>
-                            <th>Юзернейм</th>
-                            <th>Тип связи</th>
-                            <th>Дата</th>
-                            <th>Действия</th>
-                        </tr>
+                        <tr><th>ID</th><th>Имя</th><th>Юзернейм</th><th>Тип</th><th>Действия</th></tr>
                     </thead>
                     <tbody>
-                        ${requests.map(req => `
+                        ${requests.map(r => `
                             <tr>
-                                <td>${req.id}</td>
-                                <td>${req.name}</td>
-                                <td>${req.username}</td>
-                                <td>
-                                    <span class="request-type ${req.requestType === 'TG' ? 'telegram' : 'vkontakte'}">
-                                        ${req.requestType === 'TG' ? 'Telegram' : 'ВКонтакте'}
-                                    </span>
-                                </td>
-                                <td>${new Date(req.createAt).toLocaleDateString('ru-RU')}</td>
-                                <td>
-                                    <button class="delete-btn" data-id="${req.id}" data-type="request">🗑️ Удалить</button>
-                                </td>
+                                <td>${r.id}</td>
+                                <td>${r.name}</td>
+                                <td>${r.username}</td>
+                                <td>${r.requestType || r.type || '—'}</td>
+                                <td><button class="delete-btn" onclick="window.deleteRequest(${r.id})">Удалить</button></td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-            </div>
-        `;
-
-        container.querySelectorAll('.delete-btn[data-type="request"]').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const id = parseInt(this.dataset.id);
-                if (confirm('Удалить заявку?')) {
-                    try {
-                        await ApiService.deleteRequest(id);
-                        showMessage('success', 'Заявка удалена');
-                        await loadData();
-                        renderTab('requests');
-                    } catch (error) {
-                        showMessage('error', 'Ошибка удаления');
-                    }
-                }
-            });
-        });
+            </div>`;
     }
 
+    // ===== РЕНДЕР ОТЗЫВОВ =====
     function renderReviews() {
         const container = document.getElementById('reviewsList');
         if (!container) return;
 
         if (reviews.length === 0) {
-            container.innerHTML = `<div class="empty-state">Нет отзывов</div>`;
+            container.innerHTML = '<div class="empty-state"><p>Нет отзывов</p></div>';
             return;
         }
 
@@ -300,83 +220,86 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="table-wrapper">
                 <table class="data-table">
                     <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Имя</th>
-                            <th>Отзыв</th>
-                            <th>Дата</th>
-                            <th>Действия</th>
-                        </tr>
+                        <tr><th>ID</th><th>Имя</th><th>Отзыв</th><th>Дата</th><th>Действия</th></tr>
                     </thead>
                     <tbody>
-                        ${reviews.map(review => `
+                        ${reviews.map(r => `
                             <tr>
-                                <td>${review.id}</td>
-                                <td>${review.name}</td>
-                                <td class="review-text">${review.review}</td>
-                                <td>${new Date(review.createAt).toLocaleDateString('ru-RU')}</td>
-                                <td>
-                                    <button class="delete-btn" data-id="${review.id}" data-type="review">🗑️ Удалить</button>
-                                </td>
+                                <td>${r.id}</td>
+                                <td>${r.name}</td>
+                                <td class="review-text">${r.review || '—'}</td>
+                                <td>${r.createAt ? new Date(r.createAt).toLocaleDateString('ru-RU') : '—'}</td>
+                                <td><button class="delete-btn" onclick="window.deleteReview(${r.id})">Удалить</button></td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-            </div>
-        `;
-
-        container.querySelectorAll('.delete-btn[data-type="review"]').forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const id = parseInt(this.dataset.id);
-                if (confirm('Удалить отзыв?')) {
-                    try {
-                        await ApiService.deleteReview(id);
-                        showMessage('success', 'Отзыв удалён');
-                        await loadData();
-                        renderTab('reviews');
-                    } catch (error) {
-                        showMessage('error', 'Ошибка удаления');
-                    }
-                }
-            });
-        });
+            </div>`;
     }
 
-    // ===== ВЫХОД =====
-    function setupLogout() {
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                try {
-                    localStorage.removeItem('adminAuthenticated');
-                } catch(e) {}
-                window.location.reload();
-            });
+    // ===== УДАЛЕНИЕ =====
+    window.deleteProject = async function(id) {
+        if (!confirm('Удалить проект?')) return;
+        try {
+            await ApiService.deleteProject(id);
+            showMessage('success', 'Проект удалён');
+            await loadData();
+            renderTab('projects');
+        } catch (error) {
+            showMessage('error', 'Ошибка удаления: ' + error.message);
         }
+    };
+
+    window.deleteRequest = async function(id) {
+        if (!confirm('Удалить заявку?')) return;
+        try {
+            await ApiService.deleteRequest(id);
+            showMessage('success', 'Заявка удалена');
+            await loadData();
+            renderTab('requests');
+        } catch (error) {
+            showMessage('error', 'Ошибка удаления: ' + error.message);
+        }
+    };
+
+    window.deleteReview = async function(id) {
+        if (!confirm('Удалить отзыв?')) return;
+        try {
+            await ApiService.deleteReview(id);
+            showMessage('success', 'Отзыв удалён');
+            await loadData();
+            renderTab('reviews');
+        } catch (error) {
+            showMessage('error', 'Ошибка удаления: ' + error.message);
+        }
+    };
+
+    // ===== LOGOUT =====
+    function setupLogout() {
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
+            // Spring сессия сбрасывается на сервере, просто перезагружаем
+            window.location.reload();
+        });
     }
 
     // ===== СООБЩЕНИЯ =====
     function showMessage(type, text) {
-        const el = document.getElementById('message');
-        if (!el) return;
-        el.className = `message ${type}`;
-        el.textContent = text;
-        el.style.display = 'block';
-        clearTimeout(el._timeout);
-        el._timeout = setTimeout(() => {
-            el.style.display = 'none';
-        }, 3000);
+        const msg = document.getElementById('message');
+        if (!msg) return;
+        msg.textContent = text;
+        msg.className = `message ${type}`;
+        msg.style.display = 'block';
+        setTimeout(() => { msg.style.display = 'none'; }, 4000);
     }
-    window.showMessage = showMessage;
 
-    // ===== МОДАЛЬНЫЕ ОКНА =====
+    // ===== МОДАЛ СОЗДАНИЯ ПРОЕКТА =====
     function setupModals() {
-        const modal = document.getElementById('projectModal');
-        const openBtn = document.getElementById('createProjectBtn');
-        const closeBtn = document.getElementById('closeProjectModal');
-        const cancelBtn = document.getElementById('cancelProjectBtn');
-        const submitBtn = document.getElementById('submitProjectBtn');
-        const nameInput = document.getElementById('projectName');
+        const modal      = document.getElementById('projectModal');
+        const openBtn    = document.getElementById('createProjectBtn');
+        const closeBtn   = document.getElementById('closeProjectModal');
+        const cancelBtn  = document.getElementById('cancelProjectBtn');
+        const submitBtn  = document.getElementById('submitProjectBtn');
+        const nameInput  = document.getElementById('projectName');
         const imagesInput = document.getElementById('projectImages');
 
         window.openProjectModal = function() {
@@ -392,99 +315,75 @@ document.addEventListener('DOMContentLoaded', function() {
                 modal.style.display = 'none';
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
-                if (nameInput) nameInput.value = '';
+                if (nameInput)   nameInput.value = '';
                 if (imagesInput) imagesInput.value = '';
                 updatePreview();
             }
         }
 
-        if (openBtn) openBtn.addEventListener('click', window.openProjectModal);
-        if (closeBtn) closeBtn.addEventListener('click', closeModal);
-        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
-
-        if (modal) {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
-        }
-
-        if (nameInput) nameInput.addEventListener('input', updatePreview);
-        if (imagesInput) imagesInput.addEventListener('change', updatePreview);
+        openBtn?.addEventListener('click', window.openProjectModal);
+        closeBtn?.addEventListener('click', closeModal);
+        cancelBtn?.addEventListener('click', closeModal);
+        modal?.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        nameInput?.addEventListener('input', updatePreview);
+        imagesInput?.addEventListener('change', updatePreview);
 
         function updatePreview() {
-            const name = nameInput ? nameInput.value.trim() : '';
-            const files = imagesInput ? imagesInput.files : null;
-            const previewName = document.getElementById('previewName');
-            const previewIcon = document.getElementById('previewIcon');
+            const name  = nameInput?.value.trim() || '';
+            const files = imagesInput?.files;
+            const previewName  = document.getElementById('previewName');
+            const previewIcon  = document.getElementById('previewIcon');
             const previewCount = document.getElementById('previewCount');
-            const imageArea = document.getElementById('previewImageArea');
+            const imageArea    = document.getElementById('previewImageArea');
 
             if (previewName) previewName.textContent = name || 'Название проекта';
             if (previewIcon) previewIcon.textContent = getProjectTypeIcon(name || 'проект');
 
             if (files && files.length > 0 && imageArea) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    imageArea.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />
-                    `;
+                reader.onload = e => {
+                    imageArea.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width:100%;height:100%;object-fit:cover;" />`;
                 };
                 reader.readAsDataURL(files[0]);
                 if (previewCount) {
-                    previewCount.textContent = `${files.length} ${files.length === 1 ? 'изображение' : files.length < 5 ? 'изображения' : 'изображений'}`;
+                    const n = files.length;
+                    previewCount.textContent = `${n} ${n === 1 ? 'изображение' : n < 5 ? 'изображения' : 'изображений'}`;
                 }
             } else if (imageArea) {
-                imageArea.innerHTML = `
-                    <div class="card-image-placeholder">
-                        <span>🖼️</span>
-                        <p>Изображения не выбраны</p>
-                    </div>
-                `;
+                imageArea.innerHTML = `<div class="card-image-placeholder"><span>🖼️</span><p>Изображения не выбраны</p></div>`;
                 if (previewCount) previewCount.textContent = '0 изображений';
             }
         }
 
-        if (submitBtn) {
-            submitBtn.addEventListener('click', async function() {
-                const name = nameInput ? nameInput.value.trim() : '';
-                const files = imagesInput ? imagesInput.files : null;
+        submitBtn?.addEventListener('click', async function() {
+            const name  = nameInput?.value.trim() || '';
+            const files = imagesInput?.files;
 
-                if (!name) {
-                    showMessage('error', 'Введите название проекта');
-                    return;
-                }
+            if (!name) {
+                showMessage('error', 'Введите название проекта');
+                return;
+            }
 
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Создание...';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Создание...';
 
-                try {
-                    await ApiService.createProject(name, files);
-                    showMessage('success', 'Проект создан');
-                    closeModal();
-                    await loadData();
-                    renderTab('projects');
-                } catch (error) {
-                    console.error('Create error:', error);
-                    showMessage('error', 'Ошибка создания проекта: ' + error.message);
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Создать';
-                }
-            });
-        }
+            try {
+                await ApiService.createProject(name, files);
+                showMessage('success', 'Проект создан');
+                closeModal();
+                await loadData();
+                renderTab('projects');
+            } catch (error) {
+                showMessage('error', 'Ошибка создания: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Создать';
+            }
+        });
 
         updatePreview();
     }
 
-    // ===== ВСЕ КНОПКИ =====
-    function initButtons() {
-        const emptyBtn = document.getElementById('emptyCreateBtn');
-        if (emptyBtn) {
-            emptyBtn.addEventListener('click', window.openProjectModal);
-        }
-    }
-
-    // ===== УТИЛИТЫ =====
     function getProjectTypeIcon(name) {
         const lower = name.toLowerCase();
         if (lower.includes('лендинг') || lower.includes('landing')) return '📄';
@@ -493,96 +392,5 @@ document.addEventListener('DOMContentLoaded', function() {
         return '🌐';
     }
 
-    // ===== ДОБАВЛЯЕМ МЕТОДЫ В API =====
-    ApiService.deleteProject = async function(id) {
-        try {
-            const response = await fetch(`${ADMIN_API_BASE}/project/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const projects = getData(STORAGE_KEYS.PROJECTS, []);
-                const filtered = projects.filter(p => p.id !== id);
-                setData(STORAGE_KEYS.PROJECTS, filtered);
-                return true;
-            }
-            throw new Error(`Failed to delete project: ${response.status}`);
-        } catch (error) {
-            console.error('Error deleting project:', error);
-            throw error;
-        }
-    };
-
-    ApiService.deleteRequest = async function(id) {
-        try {
-            const response = await fetch(`${ADMIN_API_BASE}/request/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const requests = getData(STORAGE_KEYS.REQUESTS, []);
-                const filtered = requests.filter(r => r.id !== id);
-                setData(STORAGE_KEYS.REQUESTS, filtered);
-                return true;
-            }
-            throw new Error(`Failed to delete request: ${response.status}`);
-        } catch (error) {
-            console.error('Error deleting request:', error);
-            throw error;
-        }
-    };
-
-    ApiService.deleteReview = async function(id) {
-        try {
-            const response = await fetch(`${ADMIN_API_BASE}/reviews/${id}`, {
-                method: 'DELETE',
-                credentials: 'include',
-            });
-            if (response.ok) {
-                const reviews = getData(STORAGE_KEYS.REVIEWS, []);
-                const filtered = reviews.filter(r => r.id !== id);
-                setData(STORAGE_KEYS.REVIEWS, filtered);
-                return true;
-            }
-            throw new Error(`Failed to delete review: ${response.status}`);
-        } catch (error) {
-            console.error('Error deleting review:', error);
-            throw error;
-        }
-    };
-
-    ApiService.createProject = async function(name, images) {
-        try {
-            const formData = new FormData();
-            formData.append('name', name);
-            if (images && images.length > 0) {
-                Array.from(images).forEach(file => {
-                    formData.append('images', file);
-                });
-            }
-
-            const response = await fetch(`${ADMIN_API_BASE}/project`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include',
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const projects = getData(STORAGE_KEYS.PROJECTS, []);
-                projects.push(data);
-                setData(STORAGE_KEYS.PROJECTS, projects);
-                return data;
-            }
-
-            const errorText = await response.text();
-            throw new Error(`Failed to create project: ${response.status} - ${errorText}`);
-        } catch (error) {
-            console.error('Error creating project:', error);
-            throw error;
-        }
-    };
-
-    // ===== ЗАПУСК =====
-    checkAuth();
+    await checkAuth();
 });
