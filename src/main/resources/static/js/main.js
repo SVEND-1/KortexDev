@@ -7,7 +7,6 @@ window.openRequestModal = function() {
         modal.style.display = 'flex';
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        // Очищаем ошибки
         const errorEl = document.getElementById('reqError');
         if (errorEl) errorEl.style.display = 'none';
     }
@@ -63,7 +62,7 @@ window.showToast = function(message) {
 
 document.addEventListener('DOMContentLoaded', function() {
     // ===== INIT =====
-    console.log('🚀 KortexDev инициализация...');
+    console.log('KortexDev инициализация...');
 
     initParticles();
     initHeroParticles();
@@ -590,16 +589,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const grid = document.getElementById('projectsGrid');
         if (!grid) return;
 
+        let allProjects = [];
+        let visibleCount = 3;
+        let isLoading = false;
+
         async function loadProjects() {
             try {
-                console.log('🔄 Загрузка проектов...');
+                console.log('Загрузка проектов...');
 
                 const projects = await ApiService.getProjects();
-                console.log('📦 Получено проектов:', projects.length);
-                console.log('📋 Проекты:', projects);
+                console.log('Получено проектов:', projects.length);
 
                 if (!projects || projects.length === 0) {
-                    console.warn('⚠️ Проектов нет!');
+                    console.warn('Проектов нет!');
                     grid.innerHTML = `
                         <div class="empty-state">
                             <p>Пока нет реализованных проектов</p>
@@ -609,101 +611,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                console.log('✅ Начинаем рендеринг проектов...');
-
-                const projectTypes = ['landing', 'platform', 'mobile'];
-                const typeLabels = { landing: 'Лендинг', platform: 'Платформа', mobile: 'Мобильное' };
-                const typeBadges = { landing: 'landing-badge', platform: 'platform-badge', mobile: 'mobile-badge' };
-                const typeIcons = { landing: '📄', platform: '⚙️', mobile: '📱' };
-
-                let currentIndex = {};
-
-                grid.innerHTML = projects.map((project, idx) => {
-                    const type = projectTypes[idx % 3];
-                    const images = project.images || [];
-                    const hasImages = images.length > 0;
-                    const imageUrl = hasImages ? images[0] : null;
-
-                    currentIndex[project.id] = 0;
-
-                    return `
-                        <div class="project-card reveal-scale" style="transition-delay: ${idx * 0.05}s">
-                            <div class="project-thumb">
-                                ${hasImages && imageUrl ? `
-                                    <img src="${imageUrl}" alt="${project.name}" class="project-image" 
-                                         onerror="this.style.display='none'; this.parentElement.querySelector('.project-placeholder').style.display='flex';" />
-                                    <div class="project-image-overlay"></div>
-                                    ${images.length > 1 ? `
-                                        <button class="project-carousel-prev" data-id="${project.id}" data-dir="prev">‹</button>
-                                        <button class="project-carousel-next" data-id="${project.id}" data-dir="next">›</button>
-                                        <div class="project-carousel-counter">1 / ${images.length}</div>
-                                    ` : ''}
-                                    <div class="project-placeholder" style="display:none; background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
-                                        <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
-                                        <span class="placeholder-text">${project.name}</span>
-                                    </div>
-                                ` : `
-                                    <div class="project-placeholder" style="background: linear-gradient(135deg, #3d2fa0, #5a45cc)">
-                                        <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
-                                        <span class="placeholder-text">${project.name}</span>
-                                    </div>
-                                `}
-                                <div class="thumb-line"></div>
-                            </div>
-                            <div class="project-body">
-                                <div class="project-tags">
-                                    <span class="tag ${typeBadges[type] || 'landing-badge'}">${typeLabels[type] || 'Проект'}</span>
-                                    ${hasImages ? `<span class="image-count">📷 ${images.length} ${images.length === 1 ? 'фото' : 'фотографий'}</span>` : ''}
-                                </div>
-                                <div class="project-title">${project.name}</div>
-                                <p class="project-desc">${project.description || 'Современный цифровой продукт под ключ.'}</p>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                console.log('✅ Рендеринг завершен!');
-
-                // ===== ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ КАРТОЧКИ =====
-                setTimeout(() => {
-                    const cards = grid.querySelectorAll('.project-card');
-                    console.log('📊 Найдено карточек:', cards.length);
-
-                    cards.forEach((card, index) => {
-                        card.classList.add('visible');
-                        card.style.opacity = '1';
-                        card.style.transform = 'scale(1)';
-                        card.style.display = 'block';
-                        card.style.visibility = 'visible';
-                    });
-
-                    grid.style.display = 'grid';
-                    grid.style.opacity = '1';
-                }, 200);
-
-                grid.querySelectorAll('.project-carousel-prev, .project-carousel-next').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const id = parseInt(this.dataset.id);
-                        const dir = this.dataset.dir;
-                        const project = projects.find(p => p.id === id);
-                        if (!project || !project.images) return;
-
-                        const total = project.images.length;
-                        currentIndex[id] = (currentIndex[id] || 0) + (dir === 'next' ? 1 : -1);
-                        if (currentIndex[id] < 0) currentIndex[id] = total - 1;
-                        if (currentIndex[id] >= total) currentIndex[id] = 0;
-
-                        const thumb = this.closest('.project-thumb');
-                        const img = thumb.querySelector('.project-image');
-                        const counter = thumb.querySelector('.project-carousel-counter');
-                        if (img) img.src = project.images[currentIndex[id]];
-                        if (counter) counter.textContent = `${currentIndex[id] + 1} / ${total}`;
-                    });
-                });
+                allProjects = projects;
+                visibleCount = Math.min(3, allProjects.length);
+                renderProjects();
 
             } catch (error) {
-                console.error('❌ Ошибка загрузки проектов:', error);
+                console.error('Ошибка загрузки проектов:', error);
                 grid.innerHTML = `
                     <div class="empty-state">
                         <p>Ошибка загрузки проектов: ${error.message}</p>
@@ -711,6 +624,142 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             }
+        }
+
+        function renderProjects() {
+            const projectTypes = ['landing', 'platform', 'mobile'];
+            const typeLabels = { landing: 'Лендинг', platform: 'Платформа', mobile: 'Мобильное' };
+            const typeBadges = { landing: 'landing-badge', platform: 'platform-badge', mobile: 'mobile-badge' };
+            const typeIcons = { landing: '📄', platform: '⚙️', mobile: '📱' };
+
+            let currentIndex = {};
+
+            const visibleProjects = allProjects.slice(0, visibleCount);
+            const hasMore = allProjects.length > visibleCount;
+
+            visibleProjects.forEach(project => {
+                currentIndex[project.id] = 0;
+            });
+
+            grid.innerHTML = visibleProjects.map((project, idx) => {
+                const type = projectTypes[idx % 3];
+                const images = project.images || [];
+                const hasImages = images.length > 0;
+                const imageUrl = hasImages ? images[0] : null;
+
+                return `
+                    <div class="project-card reveal-scale" style="transition-delay: ${idx * 0.05}s">
+                        <div class="project-thumb">
+                            ${hasImages && imageUrl ? `
+                                <img src="${imageUrl}" alt="${project.name}" class="project-image" 
+                                     onerror="this.style.display='none'; this.parentElement.querySelector('.project-placeholder').style.display='flex';" />
+                                <div class="project-image-overlay"></div>
+                                ${images.length > 1 ? `
+                                    <button class="project-carousel-prev" data-id="${project.id}" data-dir="prev">‹</button>
+                                    <button class="project-carousel-next" data-id="${project.id}" data-dir="next">›</button>
+                                    <div class="project-carousel-counter">1 / ${images.length}</div>
+                                ` : ''}
+                                <div class="project-placeholder" style="display:none; background: linear-gradient(135deg, #1a1a2e, #16213e)">
+                                    <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
+                                    <span class="placeholder-text">${project.name}</span>
+                                </div>
+                            ` : `
+                                <div class="project-placeholder" style="background: linear-gradient(135deg, #1a1a2e, #16213e)">
+                                    <span class="placeholder-icon">${typeIcons[type] || '🌐'}</span>
+                                    <span class="placeholder-text">${project.name}</span>
+                                </div>
+                            `}
+                            <div class="thumb-line"></div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-tags">
+                                <span class="tag ${typeBadges[type] || 'landing-badge'}">${typeLabels[type] || 'Проект'}</span>
+                                ${hasImages ? `<span class="image-count">📷 ${images.length}</span>` : ''}
+                            </div>
+                            <div class="project-title">${project.name}</div>
+                            <p class="project-desc">${project.description || 'Современный цифровой продукт под ключ.'}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            if (hasMore) {
+                const loadMoreHtml = `
+                    <div class="load-more-container">
+                        <button class="load-more-btn" id="loadMoreBtn">
+                            <span class="btn-text">Показать ещё</span>
+                            <span class="spinner"></span>
+                        </button>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', loadMoreHtml);
+
+                const loadMoreBtn = document.getElementById('loadMoreBtn');
+                if (loadMoreBtn) {
+                    loadMoreBtn.addEventListener('click', function() {
+                        if (isLoading) return;
+
+                        isLoading = true;
+                        this.classList.add('loading');
+                        this.disabled = true;
+
+                        const remaining = allProjects.length - visibleCount;
+                        const addCount = Math.min(3, remaining);
+                        visibleCount += addCount;
+
+                        const container = this.closest('.load-more-container');
+                        if (container) container.remove();
+
+                        renderProjects();
+
+                        if (visibleCount >= allProjects.length) {
+                            const btnContainer = document.querySelector('.load-more-container');
+                            if (btnContainer) btnContainer.remove();
+                        }
+
+                        isLoading = false;
+                    });
+                }
+            }
+
+            console.log('Рендеринг завершен! Показано:', visibleCount, 'из', allProjects.length);
+
+            setTimeout(() => {
+                const cards = grid.querySelectorAll('.project-card');
+                cards.forEach((card, index) => {
+                    card.classList.add('visible');
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                    card.style.display = 'block';
+                    card.style.visibility = 'visible';
+                });
+                grid.style.display = 'grid';
+                grid.style.opacity = '1';
+            }, 200);
+
+            grid.querySelectorAll('.project-carousel-prev, .project-carousel-next').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = parseInt(this.dataset.id);
+                    const dir = this.dataset.dir;
+                    const project = allProjects.find(p => p.id === id);
+                    if (!project || !project.images) return;
+
+                    const currentProject = visibleProjects.find(p => p.id === id);
+                    if (!currentProject) return;
+
+                    const total = project.images.length;
+                    currentIndex[id] = (currentIndex[id] || 0) + (dir === 'next' ? 1 : -1);
+                    if (currentIndex[id] < 0) currentIndex[id] = total - 1;
+                    if (currentIndex[id] >= total) currentIndex[id] = 0;
+
+                    const thumb = this.closest('.project-thumb');
+                    const img = thumb.querySelector('.project-image');
+                    const counter = thumb.querySelector('.project-carousel-counter');
+                    if (img) img.src = project.images[currentIndex[id]];
+                    if (counter) counter.textContent = `${currentIndex[id] + 1} / ${total}`;
+                });
+            });
         }
 
         loadProjects();
@@ -723,11 +772,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async function loadReviews() {
             try {
-                console.log('🔄 Загрузка отзывов...');
+                console.log('Загрузка отзывов...');
 
                 const reviews = await ApiService.getReviews();
-                console.log('📦 Получено отзывов:', reviews.length);
-                console.log('📋 Отзывы:', reviews);
+                console.log('Получено отзывов:', reviews.length);
 
                 if (!reviews || reviews.length === 0) {
                     container.innerHTML = `<div class="empty-state">Пока нет отзывов. Будьте первым!</div>`;
@@ -761,10 +809,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
 
-                console.log('✅ Отзывы отрендерены!');
+                console.log('Отзывы отрендерены!');
 
             } catch (error) {
-                console.error('❌ Ошибка загрузки отзывов:', error);
+                console.error('Ошибка загрузки отзывов:', error);
                 container.innerHTML = `<div class="empty-state">Ошибка загрузки отзывов: ${error.message}</div>`;
             }
         }
@@ -782,7 +830,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const closeReview = document.getElementById('closeReviewModal');
         const reviewForm = document.getElementById('reviewForm');
 
-        // Кнопки закрытия
         if (closeRequest) {
             closeRequest.addEventListener('click', window.closeRequestModal);
         }
@@ -791,7 +838,6 @@ document.addEventListener('DOMContentLoaded', function() {
             closeReview.addEventListener('click', window.closeReviewModal);
         }
 
-        // Закрытие по клику на оверлей
         if (requestModal) {
             requestModal.addEventListener('click', function(e) {
                 if (e.target === this) {
@@ -808,7 +854,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Закрытие по ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (requestModal && requestModal.classList.contains('active')) {
@@ -820,7 +865,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // ===== REQUEST FORM =====
         if (requestForm) {
             requestForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -864,7 +908,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // ===== REVIEW FORM =====
         if (reviewForm) {
             reviewForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -911,7 +954,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== ВСЕ КНОПКИ =====
     function initButtons() {
-        // Все кнопки "Заказать проект"
         const requestButtonIds = [
             'requestBtn',
             'mobileRequestBtn',
@@ -925,7 +967,6 @@ document.addEventListener('DOMContentLoaded', function() {
         requestButtonIds.forEach(id => {
             const btn = document.getElementById(id);
             if (btn) {
-                // Убираем все старые обработчики
                 const newBtn = btn.cloneNode(true);
                 btn.parentNode.replaceChild(newBtn, btn);
                 newBtn.addEventListener('click', function(e) {
@@ -936,7 +977,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Кнопка "Оставить отзыв"
         const reviewBtn = document.getElementById('reviewBtn');
         if (reviewBtn) {
             const newBtn = reviewBtn.cloneNode(true);
@@ -948,7 +988,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Кнопка "Связаться с нами"
         const contactBtn = document.getElementById('contactBtn');
         if (contactBtn) {
             const newBtn = contactBtn.cloneNode(true);
@@ -960,7 +999,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Кнопка email
         const emailBtn = document.getElementById('emailBtn');
         if (emailBtn) {
             const newBtn = emailBtn.cloneNode(true);
@@ -992,5 +1030,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    console.log('✅ KortexDev инициализация завершена!');
+    console.log('KortexDev инициализация завершена!');
 });
